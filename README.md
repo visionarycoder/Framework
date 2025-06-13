@@ -1,2 +1,2 @@
-# vc
-My libraries and applications
+# Ifx
+Core Infrastructure and framework elements.

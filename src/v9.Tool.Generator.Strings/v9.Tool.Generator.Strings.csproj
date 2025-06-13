@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0-windows</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>strGen</AssemblyName>
+
+        <!-- Add this for cross-platform support -->
+        <SupportedOSPlatform>windows</SupportedOSPlatform>
+        <SupportedOSPlatform>linux</SupportedOSPlatform>
+        <SupportedOSPlatform>osx</SupportedOSPlatform>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="AppSettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.5" />
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\v9.Ifx.Helpers\v9.Ifx.Helpers.csproj" />
+        <ProjectReference Include="..\v9.Ifx.Services.Linux\v9.Ifx.Services.OS.Linux.csproj" />
+        <ProjectReference Include="..\v9.Ifx.Services.Mac\v9.Ifx.Services.OS.Mac.csproj" />
+        <ProjectReference Include="..\v9.Ifx.Services.Windows.Cli\v9.Ifx.Services.OS.Windows.Cli.csproj" />
+        <ProjectReference Include="..\v9.Ifx.Services.Windows.Forms\v9.Ifx.Services.OS.Windows.Forms.csproj" />
+        <ProjectReference Include="..\v9.Ifx.Services\v9.Ifx.Services.csproj" />
+        <ProjectReference Include="..\v9.Ifx\v9.Ifx.csproj" />
+    </ItemGroup>
+
+</Project>

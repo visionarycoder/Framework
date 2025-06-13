@@ -1,0 +1,164 @@
+using System.Linq.Expressions;
+using System.Reflection;
+using Ifx.Filtering;
+using vc.v2.Ifx.Core;
+
+namespace v8.Ifx.Data.Filtering.Extensions;
+
+/// <summary>
+///     Provides extension methods for applying filters, ordering, and pagination to IQueryable objects.
+/// </summary>
+public static class QueryableExtensions
+{
+
+    public const string TO_STRING = "ToString";
+    public const string TO_LOWER = "ToLower";
+    public const string CONTAINS = "Contains";
+    public const string EQUALS = "Equals";
+
+    // Get MethodInfo references for ToString, ToLower, and Contains
+    private static readonly MethodInfo toStringMethod = typeof(object).GetMethod(TO_STRING, Type.EmptyTypes)!;
+    private static readonly MethodInfo toLowerMethod = typeof(string).GetMethod(TO_LOWER, Type.EmptyTypes)!;
+    private static readonly MethodInfo containsMethod = typeof(string).GetMethod(CONTAINS, [typeof(string)])!;
+
+    /// <summary>
+    ///     Applies the specified filter to the query.
+    /// </summary>
+    /// <typeparam name="T">The type of the entity being queried.</typeparam>
+    /// <param name="query">The query to apply the filter to.</param>
+    /// <param name="filter">The filter to apply.</param>
+    /// <returns>The filtered query.</returns>
+    public static IQueryable<T> ApplyFilter<T>(this IQueryable<T> query, Filter filter) where T : class
+    {
+        foreach (var item in filter.Criteria)
+        {
+            var property = typeof(T).GetProperty(item.PropertyName);
+            if (property == null) continue;
+
+            var predicate = BuildPredicate<T>(item);
+            query = query.Where(predicate);
+        }
+
+        query = query.ApplyOrdering(filter);
+        query = query.ApplyPagination(filter);
+        return query;
+    }
+
+    /// <summary>
+    ///     Applies ordering to the query based on the specified filter.
+    /// </summary>
+    /// <typeparam name="T">The type of the entity being queried.</typeparam>
+    /// <param name="query">The query to apply ordering to.</param>
+    /// <param name="filter">The filter containing ordering information.</param>
+    /// <returns>The ordered query.</returns>
+    private static IQueryable<T> ApplyOrdering<T>(this IQueryable<T> query, Filter filter) where T : class
+    {
+
+        if (filter.OrderBy.Count == 0)
+            return query;
+        
+        if(filter.OrderBy.Count > 0)
+            query = ApplyOrderingImp(query, filter.OrderBy[0].PropertyName, filter.OrderBy[0].Direction);
+        if (filter.OrderBy.Count > 1)
+        {
+            foreach (var orderBy in filter.OrderBy[1..])
+            {
+                query = ApplyOrderingImp(query, orderBy);
+            }
+        }
+        return query;
+    }
+
+    /// <summary>
+    ///     Applies ordering to the query based on the specified property name and direction.
+    /// </summary>
+    /// <typeparam name="T">The type of the entity being queried.</typeparam>
+    /// <param name="query">The query to apply ordering to.</param>
+    /// <param name="propertyName">The name of the property to order by.</param>
+    /// <param name="direction">The direction of the ordering.</param>
+    /// <param name="thenBy">Indicates whether this is a secondary ordering.</param>
+    /// <returns>The ordered query.</returns>
+    private static IQueryable<T> OrderBy<T>(IQueryable<T> query, string propertyName, Filter.SortDirection direction) where T 
+        : class
+    {
+        
+        var parameter = Expression.Parameter(typeof(T), "e");
+        var property = Expression.Property(parameter, propertyName);
+        var lambda = Expression.Lambda(property, parameter);
+
+        var methodName = direction == Filter.SortDirection.Descending ? "OrderByDescending" : "OrderBy";
+        var resultExpression = Expression.Call(typeof(Queryable), methodName, [typeof(T), property.Type], query.Expression, Expression.Quote(lambda));
+        return query.Provider.CreateQuery<T>(resultExpression);
+
+    }
+
+    /// <summary>
+    ///     Applies ordering to the query based on the specified property name and direction.
+    /// </summary>
+    /// <typeparam name="T">The type of the entity being queried.</typeparam>
+    /// <param name="query">The query to apply ordering to.</param>
+    /// <param name="propertyName">The name of the property to order by.</param>
+    /// <param name="direction">The direction of the ordering.</param>
+    /// <param name="thenBy">Indicates whether this is a secondary ordering.</param>
+    /// <returns>The ordered query.</returns>
+    private static IQueryable<T> ThenBy<T>(IQueryable<T> query, string propertyName, Filter.SortDirection direction) where T 
+        : class
+    {
+        var parameter = Expression.Parameter(typeof(T), "e");
+        var property = Expression.Property(parameter, propertyName);
+        var lambda = Expression.Lambda(property, parameter);
+
+        var methodName = direction == Filter.SortDirection.Descending ? "ThenByDescending" : "ThenBy";
+        var resultExpression = Expression.Call(typeof(Queryable), methodName, [typeof(T), property.Type], query.Expression, Expression.Quote(lambda));
+
+        return query.Provider.CreateQuery<T>(resultExpression);
+    }
+
+   
+
+    /// <summary>
+    ///     Builds a predicate expression based on the specified criterion.
+    /// </summary>
+    /// <typeparam name="T">The type of the entity being queried.</typeparam>
+    /// <param name="criterion">The criterion to build the predicate from.</param>
+    /// <returns>The predicate expression.</returns>
+    private static Expression<Func<T, bool>> BuildPredicate<T>(Filter.Criterion criterion) where T : class
+    {
+        var parameter = Expression.Parameter(typeof(T), "e");
+        var property = Expression.Property(parameter, criterion.PropertyName);
+        var constant = Expression.Constant(criterion.PropertyValue);
+
+        var body = criterion.ComparisonOperator switch
+        {
+            Filter.ComparisonType.Equals => Expression.Equal(property, constant),
+            Filter.ComparisonType.NotEquals => Expression.NotEqual(property, constant),
+            Filter.ComparisonType.GreaterThan => Expression.GreaterThan(property, constant),
+            Filter.ComparisonType.LessThan => Expression.LessThan(property, constant),
+            Filter.ComparisonType.Contains when criterion.IgnoreCase == Filter.IgnoreCase.Yes => BuildCaseInsensitiveContains(property, constant),
+            Filter.ComparisonType.Contains => Expression.Call(property, "Contains", null, constant),
+            _ => throw new NotSupportedException($"ComparisonOperator {criterion.ComparisonOperator} is not supported.")
+        };
+
+        return Expression.Lambda<Func<T, bool>>(body, parameter);
+    }
+
+    /// <summary>
+    ///     Builds a case-insensitive "Contains" expression.
+    /// </summary>
+    /// <param name="property">The property expression.</param>
+    /// <param name="constant">The constant expression.</param>
+    /// <returns>The case-insensitive "Contains" expression.</returns>
+    private static Expression BuildCaseInsensitiveContains(Expression property, Expression constant)
+    {
+        // Convert property to string and to lowercase
+        var propertyToString = Expression.Call(property, toStringMethod);
+        var propertyToLower = Expression.Call(propertyToString, toLowerMethod);
+
+        // Convert constant to string and to lowercase
+        var constantToString = Expression.Call(constant, toStringMethod);
+        var constantToLower = Expression.Call(constantToString, toLowerMethod);
+
+        // Build the "Contains" call
+        return Expression.Call(propertyToLower, containsMethod, constantToLower);
+    }
+}
