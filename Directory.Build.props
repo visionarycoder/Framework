@@ -12,7 +12,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Authors>Ivan Jones</Authors>
         <Company>Visionary Coder LLC</Company>
-         <Description>vc.* packages are sharable resources designed as accelrators.</Description>
+        <Description>vc.* packages are sharable resources designed as accelrators.</Description>
         <Copyright>Copyright © $([System.DateTime]::Now.Year)</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -38,6 +38,29 @@
 
     <!-- For source link support -->
     <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+        <PackageReference Include="Microsoft.SourceLink.Common" Version="8.0.0" PrivateAssets="All"/>
     </ItemGroup>
+
+    <!--<ItemGroup>
+        <PackageReference Include="LanguageExt.Core" Version="4.4.9" PrivateAssets="All"/>
+        <PackageReference Include="LanguageExt.Transformers" Version="4.4.8" PrivateAssets="All"/>
+        <PackageReference Include="LanguageExt.Parsec" Version="4.4.9" PrivateAssets="All"/>
+        <PackageReference Include="LanguageExt.CodeGen" Version="4.4.8" PrivateAssets="All"/>
+        <PackageReference Include="csharp-monad" Version="1.0.1" PrivateAssets="All"/>
+        <PackageReference Include="LanguageExt.Sys" Version="4.4.9" PrivateAssets="All"/>
+        <PackageReference Include="LanguageExt.SysX" Version="4.4.8" PrivateAssets="All"/>
+    </ItemGroup>-->
+
+    <!--<ItemGroup>
+        <Using Include="LanguageExt" />
+        <Using Include="LanguageExt.Common" />
+        <Using Include="LanguageExt.Prelude" />
+        <Using Include="LanguageExt.Traits" />
+        <Using Include="LanguageExt.Effects" />
+        <Using Include="LanguageExt.Pipes" />
+        <Using Include="LanguageExt.Pretty" />
+        <Using Include="LanguageExt.Traits.Domain" />
+    </ItemGroup>-->
+
 </Project>

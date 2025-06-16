@@ -4,5 +4,3 @@ global using System.Linq;
 global using System.Text;
 global using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("vc.Ifx.Data.UnitTests")]

@@ -5,8 +5,4 @@
         <RootNamespace>vc.Ifx.Services</RootNamespace>
     </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\v9.Ifx.Services\v9.Ifx.Services.csproj" />
-    </ItemGroup>
-
 </Project>
