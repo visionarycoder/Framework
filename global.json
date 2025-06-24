@@ -3,6 +3,6 @@
         "version": "9.0.301"
     },
     "projects": [
-        "src", "tests", "tools","patterns"
+        "src", "tests", "tools"
     ]
 }
