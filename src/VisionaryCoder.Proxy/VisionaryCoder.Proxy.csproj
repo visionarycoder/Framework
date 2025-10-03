@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="Classification\" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\vc.Ifx\vc.Ifx.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Proxy.Abstractions\VisionaryCoder.Proxy.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

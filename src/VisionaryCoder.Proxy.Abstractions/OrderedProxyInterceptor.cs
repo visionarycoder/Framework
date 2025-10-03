@@ -1,0 +1,7 @@
+﻿namespace VisionaryCoder.Proxy.Abstractions;
+
+public sealed class OrderedProxyInterceptor<TInner>(TInner inner, int order) : IProxyInterceptor, IOrderedProxyInterceptor where TInner : IProxyInterceptor
+{
+    public int Order => order;
+    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next) => inner.InvokeAsync(context, next);
+}

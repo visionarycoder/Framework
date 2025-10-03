@@ -6,8 +6,4 @@
         <RootNamespace>vc.Ifx.Data</RootNamespace>
     </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="StronglyTypedId" Version="0.2.1" />
-    </ItemGroup>
-
 </Project>
