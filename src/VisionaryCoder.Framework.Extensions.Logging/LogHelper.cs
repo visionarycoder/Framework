@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace VisionaryCoder;
+namespace VisionaryCoder.Framework.Extensions.Logging;
 
 public static class LogHelper
 {

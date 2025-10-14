@@ -6,35 +6,25 @@ namespace VisionaryCoder.Framework.Proxy.Abstractions;
 /// <summary>
 /// Represents the context of a proxy operation.
 /// </summary>
-public class ProxyContext
+/// <param name="request">The request object.</param>
+/// <param name="resultType">The expected result type.</param>
+/// <param name="cancellationToken">The cancellation token.</param>
+public class ProxyContext(object request, Type resultType, CancellationToken cancellationToken = default)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ProxyContext"/> class.
-    /// </summary>
-    /// <param name="request">The request object.</param>
-    /// <param name="resultType">The expected result type.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    public ProxyContext(object request, Type resultType, CancellationToken cancellationToken = default)
-    {
-        Request = request ?? throw new ArgumentNullException(nameof(request));
-        ResultType = resultType ?? throw new ArgumentNullException(nameof(resultType));
-        CancellationToken = cancellationToken;
-    }
-
     /// <summary>
     /// Gets the request object.
     /// </summary>
-    public object Request { get; }
+    public object Request { get; } = request ?? throw new ArgumentNullException(nameof(request));
 
     /// <summary>
     /// Gets the expected result type.
     /// </summary>
-    public Type ResultType { get; }
+    public Type ResultType { get; } = resultType ?? throw new ArgumentNullException(nameof(resultType));
 
     /// <summary>
     /// Gets the cancellation token for the operation.
     /// </summary>
-    public CancellationToken CancellationToken { get; }
+    public CancellationToken CancellationToken { get; } = cancellationToken;
 
     /// <summary>
     /// Gets or sets the correlation ID for the operation.

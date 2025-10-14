@@ -1,4 +1,4 @@
-namespace VisionaryCoder;
+namespace VisionaryCoder.Framework.Extensions.Logging;
 
 /// <summary>
 /// Delegate for logging warning messages.

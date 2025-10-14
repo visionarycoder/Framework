@@ -3,8 +3,6 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
-using VisionaryCoder.Framework.Proxy.Abstractions.Interceptors;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
 

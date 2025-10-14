@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Extensions.Collections;
+namespace VisionaryCoder.Framework.Extensions;
 
 /// <summary>
 /// Provides extension methods for <see cref="HashSet{T}"/>.

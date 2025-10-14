@@ -3,7 +3,6 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Proxy.Abstractions.Interceptors;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Correlation;
 
@@ -69,34 +68,5 @@ public sealed class CorrelationInterceptor : IOrderedProxyInterceptor
             logger.LogError(ex, "Error in correlation interceptor with CorrelationId: {CorrelationId}", correlationId);
             throw;
         }
-    }
-}
-
-/// <summary>
-/// Default implementation of correlation context using AsyncLocal.
-/// </summary>
-public sealed class DefaultCorrelationContext : ICorrelationContext
-{
-    private static readonly AsyncLocal<string?> correlationId = new();
-
-    /// <inheritdoc />
-    public string? CorrelationId => correlationId.Value;
-
-    /// <inheritdoc />
-    public void SetCorrelationId(string correlationId)
-    {
-        correlationId.Value = correlationId;
-    }
-}
-
-/// <summary>
-/// Default correlation ID generator that creates GUIDs.
-/// </summary>
-public sealed class GuidCorrelationIdGenerator : ICorrelationIdGenerator
-{
-    /// <inheritdoc />
-    public string GenerateId()
-    {
-        return Guid.NewGuid().ToString("D");
     }
 }

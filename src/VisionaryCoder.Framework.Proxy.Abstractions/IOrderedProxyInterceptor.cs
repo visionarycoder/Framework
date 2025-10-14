@@ -1,7 +1,7 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-namespace VisionaryCoder.Framework.Proxy.Abstractions.Interceptors;
+namespace VisionaryCoder.Framework.Proxy.Abstractions;
 
 /// <summary>
 /// Defines a contract for ordered proxy interceptors.

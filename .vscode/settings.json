@@ -98,5 +98,6 @@
         "eval": true,
         "Invoke-Expression": true,
         "iex": true
-    }
+    },
+    "sarif-viewer.connectToGithubCodeScanning": "off"
 }

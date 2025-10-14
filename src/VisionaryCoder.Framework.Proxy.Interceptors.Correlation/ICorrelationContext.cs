@@ -19,15 +19,3 @@ public interface ICorrelationContext
     /// <param name="correlationId">The correlation ID to set.</param>
     void SetCorrelationId(string correlationId);
 }
-
-/// <summary>
-/// Defines a contract for generating correlation IDs.
-/// </summary>
-public interface ICorrelationIdGenerator
-{
-    /// <summary>
-    /// Generates a new correlation ID.
-    /// </summary>
-    /// <returns>A new correlation ID.</returns>
-    string GenerateId();
-}

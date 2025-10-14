@@ -6,16 +6,12 @@ namespace VisionaryCoder.Framework.Azure.KeyVault;
 /// <summary>
 /// Local implementation of ISecretProvider for development scenarios.
 /// </summary>
-public sealed class LocalSecretProvider : ISecretProvider
+/// <param name="configuration">The configuration instance.</param>
+/// <param name="options">The KeyVault options.</param>
+public sealed class LocalSecretProvider(IConfiguration configuration, KeyVaultOptions options) : ISecretProvider
 {
-    private readonly IConfiguration _configuration;
-    private readonly KeyVaultOptions _options;
-
-    public LocalSecretProvider(IConfiguration configuration, KeyVaultOptions options)
-    {
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        _options = options ?? throw new ArgumentNullException(nameof(options));
-    }
+    private readonly IConfiguration configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    private readonly KeyVaultOptions options = options ?? throw new ArgumentNullException(nameof(options));
 
     /// <summary>
     /// Retrieves a secret from local configuration sources.
@@ -29,9 +25,9 @@ public sealed class LocalSecretProvider : ISecretProvider
         }
 
         // Try configuration with prefix first
-        var prefixedKey = $"{_options.LocalSecretsPrefix}:{name}";
-        var value = _configuration[prefixedKey] 
-                   ?? _configuration[name] 
+        var prefixedKey = $"{options.LocalSecretsPrefix}:{name}";
+        var value = configuration[prefixedKey] 
+                   ?? configuration[name] 
                    ?? Environment.GetEnvironmentVariable(name);
 
         return Task.FromResult(value);

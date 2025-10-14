@@ -9,41 +9,32 @@ namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
 /// <summary>
 /// Helper class for enriching proxy context with JWT Bearer authentication.
 /// </summary>
-public sealed class JwtBearerEnricher : IProxySecurityEnricher
+/// <param name="logger">The logger instance.</param>
+/// <param name="tokenProvider">Function to provide JWT tokens.</param>
+public class JwtBearerEnricher(ILogger<JwtBearerEnricher> logger, Func<Task<string?>> tokenProvider) : IProxySecurityEnricher
 {
-    private readonly ILogger<JwtBearerEnricher> _logger;
-    private readonly Func<Task<string?>> _tokenProvider;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="JwtBearerEnricher"/> class.
-    /// </summary>
-    /// <param name="logger">The logger instance.</param>
-    /// <param name="tokenProvider">Function that provides the JWT token.</param>
-    public JwtBearerEnricher(ILogger<JwtBearerEnricher> logger, Func<Task<string?>> tokenProvider)
-    {
-        _logger = logger;
-        _tokenProvider = tokenProvider;
-    }
+    private readonly ILogger<JwtBearerEnricher> logger = logger;
+    private readonly Func<Task<string?>> tokenProvider = tokenProvider;
 
     /// <inheritdoc />
     public async Task EnrichAsync(ProxyContext context, CancellationToken cancellationToken = default)
     {
         try
         {
-            var token = await _tokenProvider();
-            if (!string.IsNullOrEmpty(token))
+            var token = await tokenProvider();
+            if (!string.IsNullOrWhiteSpace(token))
             {
-                context.Items["Authorization"] = $"Bearer {token}";
-                _logger.LogDebug("JWT Bearer token added to context");
+                context.Headers["Authorization"] = $"Bearer {token}";
+                logger.LogDebug("JWT Bearer token added to context");
             }
             else
             {
-                _logger.LogWarning("JWT token provider returned null or empty token");
+                logger.LogWarning("JWT token provider returned null or empty token");
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to retrieve JWT token");
+            logger.LogError(ex, "Failed to retrieve JWT token");
             throw;
         }
     }

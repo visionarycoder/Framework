@@ -3,59 +3,22 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Proxy.Abstractions.Interceptors;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Auditing;
-
-/// <summary>
-/// Represents an audit record for proxy operations.
-/// </summary>
-public sealed record AuditRecord(
-    string CorrelationId,
-    string Operation,
-    string RequestType,
-    DateTime Timestamp,
-    bool Success,
-    string? Error = null,
-    TimeSpan? Duration = null,
-    Dictionary<string, object?>? Metadata = null);
-
-/// <summary>
-/// Defines a contract for audit sinks that receive audit records.
-/// </summary>
-public interface IAuditSink
-{
-    /// <summary>
-    /// Emits an audit record to the sink.
-    /// </summary>
-    /// <param name="auditRecord">The audit record to emit.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task EmitAsync(AuditRecord auditRecord, CancellationToken cancellationToken = default);
-}
 
 /// <summary>
 /// Auditing interceptor that emits audit records for proxy operations.
 /// Order: 300 (executes last in the pipeline).
 /// </summary>
-public sealed class AuditingInterceptor : IOrderedProxyInterceptor
+/// <param name="logger">The logger instance.</param>
+/// <param name="auditSinks">The audit sinks.</param>
+public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEnumerable<IAuditSink> auditSinks) : IOrderedProxyInterceptor
 {
-    private readonly ILogger<AuditingInterceptor> logger;
-    private readonly IEnumerable<IAuditSink> auditSinks;
+    private readonly ILogger<AuditingInterceptor> logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly IEnumerable<IAuditSink> auditSinks = auditSinks ?? throw new ArgumentNullException(nameof(auditSinks));
 
     /// <inheritdoc />
     public int Order => 300;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AuditingInterceptor"/> class.
-    /// </summary>
-    /// <param name="logger">The logger instance.</param>
-    /// <param name="auditSinks">The audit sinks.</param>
-    public AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEnumerable<IAuditSink> auditSinks)
-    {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.auditSinks = auditSinks ?? throw new ArgumentNullException(nameof(auditSinks));
-    }
 
     /// <inheritdoc />
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
@@ -166,29 +129,5 @@ public sealed class AuditingInterceptor : IOrderedProxyInterceptor
         var sensitiveKeys = new[] { "Authorization", "Password", "Secret", "Token", "Key" };
         return sensitiveKeys.Any(sensitive => 
             key.Contains(sensitive, StringComparison.OrdinalIgnoreCase));
-    }
-}
-
-/// <summary>
-/// Default audit sink that logs audit records.
-/// </summary>
-public sealed class LoggingAuditSink : IAuditSink
-{
-    private readonly ILogger<LoggingAuditSink> logger;
-
-    public LoggingAuditSink(ILogger<LoggingAuditSink> logger)
-    {
-        logger = logger;
-    }
-
-    public Task EmitAsync(AuditRecord auditRecord, CancellationToken cancellationToken = default)
-    {
-        logger.LogInformation("Audit: {Operation} | Success: {Success} | Duration: {Duration}ms | CorrelationId: {CorrelationId}",
-            auditRecord.Operation,
-            auditRecord.Success,
-            auditRecord.Duration?.TotalMilliseconds ?? 0,
-            auditRecord.CorrelationId);
-
-        return Task.CompletedTask;
     }
 }

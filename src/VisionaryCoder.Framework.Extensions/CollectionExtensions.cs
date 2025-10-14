@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Extensions.Collections;
+namespace VisionaryCoder.Framework.Extensions;
 
 public static class CollectionExtensions
 {

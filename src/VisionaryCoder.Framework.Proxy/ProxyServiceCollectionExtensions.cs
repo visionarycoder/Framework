@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Text.Json;
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy;
@@ -55,59 +54,5 @@ public static class ProxyServiceCollectionExtensions
         services.TryAdd(ServiceDescriptor.Describe(typeof(TInterceptor), typeof(TInterceptor), lifetime));
         services.TryAddEnumerable(ServiceDescriptor.Describe(typeof(IProxyInterceptor), typeof(TInterceptor), lifetime));
         return services;
-    }
-}
-
-/// <summary>
-/// Example HTTP transport implementation.
-/// </summary>
-public class HttpProxyTransport : IProxyTransport
-{
-    private readonly HttpClient _httpClient;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HttpProxyTransport"/> class.
-    /// </summary>
-    /// <param name="httpClient">The HTTP client to use for requests.</param>
-    public HttpProxyTransport(HttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
-
-    /// <summary>
-    /// Sends an HTTP request and returns a typed response.
-    /// </summary>
-    /// <typeparam name="T">The expected response type.</typeparam>
-    /// <param name="context">The proxy context.</param>
-    /// <returns>A task representing the HTTP response.</returns>
-    public async Task<Response<T>> SendCoreAsync<T>(ProxyContext context)
-    {
-        try
-        {
-            var request = new HttpRequestMessage(new HttpMethod(context.Method), context.Url);
-            
-            // Add headers from context
-            foreach (var header in context.Headers)
-            {
-                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
-            }
-
-            var response = await _httpClient.SendAsync(request);
-            var content = await response.Content.ReadAsStringAsync();
-            
-            if (response.IsSuccessStatusCode)
-            {
-                var data = JsonSerializer.Deserialize<T>(content);
-                return Response<T>.Success(data!, (int)response.StatusCode);
-            }
-            else
-            {
-                return Response<T>.Failure($"HTTP {response.StatusCode}: {content}");
-            }
-        }
-        catch (Exception ex)
-        {
-            return Response<T>.Failure($"Transport error: {ex.Message}");
-        }
     }
 }

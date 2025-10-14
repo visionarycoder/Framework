@@ -11,10 +11,10 @@ namespace VisionaryCoder.Framework.Azure.KeyVault;
 /// </summary>
 public sealed class KeyVaultSecretProvider : ISecretProvider
 {
-    private readonly SecretClient _client;
-    private readonly IMemoryCache _cache;
-    private readonly ILogger<KeyVaultSecretProvider> _logger;
-    private readonly KeyVaultOptions _options;
+    private readonly SecretClient client;
+    private readonly IMemoryCache cache;
+    private readonly ILogger<KeyVaultSecretProvider> logger;
+    private readonly KeyVaultOptions options;
 
     public KeyVaultSecretProvider(
         SecretClient client,
@@ -22,10 +22,10 @@ public sealed class KeyVaultSecretProvider : ISecretProvider
         IMemoryCache cache,
         ILogger<KeyVaultSecretProvider> logger)
     {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _options = options.Value ?? throw new ArgumentNullException(nameof(options));
+        this.client = client ?? throw new ArgumentNullException(nameof(client));
+        this.cache = cache ?? throw new ArgumentNullException(nameof(cache));
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.options = options.Value ?? throw new ArgumentNullException(nameof(options));
     }
 
     /// <summary>
@@ -41,35 +41,35 @@ public sealed class KeyVaultSecretProvider : ISecretProvider
         var cacheKey = $"secret:{name}";
 
         // Try cache first
-        if (_cache.TryGetValue(cacheKey, out string? cachedValue))
+        if (cache.TryGetValue(cacheKey, out string? cachedValue))
         {
-            _logger.LogDebug("Secret '{SecretName}' retrieved from cache", name);
+            logger.LogDebug("Secret '{SecretName}' retrieved from cache", name);
             return cachedValue;
         }
 
         try
         {
-            _logger.LogDebug("Retrieving secret '{SecretName}' from Key Vault", name);
+            logger.LogDebug("Retrieving secret '{SecretName}' from Key Vault", name);
             
-            var response = await _client.GetSecretAsync(name, cancellationToken: cancellationToken);
+            var response = await client.GetSecretAsync(name, cancellationToken: cancellationToken);
             var value = response.Value?.Value;
 
             if (!string.IsNullOrEmpty(value))
             {
                 // Cache the secret with configured TTL
-                _cache.Set(cacheKey, value, _options.CacheTtl);
-                _logger.LogDebug("Secret '{SecretName}' cached for {CacheTtl}", name, _options.CacheTtl);
+                cache.Set(cacheKey, value, options.CacheTtl);
+                logger.LogDebug("Secret '{SecretName}' cached for {CacheTtl}", name, options.CacheTtl);
             }
             else
             {
-                _logger.LogWarning("Secret '{SecretName}' returned empty value from Key Vault", name);
+                logger.LogWarning("Secret '{SecretName}' returned empty value from Key Vault", name);
             }
 
             return value;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to retrieve secret '{SecretName}' from Key Vault", name);
+            logger.LogError(ex, "Failed to retrieve secret '{SecretName}' from Key Vault", name);
             
             // Don't cache failures, but don't rethrow to allow fallback behavior
             return null;
@@ -88,7 +88,7 @@ public sealed class KeyVaultSecretProvider : ISecretProvider
             return new Dictionary<string, string?>();
         }
 
-        _logger.LogDebug("Retrieving {SecretCount} secrets from Key Vault", secretNames.Count);
+        logger.LogDebug("Retrieving {SecretCount} secrets from Key Vault", secretNames.Count);
 
         var tasks = secretNames.Select(async name =>
         {

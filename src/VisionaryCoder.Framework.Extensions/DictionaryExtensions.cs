@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Reflection;
 
-namespace VisionaryCoder.Framework.Extensions.Collections;
+namespace VisionaryCoder.Framework.Extensions;
 
 public static class DictionaryExtensions
 {

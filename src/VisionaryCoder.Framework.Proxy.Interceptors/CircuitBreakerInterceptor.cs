@@ -3,22 +3,8 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors;
-
-/// <summary>
-/// Circuit breaker state enumeration.
-/// </summary>
-public enum CircuitBreakerState
-{
-    /// <summary>Circuit is closed - operations are allowed.</summary>
-    Closed,
-    /// <summary>Circuit is open - operations are blocked.</summary>
-    Open,
-    /// <summary>Circuit is half-open - testing if operations can resume.</summary>
-    HalfOpen
-}
 
 /// <summary>
 /// Interceptor that implements the circuit breaker pattern to prevent cascading failures.

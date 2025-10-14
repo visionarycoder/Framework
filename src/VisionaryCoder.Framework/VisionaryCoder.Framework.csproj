@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageId>VisionaryCoder.Framework</PackageId>
+		<Title>VisionaryCoder Framework - Core Library</Title>
+		<Description>Core framework library providing foundational features and utilities for the VisionaryCoder framework following Microsoft best practices.</Description>
+		<Authors>VisionaryCoder</Authors>
+		<Company>VisionaryCoder</Company>
+		<Product>VisionaryCoder Framework</Product>
+		<PackageTags>framework;core;library;microsoft;patterns</PackageTags>
+		<RepositoryUrl>https://github.com/visionarycoder/vc</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\VisionaryCoder.Framework.Abstractions\VisionaryCoder.Framework.Abstractions.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.Options" />
+	</ItemGroup>
+
+</Project>

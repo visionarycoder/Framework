@@ -1,27 +1,17 @@
 using System.Reflection;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Proxy.Abstractions.Interceptors;
 
 namespace VisionaryCoder.Framework.Proxy;
 
 /// <summary>
 /// Default implementation of the proxy pipeline that executes interceptors in order.
 /// </summary>
-public sealed class DefaultProxyPipeline : IProxyPipeline
+/// <param name="interceptors">The collection of interceptors to execute.</param>
+/// <param name="transport">The transport implementation for sending requests.</param>
+public sealed class DefaultProxyPipeline(IEnumerable<IProxyInterceptor> interceptors, IProxyTransport transport) : IProxyPipeline
 {
-    private readonly IReadOnlyList<IProxyInterceptor> _orderedInterceptors;
-    private readonly IProxyTransport _transport;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DefaultProxyPipeline"/> class.
-    /// </summary>
-    /// <param name="interceptors">The collection of interceptors to execute.</param>
-    /// <param name="transport">The transport implementation for sending requests.</param>
-    public DefaultProxyPipeline(IEnumerable<IProxyInterceptor> interceptors, IProxyTransport transport)
-    {
-        _orderedInterceptors = Order(interceptors);
-        _transport = transport ?? throw new ArgumentNullException(nameof(transport));
-    }
+    private readonly IReadOnlyList<IProxyInterceptor> orderedInterceptors = Order(interceptors);
+    private readonly IProxyTransport transport = transport ?? throw new ArgumentNullException(nameof(transport));
 
     /// <summary>
     /// Sends a request through the pipeline and returns a response.
@@ -35,10 +25,10 @@ public sealed class DefaultProxyPipeline : IProxyPipeline
             throw new ArgumentNullException(nameof(context));
 
         // Build the pipeline by wrapping interceptors around the transport
-        ProxyDelegate<T> terminal = _ => _transport.SendCoreAsync<T>(context);
+        ProxyDelegate<T> terminal = _ => transport.SendCoreAsync<T>(context);
 
         // Wrap each interceptor around the previous delegate (reverse order for proper execution)
-        foreach (var interceptor in _orderedInterceptors.Reverse())
+        foreach (var interceptor in orderedInterceptors.Reverse())
         {
             var next = terminal;
             terminal = ctx => interceptor.InvokeAsync<T>(ctx, next);

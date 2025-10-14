@@ -2,9 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Resilience;
 using Polly;
-using Polly.Extensions;
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Resilience;
@@ -42,35 +40,26 @@ public sealed class ResilienceInterceptor : IProxyInterceptor
     /// <returns>A task representing the asynchronous operation with the response.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
     {
+
         var operationName = context.OperationName ?? "Unknown";
-        var correlationId = context.CorrelationId ?? "None";
+        var correlationId = context.CorrelationId ?? "Undefined";
 
         try
         {
-            logger.LogDebug("Applying resilience pipeline for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
-                operationName, correlationId);
+            logger.LogDebug("Applying resilience pipeline for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", operationName, correlationId);
 
-            var response = await resiliencePipeline.ExecuteAsync(async (ct) =>
-            {
-                return await next();
-            });
-
+            var response = await resiliencePipeline.ExecuteAsync(async (ct) => await next(context));
             context.Metadata["ResilienceApplied"] = "true";
-            
-            logger.LogDebug("Resilience pipeline completed successfully for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
-                operationName, correlationId);
-
+            logger.LogDebug("Resilience pipeline completed successfully for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", operationName, correlationId);
             return response;
         }
         catch (Exception ex)
         {
             context.Metadata["ResilienceException"] = ex.GetType().Name;
-            
-            logger.LogError(ex, "Resilience pipeline failed for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
-                operationName, correlationId);
-
+            logger.LogError(ex, "Resilience pipeline failed for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", operationName, correlationId);
             throw;
         }
+
     }
 
     /// <summary>

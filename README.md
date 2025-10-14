@@ -31,10 +31,12 @@ dotnet test VisionaryCoder.Framework.sln --configuration Release
 The VisionaryCoder Framework includes the following components:
 
 ### Core Libraries
+
 - **VisionaryCoder.Framework.Core** - Base entity classes and core abstractions
 - **VisionaryCoder.Framework.Abstractions** - Core interfaces and contracts
 
 ### Extensions
+
 - **VisionaryCoder.Framework.Extensions** - General utility extensions
 - **VisionaryCoder.Framework.Extensions.Configuration** - Configuration helpers and providers
 - **VisionaryCoder.Framework.Extensions.Logging** - Enhanced logging capabilities
@@ -43,11 +45,13 @@ The VisionaryCoder Framework includes the following components:
 - **VisionaryCoder.Framework.Extensions.Security** - Security utilities and helpers
 
 ### Platform-Specific Extensions
+
 - **VisionaryCoder.Framework.Extensions.Primitives** - Primitive type extensions
 - **VisionaryCoder.Framework.Extensions.Primitives.AspNetCore** - ASP.NET Core integration
 - **VisionaryCoder.Framework.Extensions.Primitives.EFCore** - Entity Framework Core integration
 
 ### Proxy & Service Architecture
+
 - **VisionaryCoder.Framework.Proxy** - Proxy pattern implementations
 - **VisionaryCoder.Framework.Proxy.Abstractions** - Proxy abstractions and contracts
 - **VisionaryCoder.Framework.Proxy.Caching** - Caching proxy implementations
@@ -55,11 +59,13 @@ The VisionaryCoder Framework includes the following components:
 - **VisionaryCoder.Framework.Proxy.Interceptors** - Method interception capabilities
 
 ### Data Access
+
 - **VisionaryCoder.Framework.Data.Abstractions** - Data access abstractions
 - **VisionaryCoder.Framework.Services.Abstractions** - Service layer abstractions
 - **VisionaryCoder.Framework.Services.FileSystem** - File system services
 
 ### Examples
+
 - **VisionaryCoder.Framework.Example** - Usage examples and demonstrations
 
 ---
