@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+    <RootNamespace>VisionaryCoder.Framework.Extensions.Primitives.EFCore</RootNamespace>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\VisionaryCoder.Framework.Extensions.Primitives\VisionaryCoder.Framework.Extensions.Primitives.csproj" />
+	</ItemGroup>
+
+</Project>

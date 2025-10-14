@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>VisionaryCoder.Framework.Proxy.Interceptors.Logging.Abstractions</RootNamespace>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Abstractions\VisionaryCoder.Framework.Proxy.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

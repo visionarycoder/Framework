@@ -1,0 +1,53 @@
+namespace VisionaryCoder.Framework.Secrets.Abstractions;
+
+/// <summary>
+/// Defines the contract for secret retrieval from various sources.
+/// </summary>
+public interface ISecretProvider
+{
+    /// <summary>
+    /// Retrieves a secret by its name.
+    /// </summary>
+    /// <param name="name">The name of the secret to retrieve.</param>
+    /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
+    /// <returns>The secret value, or null if not found.</returns>
+    Task<string?> GetAsync(string name, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves multiple secrets by their names.
+    /// </summary>
+    /// <param name="names">The names of the secrets to retrieve.</param>
+    /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
+    /// <returns>A dictionary of secret names and their values.</returns>
+    async Task<IDictionary<string, string?>> GetMultipleAsync(IEnumerable<string> names, CancellationToken cancellationToken = default)
+    {
+        var results = new Dictionary<string, string?>();
+        
+        foreach (var name in names)
+        {
+            var value = await GetAsync(name, cancellationToken);
+            results[name] = value;
+        }
+        
+        return results;
+    }
+}
+
+/// <summary>
+/// A null implementation of ISecretProvider that returns null for all requests.
+/// </summary>
+public sealed class NullSecretProvider : ISecretProvider
+{
+    /// <summary>
+    /// Gets the singleton instance of the NullSecretProvider.
+    /// </summary>
+    public static NullSecretProvider Instance { get; } = new();
+
+    private NullSecretProvider() { }
+
+    /// <summary>
+    /// Always returns null.
+    /// </summary>
+    public Task<string?> GetAsync(string name, CancellationToken cancellationToken = default) 
+        => Task.FromResult<string?>(null);
+}

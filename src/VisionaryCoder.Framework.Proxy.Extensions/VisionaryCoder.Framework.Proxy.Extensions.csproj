@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>VisionaryCoder.Framework.Proxy.Extensions</RootNamespace>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Abstractions\VisionaryCoder.Framework.Proxy.Abstractions.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Security\VisionaryCoder.Framework.Proxy.Interceptors.Security.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Telemetry\VisionaryCoder.Framework.Proxy.Interceptors.Telemetry.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Correlation\VisionaryCoder.Framework.Proxy.Interceptors.Correlation.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Logging\VisionaryCoder.Framework.Proxy.Interceptors.Logging.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Caching\VisionaryCoder.Framework.Proxy.Interceptors.Caching.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Resilience\VisionaryCoder.Framework.Proxy.Interceptors.Resilience.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Retry\VisionaryCoder.Framework.Proxy.Interceptors.Retry.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Auditing\VisionaryCoder.Framework.Proxy.Interceptors.Auditing.csproj" />
+  </ItemGroup>
+
+</Project>

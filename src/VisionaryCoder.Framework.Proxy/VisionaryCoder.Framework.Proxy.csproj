@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>VisionaryCoder.Framework.Proxy</RootNamespace>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Abstractions\VisionaryCoder.Framework.Proxy.Abstractions.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Caching\VisionaryCoder.Framework.Proxy.Interceptors.Caching.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Logging\VisionaryCoder.Framework.Proxy.Interceptors.Logging.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Security\VisionaryCoder.Framework.Proxy.Interceptors.Security.csproj" />
+  </ItemGroup>
+</Project>

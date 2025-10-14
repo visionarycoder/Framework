@@ -1,6 +1,11 @@
 <Project>
   <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
-  <Target Name="CustomAfterBuildTarget" AfterTargets="Build">
-      <Message Text="Hello from CustomAfterBuildTarget" Importance="high" />
+  <Target Name="CopyNuGetPackages" AfterTargets="Pack">
+    <ItemGroup>
+      <GeneratedPackages Include="$(OutputPath)\*.nupkg" />
+      <GeneratedSymbols Include="$(OutputPath)\*.snupkg" />
+    </ItemGroup>
+    <Copy SourceFiles="@(GeneratedPackages)" DestinationFolder="$(MSBuildProjectDirectory)\.nupkgs\" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(GeneratedSymbols)" DestinationFolder="$(MSBuildProjectDirectory)\.nupkgs\" SkipUnchangedFiles="true" />
   </Target>
 </Project>
