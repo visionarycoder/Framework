@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using VisionaryCoder.Framework.Secrets.Abstractions;
 
 namespace VisionaryCoder.Framework.Extensions.Configuration;
 
