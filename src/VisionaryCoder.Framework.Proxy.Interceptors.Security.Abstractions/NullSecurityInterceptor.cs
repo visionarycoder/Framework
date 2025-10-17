@@ -14,9 +14,9 @@ public sealed class NullSecurityInterceptor : IOrderedProxyInterceptor
     public int Order => -200;
 
     /// <inheritdoc />
-    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         // Pass through without any security processing
-        return next();
+        return next(context, cancellationToken);
     }
 }

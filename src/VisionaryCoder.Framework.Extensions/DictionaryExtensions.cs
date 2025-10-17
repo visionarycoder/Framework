@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace VisionaryCoder.Framework.Extensions;
@@ -263,7 +264,7 @@ public static class DictionaryExtensions
     /// <param name="key">The key to remove</param>
     /// <param name="value">The value associated with the key if found, default otherwise</param>
     /// <returns>True if the key was found and removed; otherwise, false</returns>
-    public static bool TryRemove<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, out TValue value)
+    public static bool TryRemove<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, [MaybeNullWhen(false)] out TValue value)
     {
         ArgumentNullException.ThrowIfNull(dictionary, nameof(dictionary));
 

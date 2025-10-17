@@ -18,23 +18,24 @@ public sealed class DefaultProxyPipeline(IEnumerable<IProxyInterceptor> intercep
     /// </summary>
     /// <typeparam name="T">The type of the response data.</typeparam>
     /// <param name="context">The proxy context containing request information.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation with the response.</returns>
-    public Task<Response<T>> SendAsync<T>(ProxyContext context)
+    public Task<Response<T>> SendAsync<T>(ProxyContext context, CancellationToken cancellationToken = default)
     {
         if (context is null)
             throw new ArgumentNullException(nameof(context));
 
         // Build the pipeline by wrapping interceptors around the transport
-        ProxyDelegate<T> terminal = _ => transport.SendCoreAsync<T>(context);
+        ProxyDelegate<T> terminal = (_, ct) => transport.SendCoreAsync<T>(context, ct);
 
         // Wrap each interceptor around the previous delegate (reverse order for proper execution)
         foreach (var interceptor in orderedInterceptors.Reverse())
         {
             var next = terminal;
-            terminal = ctx => interceptor.InvokeAsync<T>(ctx, next);
+            terminal = (ctx, ct) => interceptor.InvokeAsync<T>(ctx, next, ct);
         }
 
-        return terminal(context);
+        return terminal(context, cancellationToken);
     }
 
     /// <summary>

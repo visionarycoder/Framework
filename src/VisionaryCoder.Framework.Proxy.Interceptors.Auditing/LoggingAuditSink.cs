@@ -11,9 +11,10 @@ public sealed class LoggingAuditSink(ILogger<LoggingAuditSink> logger) : IAuditS
 {
     private readonly ILogger<LoggingAuditSink> logger = logger;
 
-    public Task EmitAsync(AuditRecord auditRecord, CancellationToken cancellationToken = default)
+    public Task WriteAsync(AuditRecord auditRecord, CancellationToken cancellationToken = default)
     {
-        logger.LogInformation("Audit: {Operation} | Success: {Success} | Duration: {Duration}ms | CorrelationId: {CorrelationId}", auditRecord.Operation, auditRecord.Success, auditRecord.Duration?.TotalMilliseconds ?? 0, auditRecord.CorrelationId);
+        logger.LogInformation("Audit: {OperationName} | Result: {Result} | Timestamp: {Timestamp} | CorrelationId: {CorrelationId}", 
+            auditRecord.OperationName, auditRecord.Result, auditRecord.Timestamp, auditRecord.CorrelationId);
 
         return Task.CompletedTask;
     }

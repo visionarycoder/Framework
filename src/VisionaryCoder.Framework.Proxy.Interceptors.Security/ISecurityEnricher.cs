@@ -11,8 +11,9 @@ public interface ISecurityEnricher
     /// Enriches the proxy context with security-related information.
     /// </summary>
     /// <param name="context">The proxy context to enrich.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous enrichment operation.</returns>
-    Task EnrichAsync(ProxyContext context);
+    Task EnrichAsync(ProxyContext context, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets the order of execution for this enricher.

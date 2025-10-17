@@ -38,8 +38,9 @@ public sealed class CachingInterceptor : IProxyInterceptor
     /// <typeparam name="T">The type of the response data.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation with the response.</returns>
-    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         var operationName = context.OperationName ?? "Unknown";
         var correlationId = context.CorrelationId ?? "None";
@@ -50,7 +51,7 @@ public sealed class CachingInterceptor : IProxyInterceptor
         {
             logger.LogDebug("Caching disabled for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
                 operationName, correlationId);
-            return await next(context);
+            return await next(context, cancellationToken);
         }
 
         // Generate cache key
@@ -71,7 +72,7 @@ public sealed class CachingInterceptor : IProxyInterceptor
             operationName, cacheKey, correlationId);
 
         // If cache miss, call next delegate to get the result
-        var response = await next(context);
+        var response = await next(context, cancellationToken);
         
         // Cache successful responses only
         if (response.IsSuccess)

@@ -8,5 +8,6 @@ namespace VisionaryCoder.Framework.Proxy.Abstractions;
 /// </summary>
 /// <typeparam name="T">The type of the response data.</typeparam>
 /// <param name="context">The proxy context.</param>
+/// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
 /// <returns>A task representing the asynchronous operation with the response.</returns>
-public delegate Task<Response<T>> ProxyDelegate<T>(ProxyContext context);
+public delegate Task<Response<T>> ProxyDelegate<T>(ProxyContext context, CancellationToken cancellationToken = default);

@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Proxy.Abstractions.Interceptors;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Telemetry.Abstractions;
 
@@ -15,9 +14,9 @@ public sealed class NullTelemetryInterceptor : IOrderedProxyInterceptor
     public int Order => -50;
 
     /// <inheritdoc />
-    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         // Pass through without any telemetry processing
-        return next();
+        return next(context, cancellationToken);
     }
 }

@@ -9,12 +9,14 @@ The `VisionaryCoder.Framework` project serves as the foundational library for th
 ## Features
 
 ### Core Services
+
 - **Framework Information Provider**: Provides metadata about the framework version, compilation time, and description
 - **Correlation ID Provider**: Manages correlation IDs for distributed request tracking
 - **Request ID Provider**: Manages request IDs for individual request tracking
 - **Result Wrapper**: Consistent success/failure handling with `FrameworkResult<T>` and `FrameworkResult`
 
 ### Configuration
+
 - **Service Collection Extensions**: Easy registration of framework services via dependency injection
 - **Framework Options**: Configurable settings for framework behavior
 - **Framework Constants**: Centralized constants for timeouts, headers, and logging
@@ -22,14 +24,18 @@ The `VisionaryCoder.Framework` project serves as the foundational library for th
 ### Key Components
 
 #### FrameworkConstants
+
 Provides framework-wide constants including:
+
 - Version information
 - Default timeout values
 - Common HTTP headers
 - Logging configuration
 
 #### ServiceCollectionExtensions
+
 Extension methods for easy framework integration:
+
 ```csharp
 services.AddVisionaryCoderFramework();
 services.AddVisionaryCoderFramework(options => 
@@ -40,7 +46,9 @@ services.AddVisionaryCoderFramework(options =>
 ```
 
 #### FrameworkResult<T>
+
 Consistent result wrapper for operations:
+
 ```csharp
 var result = FrameworkResult<string>.Success("Hello World");
 result.Match(

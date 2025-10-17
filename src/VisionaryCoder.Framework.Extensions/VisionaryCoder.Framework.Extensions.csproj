@@ -5,6 +5,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>VisionaryCoder.Framework.Extensions</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>VisionaryCoder.Framework.Extensions</PackageId>
+    <Title>VisionaryCoder Framework - Common Extensions</Title>
+    <Description>Extension methods and utilities for the VisionaryCoder framework following Microsoft best practices.</Description>
+    <Authors>VisionaryCoder</Authors>
+    <Company>VisionaryCoder</Company>
+    <Product>VisionaryCoder Framework</Product>
+    <PackageTags>framework;extensions;utilities;microsoft;patterns</PackageTags>
+    <RepositoryUrl>https://github.com/visionarycoder/vc</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>

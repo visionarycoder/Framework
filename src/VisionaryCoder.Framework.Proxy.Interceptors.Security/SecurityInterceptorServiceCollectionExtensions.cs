@@ -18,7 +18,7 @@ public static class SecurityInterceptorServiceCollectionExtensions
     /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddJwtBearerInterceptor(
         this IServiceCollection services,
-        Func<Task<string?>> tokenProvider)
+        Func<CancellationToken, Task<string?>> tokenProvider)
     {
         services.AddSingleton<IProxyInterceptor>(provider =>
         {
@@ -44,9 +44,9 @@ public static class SecurityInterceptorServiceCollectionExtensions
             var logger = provider.GetRequiredService<ILogger<JwtBearerInterceptor>>();
             var secretProvider = provider.GetRequiredService<ISecretProvider>();
 
-            Func<Task<string?>> tokenProvider = async () =>
+            Func<CancellationToken, Task<string?>> tokenProvider = async (cancellationToken) =>
             {
-                return await secretProvider.GetAsync(secretName);
+                return await secretProvider.GetAsync(secretName, cancellationToken);
             };
 
             return new JwtBearerInterceptor(logger, tokenProvider);
@@ -65,6 +65,6 @@ public static class SecurityInterceptorServiceCollectionExtensions
         this IServiceCollection services,
         string staticToken)
     {
-        return services.AddJwtBearerInterceptor(() => Task.FromResult<string?>(staticToken));
+        return services.AddJwtBearerInterceptor((cancellationToken) => Task.FromResult<string?>(staticToken));
     }
 }

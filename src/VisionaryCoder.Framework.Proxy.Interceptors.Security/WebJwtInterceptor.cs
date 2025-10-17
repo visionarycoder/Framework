@@ -35,8 +35,9 @@ public class WebJwtInterceptor : IProxyInterceptor
     /// <typeparam name="T">The response type.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -70,6 +71,6 @@ public class WebJwtInterceptor : IProxyInterceptor
             logger.LogError(ex, "Failed to retrieve web JWT token for audience: {Audience}", options.Audience);
         }
 
-        return await next(context);
+        return await next(context, cancellationToken);
     }
 }

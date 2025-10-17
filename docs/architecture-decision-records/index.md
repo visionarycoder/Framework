@@ -11,6 +11,8 @@ ADRs are **immutable**: once accepted, they remain as historical records. If a d
 | ADR ID     | Title                                                   | Status    | Date       | Supersedes |
 |------------|---------------------------------------------------------|-----------|------------|-------------|
 | ADR-0001   | Establish Solution Architect Radar and Best Practice Capsules | Accepted  | 2025-10-04 | –           |
+| ADR-0002   | Adopt GitOps for CI/CD                                | Accepted  | 2025-10-04 | –           |
+| ADR-0003   | XML Documentation Generation and Unit Testing Strategy | Accepted  | 2025-10-16 | –           |
 
 ---
 

@@ -38,7 +38,8 @@ public sealed class SecurityInterceptor : IOrderedProxyInterceptor
     /// <inheritdoc />
     public async Task<Response<T>> InvokeAsync<T>(
         ProxyContext context,
-        ProxyDelegate<T> next)
+        ProxyDelegate<T> next,
+        CancellationToken cancellationToken = default)
     {
         using var _ = logger.BeginScope("SecurityInterceptor for {RequestType}", context.Request?.GetType().Name ?? "Unknown");
         
@@ -47,13 +48,13 @@ public sealed class SecurityInterceptor : IOrderedProxyInterceptor
             // Enrich security context
             foreach (var enricher in enrichers)
             {
-                await enricher.EnrichAsync(context, CancellationToken.None);
+                await enricher.EnrichAsync(context, cancellationToken);
             }
 
             // Check authorization policies
             foreach (var policy in policies)
             {
-                if (!await policy.IsAuthorizedAsync(context, CancellationToken.None))
+                if (!await policy.IsAuthorizedAsync(context, cancellationToken))
                 {
                     logger.LogWarning("Authorization failed for policy {PolicyType}", policy.GetType().Name);
                     return Response<T>.Failure(new NonRetryableTransportException("Authorization failed"));
@@ -61,7 +62,7 @@ public sealed class SecurityInterceptor : IOrderedProxyInterceptor
             }
 
             logger.LogDebug("Security validation passed, proceeding to next interceptor");
-            return await next(context);
+            return await next(context, cancellationToken);
         }
         catch (Exception ex) when (ex is not ProxyException)
         {

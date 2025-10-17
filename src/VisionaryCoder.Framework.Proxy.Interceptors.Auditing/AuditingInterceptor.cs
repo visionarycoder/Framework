@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
+using AuditingAbstractions = VisionaryCoder.Framework.Proxy.Interceptors.Auditing.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Auditing;
 
@@ -12,16 +13,16 @@ namespace VisionaryCoder.Framework.Proxy.Interceptors.Auditing;
 /// </summary>
 /// <param name="logger">The logger instance.</param>
 /// <param name="auditSinks">The audit sinks.</param>
-public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEnumerable<IAuditSink> auditSinks) : IOrderedProxyInterceptor
+public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEnumerable<AuditingAbstractions.IAuditSink> auditSinks) : IOrderedProxyInterceptor
 {
     private readonly ILogger<AuditingInterceptor> logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    private readonly IEnumerable<IAuditSink> auditSinks = auditSinks ?? throw new ArgumentNullException(nameof(auditSinks));
+    private readonly IEnumerable<AuditingAbstractions.IAuditSink> auditSinks = auditSinks ?? throw new ArgumentNullException(nameof(auditSinks));
 
     /// <inheritdoc />
     public int Order => 300;
 
     /// <inheritdoc />
-    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         var requestType = context.Request?.GetType().Name ?? "Unknown";
         var correlationId = context.Items.TryGetValue("CorrelationId", out var corrId) ? 
@@ -33,24 +34,24 @@ public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEn
 
         try
         {
-            var result = await next();
+            var result = await next(context, cancellationToken);
             
             stopwatch.Stop();
             
             // Create audit record
-            var auditRecord = new AuditRecord(
+            var auditRecord = new AuditingAbstractions.AuditRecord(
                 CorrelationId: correlationId,
                 Operation: $"Proxy.{requestType}",
                 RequestType: requestType,
                 Timestamp: startTime,
                 Success: result.IsSuccess,
-                Error: result.IsSuccess ? null : result.Error,
+                Error: result.IsSuccess ? null : result.Error?.Message,
                 Duration: stopwatch.Elapsed,
                 Metadata: CreateMetadata(context, result)
             );
 
             // Emit to all audit sinks
-            await EmitAuditRecord(auditRecord);
+            await EmitAuditRecord(auditRecord, cancellationToken);
             
             return result;
         }
@@ -59,7 +60,7 @@ public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEn
             stopwatch.Stop();
             
             // Create audit record for exception
-            var auditRecord = new AuditRecord(
+            var auditRecord = new AuditingAbstractions.AuditRecord(
                 CorrelationId: correlationId,
                 Operation: $"Proxy.{requestType}",
                 RequestType: requestType,
@@ -73,7 +74,7 @@ public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEn
             // Emit to all audit sinks (best effort, don't let audit failure affect the operation)
             try
             {
-                await EmitAuditRecord(auditRecord);
+                await EmitAuditRecord(auditRecord, cancellationToken);
             }
             catch (Exception auditEx)
             {
@@ -84,13 +85,13 @@ public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEn
         }
     }
 
-    private async Task EmitAuditRecord(AuditRecord auditRecord)
+    private async Task EmitAuditRecord(AuditingAbstractions.AuditRecord auditRecord, CancellationToken cancellationToken = default)
     {
         foreach (var sink in auditSinks)
         {
             try
             {
-                await sink.EmitAsync(auditRecord, CancellationToken.None);
+                await sink.EmitAsync(auditRecord, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -99,9 +100,9 @@ public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEn
         }
     }
 
-    private static Dictionary<string, object?> CreateMetadata<T>(
+    private static Dictionary<string, object?> CreateMetadata(
         ProxyContext context, 
-        Response<T>? result = null, 
+        object? result = null, 
         Exception? exception = null)
     {
         var metadata = new Dictionary<string, object?>

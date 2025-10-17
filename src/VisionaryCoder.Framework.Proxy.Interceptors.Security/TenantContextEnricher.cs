@@ -19,10 +19,11 @@ public class TenantContextEnricher(ITenantContextProvider tenantProvider) : ISec
     /// Enriches the context with current tenant information.
     /// </summary>
     /// <param name="context">The proxy context.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the enrichment operation.</returns>
-    public async Task EnrichAsync(ProxyContext context)
+    public async Task EnrichAsync(ProxyContext context, CancellationToken cancellationToken = default)
     {
-        var tenantContext = await tenantProvider.GetCurrentTenantAsync();
+        var tenantContext = await tenantProvider.GetCurrentTenantAsync(cancellationToken);
         if (tenantContext != null)
         {
             context.Metadata["TenantId"] = tenantContext.TenantId;

@@ -37,8 +37,9 @@ public sealed class ResilienceInterceptor : IProxyInterceptor
     /// <typeparam name="T">The type of the response data.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation with the response.</returns>
-    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
 
         var operationName = context.OperationName ?? "Unknown";
@@ -48,7 +49,7 @@ public sealed class ResilienceInterceptor : IProxyInterceptor
         {
             logger.LogDebug("Applying resilience pipeline for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", operationName, correlationId);
 
-            var response = await resiliencePipeline.ExecuteAsync(async (ct) => await next(context));
+            var response = await resiliencePipeline.ExecuteAsync(async (ct) => await next(context, ct), cancellationToken);
             context.Metadata["ResilienceApplied"] = "true";
             logger.LogDebug("Resilience pipeline completed successfully for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", operationName, correlationId);
             return response;

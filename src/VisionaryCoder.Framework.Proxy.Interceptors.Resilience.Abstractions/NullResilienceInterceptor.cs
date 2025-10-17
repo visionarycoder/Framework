@@ -14,9 +14,9 @@ public sealed class NullResilienceInterceptor : IOrderedProxyInterceptor
     public int Order => 180;
 
     /// <inheritdoc />
-    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
-        // Pass through without any resilience patterns
-        return next(context);
+        // Pass through without any resilience processing
+        return next(context, cancellationToken);
     }
 }

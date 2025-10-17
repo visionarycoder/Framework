@@ -18,12 +18,18 @@
         <Copyright>Copyright © $([System.DateTime]::Now.Year)</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryBranch>main</RepositoryBranch>
 
         <!-- Source linking and debugging -->
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        
+        <!-- XML Documentation Generation -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
     </PropertyGroup>
 
     <!-- Expose internals to unit test projects -->
@@ -36,6 +42,23 @@
             <_Parameter1>$(MSBuildProjectName).UnitTests</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
+
+    <!-- Code Coverage Configuration -->
+    <PropertyGroup Condition="'$(IsTestProject)' != 'true' AND '$(IsBenchmarkProject)' != 'true'">
+        <CollectCoverage>true</CollectCoverage>
+        <CoverletOutputFormat>opencover</CoverletOutputFormat>
+        <CoverletOutput>$(OutputPath)coverage.opencover.xml</CoverletOutput>
+        <Exclude>[*]*.Tests.*,[*]*.UnitTests.*,[*]*.IntegrationTests.*,[*]*.Benchmarks.*</Exclude>
+        <ExcludeByFile>**/obj/**/*.*,**/bin/**/*.*</ExcludeByFile>
+        <IncludeTestAssembly>false</IncludeTestAssembly>
+    </PropertyGroup>
+
+    <!-- Test Project Configuration -->
+    <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
 
   <!-- <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />

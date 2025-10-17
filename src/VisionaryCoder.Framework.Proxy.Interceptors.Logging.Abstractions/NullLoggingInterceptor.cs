@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Proxy.Abstractions.Interceptors;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Logging.Abstractions;
 
@@ -15,9 +14,9 @@ public sealed class NullLoggingInterceptor : IOrderedProxyInterceptor
     public int Order => 100;
 
     /// <inheritdoc />
-    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
-        // Pass through without any logging
-        return next();
+        // Pass through without any logging processing
+        return next(context, cancellationToken);
     }
 }

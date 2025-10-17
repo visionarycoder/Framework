@@ -4,8 +4,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
-using VisionaryCoder.Framework.Proxy.Abstractions.Interceptors;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Retry;
 
@@ -34,17 +32,17 @@ public sealed class RetryInterceptor : IOrderedProxyInterceptor
     }
 
     /// <inheritdoc />
-    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         var attempt = 0;
-        var maxRetries = options.MaxRetries;
+        var maxRetries = options.MaxRetryAttempts;
         var baseDelay = options.RetryDelay;
 
         while (true)
         {
             try
             {
-                var result = await next();
+                var result = await next(context, cancellationToken);
                 
                 if (attempt > 0)
                 {

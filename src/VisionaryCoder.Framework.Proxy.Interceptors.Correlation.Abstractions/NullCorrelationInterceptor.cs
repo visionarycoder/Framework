@@ -14,9 +14,9 @@ public sealed class NullCorrelationInterceptor : IOrderedProxyInterceptor
     public int Order => 0;
 
     /// <inheritdoc />
-    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         // Pass through without any correlation processing
-        return next();
+        return next(context, cancellationToken);
     }
 }

@@ -36,8 +36,9 @@ public sealed class RateLimitingInterceptor : IProxyInterceptor
     /// <typeparam name="T">The type of the response data.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation with the response.</returns>
-    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         var operationName = context.OperationName ?? "Unknown";
         var correlationId = context.CorrelationId ?? "None";
@@ -67,7 +68,7 @@ public sealed class RateLimitingInterceptor : IProxyInterceptor
         logger.LogDebug("Rate limit check passed for key '{RateLimitKey}' on operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
             rateLimitKey, operationName, correlationId);
 
-        return await next(context);
+        return await next(context, cancellationToken);
     }
 
     private string GenerateRateLimitKey(ProxyContext context)

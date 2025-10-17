@@ -4,8 +4,6 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
-using VisionaryCoder.Framework.Proxy.Abstractions.Interceptors;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Telemetry;
 
@@ -35,7 +33,8 @@ public sealed class TelemetryInterceptor : IOrderedProxyInterceptor
     /// <inheritdoc />
     public async Task<Response<T>> InvokeAsync<T>(
         ProxyContext context,
-        ProxyDelegate<T> next)
+        ProxyDelegate<T> next,
+        CancellationToken cancellationToken = default)
     {
         var requestType = context.Request?.GetType().Name ?? "Unknown";
         var operationName = $"Proxy.{requestType}";
@@ -57,7 +56,7 @@ public sealed class TelemetryInterceptor : IOrderedProxyInterceptor
         {
             logger.LogDebug("Starting telemetry for {RequestType}", requestType);
             
-            var result = await next();
+            var result = await next(context, cancellationToken);
             
             stopwatch.Stop();
             activity?.SetTag("proxy.duration_ms", stopwatch.ElapsedMilliseconds);

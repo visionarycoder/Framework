@@ -13,6 +13,6 @@ public sealed class DefaultCorrelationContext : ICorrelationContext
     /// <inheritdoc />
     public void SetCorrelationId(string correlationId)
     {
-        correlationId.Value = correlationId;
+        DefaultCorrelationContext.correlationId.Value = correlationId;
     }
 }

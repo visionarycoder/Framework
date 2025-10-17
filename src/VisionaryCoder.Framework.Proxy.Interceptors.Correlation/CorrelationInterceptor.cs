@@ -38,7 +38,8 @@ public sealed class CorrelationInterceptor : IOrderedProxyInterceptor
     /// <inheritdoc />
     public async Task<Response<T>> InvokeAsync<T>(
         ProxyContext context,
-        ProxyDelegate<T> next)
+        ProxyDelegate<T> next,
+        CancellationToken cancellationToken = default)
     {
         // Get or generate correlation ID
         var correlationId = correlationContext.CorrelationId;
@@ -61,7 +62,7 @@ public sealed class CorrelationInterceptor : IOrderedProxyInterceptor
         
         try
         {
-            return await next();
+            return await next(context, cancellationToken);
         }
         catch (Exception ex)
         {

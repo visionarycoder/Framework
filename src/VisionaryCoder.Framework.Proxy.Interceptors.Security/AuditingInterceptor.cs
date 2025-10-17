@@ -37,8 +37,9 @@ public class AuditingInterceptor : IProxyInterceptor
     /// <typeparam name="T">The response type.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         var auditRecord = CreateAuditRecord(context);
         var stopwatch = Stopwatch.StartNew();
@@ -47,7 +48,7 @@ public class AuditingInterceptor : IProxyInterceptor
         {
             logger.LogDebug("Starting audit for request: {RequestId}", auditRecord.RequestId);
             
-            var response = await next(context);
+            var response = await next(context, cancellationToken);
             
             stopwatch.Stop();
             auditRecord.CompletedAt = DateTimeOffset.UtcNow;
@@ -65,7 +66,7 @@ public class AuditingInterceptor : IProxyInterceptor
                 auditRecord.ResponseSize = CalculateResponseSize(response.Data);
             }
             
-            await auditSink.WriteAsync(auditRecord);
+            await auditSink.WriteAsync(auditRecord, cancellationToken);
             
             logger.LogDebug("Completed audit for request: {RequestId}, Duration: {Duration}ms", 
                 auditRecord.RequestId, auditRecord.Duration?.TotalMilliseconds);
@@ -83,7 +84,7 @@ public class AuditingInterceptor : IProxyInterceptor
             
             try
             {
-                await auditSink.WriteAsync(auditRecord);
+                await auditSink.WriteAsync(auditRecord, cancellationToken);
             }
             catch (Exception auditEx)
             {

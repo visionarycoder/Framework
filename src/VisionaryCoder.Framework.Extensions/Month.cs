@@ -4,36 +4,36 @@ public class Month
 {
 
     #region consts
-    public const string UNKNOWN = "???";
+    public const string Unknown = "???";
 
-    public const string JANUARY = "January";
-    public const string FEBRUARY = "February";
-    public const string MARCH = "March";
-    public const string APRIL = "April";
-    public const string MAY = "May";
-    public const string JUNE = "June";
-    public const string JULY = "July";
-    public const string AUGUST = "August";
-    public const string SEPTEMBER = "September";
-    public const string OCTOBER = "October";
-    public const string NOVEMBER = "November";
-    public const string DECEMBER = "December";
+    public const string January = "January";
+    public const string February = "February";
+    public const string March = "March";
+    public const string April = "April";
+    public const string May = "May";
+    public const string June = "June";
+    public const string July = "July";
+    public const string August = "August";
+    public const string September = "September";
+    public const string October = "October";
+    public const string November = "November";
+    public const string December = "December";
 
-    public const string JAN = "Jan";
-    public const string FEB = "Feb";
-    public const string MAR = "Mar";
-    public const string APR = "Apr";
-    public const string JUN = "Jun";
-    public const string JUL = "Jul";
-    public const string AUG = "Aug";
-    public const string SEP = "Sep";
-    public const string OCT = "Oct";
-    public const string NOV = "Nov";
-    public const string DEC = "Dec";
+    public const string Jan = "Jan";
+    public const string Feb = "Feb";
+    public const string Mar = "Mar";
+    public const string Apr = "Apr";
+    public const string Jun = "Jun";
+    public const string Jul = "Jul";
+    public const string Aug = "Aug";
+    public const string Sep = "Sep";
+    public const string Oct = "Oct";
+    public const string Nov = "Nov";
+    public const string Dec = "Dec";
     #endregion consts
 
-    private readonly List<string> longMonthNames = [UNKNOWN, JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER];
-    private readonly List<string> shortMonthNames = [UNKNOWN, JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC];
+    private readonly List<string> longMonthNames = [Unknown, January, February, March, April, May, June, July, August, September, October, November, December];
+    private readonly List<string> shortMonthNames = [Unknown, Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec];
 
     public string Name { get; private set; }
     public string Abbrv => Name[..3];
@@ -41,7 +41,7 @@ public class Month
     public int Index => Order - 1;
 
     public Month()
-        : this(UNKNOWN)
+        : this(Unknown)
     {
     }
 

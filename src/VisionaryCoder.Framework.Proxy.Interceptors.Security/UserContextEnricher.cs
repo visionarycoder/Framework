@@ -19,10 +19,11 @@ public class UserContextEnricher(IUserContextProvider userProvider) : ISecurityE
     /// Enriches the context with current user information.
     /// </summary>
     /// <param name="context">The proxy context.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the enrichment operation.</returns>
-    public async Task EnrichAsync(ProxyContext context)
+    public async Task EnrichAsync(ProxyContext context, CancellationToken cancellationToken = default)
     {
-        var userContext = await userProvider.GetCurrentUserAsync();
+        var userContext = await userProvider.GetCurrentUserAsync(cancellationToken);
         if (userContext != null)
         {
             context.Metadata["UserId"] = userContext.UserId;

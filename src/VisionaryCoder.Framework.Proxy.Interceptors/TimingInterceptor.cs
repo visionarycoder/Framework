@@ -20,8 +20,9 @@ public sealed class TimingInterceptor(ILogger<TimingInterceptor> logger) : IProx
     /// <typeparam name="T">The type of the response data.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation with the response.</returns>
-    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         var operationName = context.OperationName ?? "Unknown";
         var correlationId = context.CorrelationId ?? "None";
@@ -29,7 +30,7 @@ public sealed class TimingInterceptor(ILogger<TimingInterceptor> logger) : IProx
 
         try
         {
-            var response = await next(context);
+            var response = await next(context, cancellationToken);
             stopwatch.Stop();
 
             var elapsedMs = stopwatch.ElapsedMilliseconds;

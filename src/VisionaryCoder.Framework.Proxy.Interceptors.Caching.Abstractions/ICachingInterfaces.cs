@@ -39,9 +39,9 @@ public sealed class NullCachingInterceptor : IOrderedProxyInterceptor
     public int Order => 150;
 
     /// <inheritdoc />
-    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         // Pass through without any caching
-        return next();
+        return next(context, cancellationToken);
     }
 }

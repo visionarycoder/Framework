@@ -12,27 +12,28 @@ namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
 public sealed class JwtBearerInterceptor : IProxyInterceptor
 {
     private readonly ILogger<JwtBearerInterceptor> logger;
-    private readonly Func<Task<string?>> tokenProvider;
+    private readonly Func<CancellationToken, Task<string?>> tokenProvider;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JwtBearerInterceptor"/> class.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
     /// <param name="tokenProvider">Function that provides the JWT token.</param>
-    public JwtBearerInterceptor(ILogger<JwtBearerInterceptor> logger, Func<Task<string?>> tokenProvider)
+    public JwtBearerInterceptor(ILogger<JwtBearerInterceptor> logger, Func<CancellationToken, Task<string?>> tokenProvider)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.tokenProvider = tokenProvider ?? throw new ArgumentNullException(nameof(tokenProvider));
     }
 
     /// <summary>
-    /// Invokes the interceptor adding JWT Bearer authentication to the context.
+    /// Invokes the interceptor to add JWT Bearer token authentication to the proxy context.
     /// </summary>
     /// <typeparam name="T">The type of the response data.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation with the response.</returns>
-    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         var operationName = context.OperationName ?? "Unknown";
         var correlationId = context.CorrelationId ?? "None";
@@ -40,7 +41,7 @@ public sealed class JwtBearerInterceptor : IProxyInterceptor
         try
         {
             // Get the JWT token
-            var token = await tokenProvider();
+            var token = await tokenProvider(cancellationToken);
             
             if (string.IsNullOrEmpty(token))
             {
@@ -59,7 +60,7 @@ public sealed class JwtBearerInterceptor : IProxyInterceptor
                     operationName, correlationId);
             }
 
-            return await next(context);
+            return await next(context, cancellationToken);
         }
         catch (Exception ex) when (!(ex is ProxyException))
         {

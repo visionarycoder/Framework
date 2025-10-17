@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Abstractions\VisionaryCoder.Framework.Proxy.Abstractions.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Auditing.Abstractions\VisionaryCoder.Framework.Proxy.Interceptors.Auditing.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

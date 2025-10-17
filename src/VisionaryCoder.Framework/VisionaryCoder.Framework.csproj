@@ -13,8 +13,16 @@
 		<Product>VisionaryCoder Framework</Product>
 		<PackageTags>framework;core;library;microsoft;patterns</PackageTags>
 		<RepositoryUrl>https://github.com/visionarycoder/vc</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryBranch>main</RepositoryBranch>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReleaseNotes>See CHANGELOG.md or GitHub releases for detailed release notes.</PackageReleaseNotes>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\VisionaryCoder.Framework.Abstractions\VisionaryCoder.Framework.Abstractions.csproj" />

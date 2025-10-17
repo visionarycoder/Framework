@@ -11,9 +11,9 @@ public sealed class NullAuditingInterceptor : IOrderedProxyInterceptor
     public int Order => 300;
 
     /// <inheritdoc />
-    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         // Pass through without any auditing
-        return next();
+        return next(context, cancellationToken);
     }
 }

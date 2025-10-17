@@ -5,6 +5,16 @@
     <RootNamespace>VisionaryCoder.Framework.Proxy.Abstractions</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>VisionaryCoder.Framework.Proxy.Abstractions</PackageId>
+    <Title>VisionaryCoder Framework - Proxy Abstractions</Title>
+    <Description>Core abstractions for proxy patterns and interceptors in the VisionaryCoder framework following Microsoft best practices.</Description>
+    <Authors>VisionaryCoder</Authors>
+    <Company>VisionaryCoder</Company>
+    <Product>VisionaryCoder Framework</Product>
+    <PackageTags>framework;proxy;abstractions;interceptors;microsoft;patterns</PackageTags>
+    <RepositoryUrl>https://github.com/visionarycoder/vc</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>

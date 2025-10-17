@@ -16,8 +16,9 @@ internal sealed class HttpProxyTransport(HttpClient httpClient) : IProxyTranspor
     /// </summary>
     /// <typeparam name="T">The expected response type.</typeparam>
     /// <param name="context">The proxy context.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the HTTP response.</returns>
-    public async Task<Response<T>> SendCoreAsync<T>(ProxyContext context)
+    public async Task<Response<T>> SendCoreAsync<T>(ProxyContext context, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -29,8 +30,8 @@ internal sealed class HttpProxyTransport(HttpClient httpClient) : IProxyTranspor
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
 
-            var response = await httpClient.SendAsync(request);
-            var content = await response.Content.ReadAsStringAsync();
+            var response = await httpClient.SendAsync(request, cancellationToken);
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
             
             if (response.IsSuccessStatusCode)
             {

@@ -12,6 +12,7 @@ public interface IProxyPipeline
     /// </summary>
     /// <typeparam name="T">The type of the response data.</typeparam>
     /// <param name="context">The proxy context containing request information.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation with the response.</returns>
-    Task<Response<T>> SendAsync<T>(ProxyContext context);
+    Task<Response<T>> SendAsync<T>(ProxyContext context, CancellationToken cancellationToken = default);
 }

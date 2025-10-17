@@ -35,19 +35,20 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
     }
 
     /// <summary>
-    /// Intercepts the request and adds JWT authentication from Key Vault.
+    /// Intercepts the proxy call to add JWT authentication from Key Vault.
     /// </summary>
     /// <typeparam name="T">The response type.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next)
+    public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         try
         {
             logger.LogDebug("Retrieving JWT token from Key Vault for secret: {SecretName}", secretName);
             
-            var jwtToken = await secretProvider.GetAsync(secretName);
+            var jwtToken = await secretProvider.GetAsync(secretName, cancellationToken);
             if (!string.IsNullOrEmpty(jwtToken))
             {
                 // Ensure the token has the Bearer prefix if it's for Authorization header
@@ -70,6 +71,6 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
             // Continue without authentication - let downstream decide how to handle
         }
 
-        return await next(context);
+        return await next(context, cancellationToken);
     }
 }
