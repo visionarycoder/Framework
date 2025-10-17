@@ -3,6 +3,7 @@ using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using VisionaryCoder.Framework.Extensions.Configuration;
 using VisionaryCoder.Framework.Secrets.Abstractions;
 
 namespace VisionaryCoder.Framework.Azure.KeyVault;
@@ -48,8 +49,7 @@ public static class KeyVaultServiceCollectionExtensions
             services.AddSingleton<ISecretProvider>(provider =>
             {
                 var config = provider.GetRequiredService<IConfiguration>();
-                var opts = provider.GetRequiredService<IOptions<KeyVaultOptions>>();
-                return new LocalSecretProvider(config, opts.Value);
+                return new LocalSecretProvider(config);
             });
             return services;
         }

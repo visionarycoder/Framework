@@ -8,12 +8,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Polly" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Abstractions\VisionaryCoder.Framework.Proxy.Abstractions.csproj" />
-    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Caching\VisionaryCoder.Framework.Proxy.Interceptors.Caching.csproj" />
-    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Logging\VisionaryCoder.Framework.Proxy.Interceptors.Logging.csproj" />
-    <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Interceptors.Security\VisionaryCoder.Framework.Proxy.Interceptors.Security.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Secrets.Abstractions\VisionaryCoder.Framework.Secrets.Abstractions.csproj" />
   </ItemGroup>
 </Project>
