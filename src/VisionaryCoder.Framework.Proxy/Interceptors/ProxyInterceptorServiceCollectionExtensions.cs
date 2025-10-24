@@ -77,70 +77,35 @@ public static class ProxyInterceptorServiceCollectionExtensions
         });
     /// Adds the telemetry interceptor (order -50).
     public static IServiceCollection AddTelemetryInterceptor(this IServiceCollection services)
-    {
         services.TryAddSingleton(new ActivitySource("VisionaryCoder.Framework.Proxy"));
         services.TryAddTransient<IOrderedProxyInterceptor, TelemetryInterceptor>();
-        return services;
-    }
-
     /// Adds the correlation interceptor (order 0).
     public static IServiceCollection AddCorrelationInterceptor(this IServiceCollection services)
-    {
         services.TryAddSingleton<VisionaryCoder.Framework.Proxy.Abstractions.ICorrelationContext, DefaultCorrelationContext>();
         services.TryAddSingleton<VisionaryCoder.Framework.Proxy.Abstractions.ICorrelationIdGenerator, GuidCorrelationIdGenerator>();
         services.TryAddTransient<IOrderedProxyInterceptor, CorrelationInterceptor>();
-        return services;
-    }
-
     /// Adds the logging interceptor (order 100).
     public static IServiceCollection AddLoggingInterceptor(this IServiceCollection services)
-    {
         services.TryAddTransient<IOrderedProxyInterceptor, LoggingInterceptor>();
-        return services;
-    }
-
     /// Adds the caching interceptor (order 150).
     public static IServiceCollection AddCachingInterceptor(this IServiceCollection services)
-    {
         services.TryAddTransient<IOrderedProxyInterceptor, CachingInterceptor>();
-        return services;
-    }
-
     /// Adds a proxy cache implementation.
     public static IServiceCollection AddProxyCache<TCache>(this IServiceCollection services)
         where TCache : class, IProxyCache
-    {
         services.TryAddSingleton<IProxyCache, TCache>();
-        return services;
-    }
-
     /// Adds the resilience interceptor (order 180).
     public static IServiceCollection AddResilienceInterceptor(this IServiceCollection services)
-    {
         services.TryAddTransient<IOrderedProxyInterceptor, ResilienceInterceptor>();
-        return services;
-    }
-
     /// Adds the retry interceptor (order 200).
     public static IServiceCollection AddRetryInterceptor(this IServiceCollection services)
-    {
         services.TryAddTransient<IOrderedProxyInterceptor, RetryInterceptor>();
-        return services;
-    }
-
     /// Adds the auditing interceptor (order 300).
     public static IServiceCollection AddAuditingInterceptor(this IServiceCollection services)
-    {
         services.TryAddTransient<IAuditSink, LoggingAuditSink>();
         services.TryAddTransient<IOrderedProxyInterceptor, VisionaryCoder.Framework.Proxy.Interceptors.Auditing.AuditingInterceptor>();
-        return services;
-    }
-
     /// Adds an audit sink.
     public static IServiceCollection AddAuditSink<TSink>(this IServiceCollection services)
         where TSink : class, IAuditSink
-    {
         services.TryAddTransient<IAuditSink, TSink>();
-        return services;
-    }
 }
