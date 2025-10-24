@@ -34,6 +34,7 @@ public sealed class SecurityInterceptor : IOrderedProxyInterceptor
         ProxyContext context,
         ProxyDelegate<T> next,
         CancellationToken cancellationToken = default)
+    {
         using var _ = logger.BeginScope("SecurityInterceptor for {RequestType}", context.Request?.GetType().Name ?? "Unknown");
         
         try
@@ -45,15 +46,20 @@ public sealed class SecurityInterceptor : IOrderedProxyInterceptor
             }
             // Check authorization policies
             foreach (var policy in policies)
+            {
                 if (!await policy.IsAuthorizedAsync(context, cancellationToken))
                 {
                     logger.LogWarning("Authorization failed for policy {PolicyType}", policy.GetType().Name);
                     return Response<T>.Failure("Authorization failed");
                 }
+            }
             logger.LogDebug("Security validation passed, proceeding to next interceptor");
             return await next(context, cancellationToken);
         }
         catch (Exception ex) when (ex is not ProxyException)
+        {
             logger.LogError(ex, "Unexpected error during security processing");
             return Response<T>.Failure("Security processing failed");
+        }
+    }
 }

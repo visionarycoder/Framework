@@ -24,13 +24,16 @@ public sealed class ResilienceInterceptor : IOrderedProxyInterceptor
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.resiliencePipeline = resiliencePipeline ?? CreateDefaultPipeline();
     }
+    /// <summary>
     /// Invokes the interceptor with resilience protection.
+    /// </summary>
     /// <typeparam name="T">The type of the response data.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
     /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation with the response.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
+    {
         var operationName = context.OperationName ?? "Unknown";
         var correlationId = context.CorrelationId ?? "Undefined";
         try
@@ -42,12 +45,19 @@ public sealed class ResilienceInterceptor : IOrderedProxyInterceptor
             return response;
         }
         catch (Exception ex)
+        {
             context.Metadata["ResilienceException"] = ex.GetType().Name;
             logger.LogError(ex, "Resilience pipeline failed for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", operationName, correlationId);
             throw;
+        }
+    }
+
+    /// <summary>
     /// Creates a default resilience pipeline with retry and circuit breaker.
+    /// </summary>
     /// <returns>A configured resilience pipeline.</returns>
     private static ResiliencePipeline CreateDefaultPipeline()
+    {
         return new ResiliencePipelineBuilder()
             .AddRetry(new()
             {
@@ -57,10 +67,13 @@ public sealed class ResilienceInterceptor : IOrderedProxyInterceptor
                 UseJitter = true
             })
             .AddCircuitBreaker(new()
+            {
                 FailureRatio = 0.5,
                 SamplingDuration = TimeSpan.FromSeconds(30),
                 MinimumThroughput = 5,
                 BreakDuration = TimeSpan.FromMinutes(1)
+            })
             .AddTimeout(TimeSpan.FromSeconds(30))
             .Build();
+    }
 }
