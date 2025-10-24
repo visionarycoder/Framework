@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\VisionaryCoder.Framework\VisionaryCoder.Framework.csproj" />
+    <ProjectReference Include="..\..\src\VisionaryCoder.Framework.Proxy\VisionaryCoder.Framework.Proxy.csproj" />
   </ItemGroup>
 
   <ItemGroup>
