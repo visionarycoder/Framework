@@ -1,4 +1,5 @@
 using System.Reflection;
+using VisionaryCoder.Framework.Abstractions;
 
 namespace VisionaryCoder.Framework;
 
@@ -8,15 +9,18 @@ namespace VisionaryCoder.Framework;
 public sealed class FrameworkInfoProvider : IFrameworkInfoProvider
 {
     /// <inheritdoc />
-    public string Version => FrameworkConstants.Version;
+    public string Version
+    {
+        get
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            return assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+                   ?? assembly.GetName().Version?.ToString() ?? "0.0.0";
+        }
+    }
 
-    /// <inheritdoc />
     public string Name => "VisionaryCoder Framework";
-
-    /// <inheritdoc />
     public string Description => "A comprehensive framework for building enterprise-grade applications with proxy interceptor architecture.";
-
-    /// <inheritdoc />
     public DateTimeOffset CompiledAt { get; } = GetCompilationTime();
 
     private static DateTimeOffset GetCompilationTime()

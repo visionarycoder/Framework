@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Caching;
-
 /// <summary>
 /// Extension methods for adding caching interceptor services.
 /// </summary>
@@ -27,7 +26,6 @@ public static class CachingInterceptorServiceCollectionExtensions
         {
             services.Configure(configure);
         }
-
         services.AddSingleton<IProxyInterceptor>(provider =>
         {
             var logger = provider.GetRequiredService<ILogger<CachingInterceptor>>();
@@ -39,14 +37,12 @@ public static class CachingInterceptorServiceCollectionExtensions
                 cache, 
                 options);
         });
-
         return services;
     }
-
     /// <summary>
     /// Adds the caching interceptor with specific configuration.
     /// </summary>
-    /// <param name="services">The service collection to add the interceptor to.</param>
+    /// <param name="services">The service collection.</param>
     /// <param name="defaultCacheDuration">The default cache duration.</param>
     /// <param name="keyGenerator">Optional custom cache key generator.</param>
     /// <returns>The service collection for chaining.</returns>

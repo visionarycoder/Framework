@@ -1,13 +1,12 @@
 // VisionaryCoder.Framework.Proxy.Caching
 
 using Microsoft.Extensions.Caching.Memory;
-
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy.Caching;
-
 public sealed class MemoryProxyCache(IMemoryCache cache) : IProxyCache
 {
+
     public Task<T?> GetAsync<T>(string key)
     {
         if (cache.TryGetValue(key, out var obj) && obj is T typed)
@@ -31,4 +30,5 @@ public sealed class MemoryProxyCache(IMemoryCache cache) : IProxyCache
         cache.Remove(key);
         return Task.CompletedTask;
     }
+
 }

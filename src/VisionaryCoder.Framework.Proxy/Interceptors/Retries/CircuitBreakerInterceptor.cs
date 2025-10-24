@@ -3,9 +3,8 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-
+using VisionaryCoder.Framework.Proxy.Interceptors.Retries.Abstractions;
 namespace VisionaryCoder.Framework.Proxy.Interceptors;
-
 /// <summary>
 /// Interceptor that implements the circuit breaker pattern to prevent cascading failures.
 /// </summary>
@@ -19,7 +18,6 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
     private CircuitBreakerState state = CircuitBreakerState.Closed;
     private int failureCount;
     private DateTimeOffset lastFailureTime;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="CircuitBreakerInterceptor"/> class.
     /// </summary>
@@ -32,10 +30,7 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
         this.failureThreshold = Math.Max(1, failureThreshold);
         this.timeout = timeout ?? TimeSpan.FromMinutes(1);
     }
-
-    /// <summary>
     /// Gets the current circuit breaker state.
-    /// </summary>
     public CircuitBreakerState State
     {
         get
@@ -46,10 +41,7 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
             }
         }
     }
-
-    /// <summary>
     /// Invokes the interceptor with circuit breaker protection.
-    /// </summary>
     /// <typeparam name="T">The type of the response data.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
@@ -59,7 +51,6 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
     {
         var operationName = context.OperationName ?? "Unknown";
         var correlationId = context.CorrelationId ?? "None";
-
         lock (lockObject)
         {
             switch (state)
@@ -79,21 +70,17 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
                     logger.LogInformation("Circuit breaker transitioning to HALF-OPEN for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
                         operationName, correlationId);
                     break;
-
                 case CircuitBreakerState.HalfOpen:
                     // Allow one request through
                     break;
-
                 case CircuitBreakerState.Closed:
                     // Normal operation
                     break;
             }
         }
-
         try
         {
             var response = await next(context, cancellationToken);
-
             lock (lockObject)
             {
                 // Success - reset failure count and close circuit if needed
@@ -103,11 +90,9 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
                     logger.LogInformation("Circuit breaker closing after successful operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
                         operationName, correlationId);
                 }
-
                 failureCount = 0;
                 context.Metadata["CircuitBreakerState"] = state.ToString();
             }
-
             return response;
         }
         catch (Exception)
@@ -116,7 +101,6 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
             {
                 failureCount++;
                 lastFailureTime = DateTimeOffset.UtcNow;
-
                 if (state == CircuitBreakerState.HalfOpen)
                 {
                     // Failed during half-open, go back to open
@@ -126,18 +110,15 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
                 }
                 else if (failureCount >= failureThreshold && state == CircuitBreakerState.Closed)
                 {
-                    // Threshold reached, open the circuit
                     state = CircuitBreakerState.Open;
+                    // Threshold reached, open the circuit
                     logger.LogError("Circuit breaker opening after {FailureCount} failures for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
                         failureCount, operationName, correlationId);
                 }
-
+                context.Metadata["CircuitBreakerFailureCount"] = failureCount.ToString();
                 context.Metadata["CircuitBreakerState"] = state.ToString();
-                context.Metadata["CircuitBreakerFailureCount"] = failureCount;
             }
-
             throw;
         }
     }
 }
-

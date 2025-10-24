@@ -14,14 +14,14 @@ public class FrameworkConstantsTests
     public void Version_ShouldHaveCorrectValue()
     {
         // Assert
-        FrameworkConstants.Version.Should().Be("1.0.0");
+        Constants.Version.Should().Be("1.0.0");
     }
 
     [TestMethod]
     public void ConfigurationSection_ShouldHaveCorrectValue()
     {
         // Assert
-        FrameworkConstants.ConfigurationSection.Should().Be("VisionaryCoderFramework");
+        Constants.ConfigurationSection.Should().Be("VisionaryCoderFramework");
     }
 
     #endregion
@@ -32,18 +32,18 @@ public class FrameworkConstantsTests
     public void TimeoutsDefaults_ShouldHaveCorrectValues()
     {
         // Assert
-        FrameworkConstants.Timeouts.DefaultHttpTimeoutSeconds.Should().Be(30);
-        FrameworkConstants.Timeouts.DefaultDatabaseTimeoutSeconds.Should().Be(30);
-        FrameworkConstants.Timeouts.DefaultCacheExpirationMinutes.Should().Be(15);
+        Constants.Timeouts.DefaultHttpTimeoutSeconds.Should().Be(30);
+        Constants.Timeouts.DefaultDatabaseTimeoutSeconds.Should().Be(30);
+        Constants.Timeouts.DefaultCacheExpirationMinutes.Should().Be(15);
     }
 
     [TestMethod]
     public void TimeoutsConstants_ShouldBePositiveValues()
     {
         // Assert
-        FrameworkConstants.Timeouts.DefaultHttpTimeoutSeconds.Should().BePositive();
-        FrameworkConstants.Timeouts.DefaultDatabaseTimeoutSeconds.Should().BePositive();
-        FrameworkConstants.Timeouts.DefaultCacheExpirationMinutes.Should().BePositive();
+        Constants.Timeouts.DefaultHttpTimeoutSeconds.Should().BePositive();
+        Constants.Timeouts.DefaultDatabaseTimeoutSeconds.Should().BePositive();
+        Constants.Timeouts.DefaultCacheExpirationMinutes.Should().BePositive();
     }
 
     #endregion
@@ -54,30 +54,30 @@ public class FrameworkConstantsTests
     public void HeaderNames_ShouldHaveCorrectValues()
     {
         // Assert
-        FrameworkConstants.Headers.CorrelationId.Should().Be("X-Correlation-ID");
-        FrameworkConstants.Headers.RequestId.Should().Be("X-Request-ID");
-        FrameworkConstants.Headers.UserContext.Should().Be("X-User-Context");
-        FrameworkConstants.Headers.ApiVersion.Should().Be("Api-Version");
+        Constants.Headers.CorrelationId.Should().Be("X-Correlation-ID");
+        Constants.Headers.RequestId.Should().Be("X-Request-ID");
+        Constants.Headers.UserContext.Should().Be("X-User-Context");
+        Constants.Headers.ApiVersion.Should().Be("Api-Version");
     }
 
     [TestMethod]
     public void HeaderNames_ShouldNotBeNullOrEmpty()
     {
         // Assert
-        FrameworkConstants.Headers.CorrelationId.Should().NotBeNullOrWhiteSpace();
-        FrameworkConstants.Headers.RequestId.Should().NotBeNullOrWhiteSpace();
-        FrameworkConstants.Headers.UserContext.Should().NotBeNullOrWhiteSpace();
-        FrameworkConstants.Headers.ApiVersion.Should().NotBeNullOrWhiteSpace();
+        Constants.Headers.CorrelationId.Should().NotBeNullOrWhiteSpace();
+        Constants.Headers.RequestId.Should().NotBeNullOrWhiteSpace();
+        Constants.Headers.UserContext.Should().NotBeNullOrWhiteSpace();
+        Constants.Headers.ApiVersion.Should().NotBeNullOrWhiteSpace();
     }
 
     [TestMethod]
     public void HeaderNames_ShouldFollowHTTPHeaderConventions()
     {
         // Assert - Headers should contain hyphens and follow standard HTTP header naming
-        FrameworkConstants.Headers.CorrelationId.Should().Contain("-");
-        FrameworkConstants.Headers.RequestId.Should().Contain("-");
-        FrameworkConstants.Headers.UserContext.Should().Contain("-");
-        FrameworkConstants.Headers.ApiVersion.Should().Contain("-");
+        Constants.Headers.CorrelationId.Should().Contain("-");
+        Constants.Headers.RequestId.Should().Contain("-");
+        Constants.Headers.UserContext.Should().Contain("-");
+        Constants.Headers.ApiVersion.Should().Contain("-");
     }
 
     #endregion
@@ -91,32 +91,32 @@ public class FrameworkConstantsTests
         var expectedTemplate = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}";
 
         // Assert
-        FrameworkConstants.Logging.DefaultTemplate.Should().Be(expectedTemplate);
+        Constants.Logging.DefaultTemplate.Should().Be(expectedTemplate);
     }
 
     [TestMethod]
     public void LoggingPropertyNames_ShouldHaveCorrectValues()
     {
         // Assert
-        FrameworkConstants.Logging.CorrelationIdProperty.Should().Be("CorrelationId");
-        FrameworkConstants.Logging.RequestIdProperty.Should().Be("RequestId");
-        FrameworkConstants.Logging.UserIdProperty.Should().Be("UserId");
+        Constants.Logging.CorrelationIdProperty.Should().Be("CorrelationId");
+        Constants.Logging.RequestIdProperty.Should().Be("RequestId");
+        Constants.Logging.UserIdProperty.Should().Be("UserId");
     }
 
     [TestMethod]
     public void LoggingPropertyNames_ShouldNotBeNullOrEmpty()
     {
         // Assert
-        FrameworkConstants.Logging.CorrelationIdProperty.Should().NotBeNullOrWhiteSpace();
-        FrameworkConstants.Logging.RequestIdProperty.Should().NotBeNullOrWhiteSpace();
-        FrameworkConstants.Logging.UserIdProperty.Should().NotBeNullOrWhiteSpace();
+        Constants.Logging.CorrelationIdProperty.Should().NotBeNullOrWhiteSpace();
+        Constants.Logging.RequestIdProperty.Should().NotBeNullOrWhiteSpace();
+        Constants.Logging.UserIdProperty.Should().NotBeNullOrWhiteSpace();
     }
 
     [TestMethod]
     public void LoggingTemplate_ShouldContainRequiredPlaceholders()
     {
         // Arrange
-        var template = FrameworkConstants.Logging.DefaultTemplate;
+        var template = Constants.Logging.DefaultTemplate;
 
         // Assert - Template should contain standard structured logging placeholders
         template.Should().Contain("{Timestamp");
@@ -138,31 +138,40 @@ public class FrameworkConstantsTests
         // If compilation succeeds, the test passes
 
         // Main constants
-        var version = FrameworkConstants.Version;
-        var configSection = FrameworkConstants.ConfigurationSection;
+        var version = Constants.Version;
+        var configSection = Constants.ConfigurationSection;
 
         // Timeout constants
-        var httpTimeout = FrameworkConstants.Timeouts.DefaultHttpTimeoutSeconds;
-        var dbTimeout = FrameworkConstants.Timeouts.DefaultDatabaseTimeoutSeconds;
-        var cacheTimeout = FrameworkConstants.Timeouts.DefaultCacheExpirationMinutes;
+        var httpTimeout = Constants.Timeouts.DefaultHttpTimeoutSeconds;
+        var dbTimeout = Constants.Timeouts.DefaultDatabaseTimeoutSeconds;
+        var cacheTimeout = Constants.Timeouts.DefaultCacheExpirationMinutes;
 
         // Header constants
-        var correlationHeader = FrameworkConstants.Headers.CorrelationId;
-        var requestHeader = FrameworkConstants.Headers.RequestId;
-        var userHeader = FrameworkConstants.Headers.UserContext;
-        var versionHeader = FrameworkConstants.Headers.ApiVersion;
+        var correlationHeader = Constants.Headers.CorrelationId;
+        var requestHeader = Constants.Headers.RequestId;
+        var userHeader = Constants.Headers.UserContext;
+        var versionHeader = Constants.Headers.ApiVersion;
 
         // Logging constants
-        var template = FrameworkConstants.Logging.DefaultTemplate;
-        var correlationProp = FrameworkConstants.Logging.CorrelationIdProperty;
-        var requestProp = FrameworkConstants.Logging.RequestIdProperty;
-        var userProp = FrameworkConstants.Logging.UserIdProperty;
+        var template = Constants.Logging.DefaultTemplate;
+        var correlationProp = Constants.Logging.CorrelationIdProperty;
+        var requestProp = Constants.Logging.RequestIdProperty;
+        var userProp = Constants.Logging.UserIdProperty;
 
         // Assert that all values are not null (compilation test)
         version.Should().NotBeNull();
         configSection.Should().NotBeNull();
-        template.Should().NotBeNull();
+        httpTimeout.Should().BeGreaterThan(0);
+        dbTimeout.Should().BeGreaterThan(0);
+        cacheTimeout.Should().BeGreaterThan(0);
         correlationHeader.Should().NotBeNull();
+        requestHeader.Should().NotBeNull();
+        userHeader.Should().NotBeNull();
+        versionHeader.Should().NotBeNull();
+        template.Should().NotBeNull();
+        correlationProp.Should().NotBeNull();
+        requestProp.Should().NotBeNull();
+        userProp.Should().NotBeNull();
     }
 
     #endregion

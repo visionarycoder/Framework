@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Extensions.Pagination;
+namespace VisionaryCoder.Framework.Pagination;
 
 public sealed class PageRequest(int pageNumber = 1, int pageSize = 50, string? continuationToken = null)
 {

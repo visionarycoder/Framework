@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Extensions.Pagination;
+namespace VisionaryCoder.Framework.Pagination;
 
 public sealed class Page<T>(IReadOnlyList<T> items, int count, int pageNumber, int pageSize, string? nextToken = null)
 {

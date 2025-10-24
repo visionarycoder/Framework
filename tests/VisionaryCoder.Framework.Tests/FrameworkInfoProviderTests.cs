@@ -1,5 +1,6 @@
 using FluentAssertions;
 using System.Reflection;
+using VisionaryCoder.Framework.Abstractions;
 
 namespace VisionaryCoder.Framework.Tests;
 
@@ -26,7 +27,7 @@ public class FrameworkInfoProviderTests
         var version = provider.Version;
 
         // Assert
-        version.Should().Be(FrameworkConstants.Version);
+        version.Should().Be(Constants.Version);
         version.Should().NotBeNullOrWhiteSpace();
     }
 

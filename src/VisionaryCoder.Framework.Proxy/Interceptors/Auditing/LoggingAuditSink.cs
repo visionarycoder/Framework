@@ -2,7 +2,6 @@ using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Auditing;
-
 /// <summary>
 /// Default audit sink that logs audit records.
 /// </summary>
@@ -10,12 +9,10 @@ namespace VisionaryCoder.Framework.Proxy.Interceptors.Auditing;
 public sealed class LoggingAuditSink(ILogger<LoggingAuditSink> logger) : IAuditSink
 {
     private readonly ILogger<LoggingAuditSink> logger = logger;
-
     public Task WriteAsync(AuditRecord auditRecord, CancellationToken cancellationToken = default)
     {
         logger.LogInformation("Audit: {OperationName} | Result: {Result} | Timestamp: {Timestamp} | CorrelationId: {CorrelationId}", 
             auditRecord.OperationName, auditRecord.Result, auditRecord.Timestamp, auditRecord.CorrelationId);
-
         return Task.CompletedTask;
     }
 }

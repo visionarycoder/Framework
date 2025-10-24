@@ -1,7 +1,6 @@
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
-
 /// <summary>
 /// Defines a contract for authorization policies.
 /// </summary>

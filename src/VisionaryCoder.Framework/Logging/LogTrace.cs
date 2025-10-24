@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Extensions.Logging;
+namespace VisionaryCoder.Framework.Logging;
 
 /// <summary>
 /// Delegate for logging trace messages.

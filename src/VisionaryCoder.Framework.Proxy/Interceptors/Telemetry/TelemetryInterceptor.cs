@@ -4,9 +4,7 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Telemetry;
-
 /// <summary>
 /// Telemetry interceptor that creates activities and tracks proxy operations.
 /// Order: -50 (executes early in the pipeline after security).
@@ -15,10 +13,8 @@ public sealed class TelemetryInterceptor : IOrderedProxyInterceptor
 {
     private readonly ILogger<TelemetryInterceptor> logger;
     private readonly ActivitySource activitySource;
-
     /// <inheritdoc />
     public int Order => -50;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="TelemetryInterceptor"/> class.
     /// </summary>
@@ -29,8 +25,6 @@ public sealed class TelemetryInterceptor : IOrderedProxyInterceptor
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.activitySource = activitySource ?? new ActivitySource("VisionaryCoder.Framework.Proxy");
     }
-
-    /// <inheritdoc />
     public async Task<Response<T>> InvokeAsync<T>(
         ProxyContext context,
         ProxyDelegate<T> next,
@@ -38,46 +32,35 @@ public sealed class TelemetryInterceptor : IOrderedProxyInterceptor
     {
         var requestType = context.Request?.GetType().Name ?? "Unknown";
         var operationName = $"Proxy.{requestType}";
-
         using var activity = activitySource.StartActivity(operationName);
         
         // Enrich activity with context information
         activity?.SetTag("proxy.request_type", requestType);
-        activity?.SetTag("proxy.result_type", context.ResultType.Name);
-        
+        activity?.SetTag("proxy.result_type", context.ResultType?.Name);
         if (context.Items.TryGetValue("CorrelationId", out var correlationId))
         {
             activity?.SetTag("proxy.correlation_id", correlationId?.ToString());
         }
-
         var stopwatch = Stopwatch.StartNew();
-        
         try
         {
             logger.LogDebug("Starting telemetry for {RequestType}", requestType);
             
             var result = await next(context, cancellationToken);
-            
             stopwatch.Stop();
             activity?.SetTag("proxy.duration_ms", stopwatch.ElapsedMilliseconds);
             activity?.SetTag("proxy.success", true);
-            
             logger.LogDebug("Telemetry completed successfully for {RequestType} in {ElapsedMs}ms", 
                 requestType, stopwatch.ElapsedMilliseconds);
-            
             return result;
         }
         catch (Exception ex)
         {
-            stopwatch.Stop();
-            activity?.SetTag("proxy.duration_ms", stopwatch.ElapsedMilliseconds);
             activity?.SetTag("proxy.success", false);
             activity?.SetTag("proxy.error", ex.Message);
             activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            
             logger.LogError(ex, "Telemetry interceptor caught exception for {RequestType} after {ElapsedMs}ms", 
                 requestType, stopwatch.ElapsedMilliseconds);
-            
             throw;
         }
     }

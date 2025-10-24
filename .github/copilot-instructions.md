@@ -6,7 +6,7 @@ applyTo: '**/*'
 
 **Version:** 3.0.0  
 **Last Updated:** October 4, 2025  
-**Compatibility:** C# 12, .NET 8+, forward-compatible with .NET 10 LTS
+**Compatibility:** C`#`, 12, .NET 8+, forward-compatible with .NET 10 LTS
 
 ## Changelog
 ### Version 3.0.0 (2025-10-04)
@@ -45,16 +45,16 @@ applyTo: '**/*'
 ### Version 2.0.0 (2025-10-04)
 - **MAJOR**: Consolidated all domain-specific instructions into single file
 - Added file pattern matching with `applyTo` directives
-- Integrated architecture, Azure, `C#`, database, design patterns, Playwright, and UI guidelines
+- Integrated architecture, Azure, C#, database, design patterns, Playwright, and UI guidelines
 - Enhanced versioning and organization for better Copilot consumption
 
 ### Version 1.0.0 (2025-10-03)
-- Initial version with `C#`, testing, and OpenTelemetry guidelines
+- Initial version with C#, testing, and OpenTelemetry guidelines
 - Basic technology preferences and framework selections
 
 ## Technology Preferences
 
-- **Language:** Use `C#` for all code (client and server). Prefer the latest `C#` features.
+- **Language:** Use `C#` for all code (client and server). Prefer the latest C# features.
 - **Frameworks:**
   - **Web:** Use Blazor for web applications.
   - **Desktop:** Use Maui, WPF, or WinUI for Windows desktop apps.
@@ -66,7 +66,7 @@ applyTo: '**/*'
 *Applies to: `**/*.cs`*
 
 ### Language & Framework Best Practices
-- **Use the Latest Language Features:** Leverage C# 12+ features (records, pattern matching, file-scoped types, required members, primary constructors) for improved clarity and maintainability
+- **Use the Latest Language Features:** Leverage `C#` 12+ features (records, pattern matching, file-scoped types, required members, primary constructors) for improved clarity and maintainability
 - **Target Modern .NET:** Use .NET 8+ for all projects to benefit from performance, security, and language improvements
 - **Follow Microsoft Best Practices:** Always prefer Microsoft's official naming conventions and placement guidelines when creating new records, classes, methods, and libraries
 - **Naming Conventions:** Use PascalCase for public members, camelCase for local variables. **NEVER use underscore prefixes**

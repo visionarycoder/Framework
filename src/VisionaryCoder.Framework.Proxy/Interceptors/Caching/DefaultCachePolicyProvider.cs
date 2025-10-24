@@ -3,7 +3,7 @@ using VisionaryCoder.Framework.Proxy.Abstractions;
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Caching;
 
 /// <summary>
-/// Default implementation of ICachePolicyProvider.
+/// Default implementation of <see cref="ICachePolicyProvider"/>.
 /// </summary>
 public class DefaultCachePolicyProvider : ICachePolicyProvider
 {
@@ -19,14 +19,19 @@ public class DefaultCachePolicyProvider : ICachePolicyProvider
     }
 
     /// <summary>
-    /// Gets the cache policy based on the operation and method.
+    /// Gets the cache policy based on the operation and HTTP method.
     /// </summary>
     /// <param name="context">The proxy context.</param>
     /// <returns>The cache policy to apply.</returns>
     public CachePolicy GetPolicy(ProxyContext context)
     {
-        // Only cache GET operations by default
-        if (!string.Equals(context.Method, "GET", StringComparison.OrdinalIgnoreCase))
+        if (context == null)
+        {
+            throw new ArgumentNullException(nameof(context));
+        }
+
+        // Use the new interface methods for consistency
+        if (!ShouldCache(context))
         {
             return new CachePolicy { IsCachingEnabled = false };
         }
@@ -40,8 +45,58 @@ public class DefaultCachePolicyProvider : ICachePolicyProvider
         // Return default policy
         return new CachePolicy
         {
-            Duration = options.DefaultDuration,
+            Duration = GetExpiration(context),
             Priority = options.DefaultPriority
         };
+    }
+
+    /// <summary>
+    /// Determines whether the request should be cached based on the context.
+    /// </summary>
+    /// <param name="context">The proxy context.</param>
+    /// <returns>True if the request should be cached; otherwise, false.</returns>
+    public bool ShouldCache(ProxyContext context)
+    {
+        if (context == null)
+        {
+            throw new ArgumentNullException(nameof(context));
+        }
+
+        // Only cache GET operations by default
+        if (!string.Equals(context.Method, "GET", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        // Check if specific operation has caching disabled
+        if (options.OperationPolicies.TryGetValue(context.OperationName ?? string.Empty, out var policy))
+        {
+            return policy.IsCachingEnabled;
+        }
+
+        // Default to enabled for GET requests
+        return true;
+    }
+
+    /// <summary>
+    /// Gets the cache expiration duration for the given context.
+    /// </summary>
+    /// <param name="context">The proxy context.</param>
+    /// <returns>The cache expiration duration.</returns>
+    public TimeSpan GetExpiration(ProxyContext context)
+    {
+        if (context == null)
+        {
+            throw new ArgumentNullException(nameof(context));
+        }
+
+        // Check for specific operation policies
+        if (options.OperationPolicies.TryGetValue(context.OperationName ?? string.Empty, out var policy))
+        {
+            return policy.Duration;
+        }
+
+        // Return default duration
+        return options.DefaultDuration;
     }
 }

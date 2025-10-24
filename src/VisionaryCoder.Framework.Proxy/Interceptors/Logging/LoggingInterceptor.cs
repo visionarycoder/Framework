@@ -3,14 +3,14 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Logging;
-
 /// <summary>
 /// Interceptor that logs proxy operations for monitoring and debugging purposes.
 /// </summary>
-public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IProxyInterceptor
+public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IOrderedProxyInterceptor
 {
+    /// <inheritdoc />
+    public int Order => 100; // Logging typically runs later in the pipeline
     /// <summary>
     /// Invokes the interceptor with comprehensive logging of the proxy operation.
     /// </summary>
@@ -26,7 +26,6 @@ public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IPr
         
         logger.LogDebug("Starting proxy operation '{OperationName}' with correlation ID '{CorrelationId}'", 
             operationName, correlationId);
-
         try
         {
             var response = await next(context, cancellationToken);
@@ -37,25 +36,15 @@ public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IPr
                     operationName, correlationId);
             }
             else
-            {
                 logger.LogWarning("Proxy operation '{OperationName}' completed with failure. Error: '{ErrorMessage}'. Correlation ID: '{CorrelationId}'", 
                     operationName, response.ErrorMessage, correlationId);
-            }
-
             return response;
         }
         catch (ProxyException ex)
-        {
             logger.LogError(ex, "Proxy operation '{OperationName}' failed with proxy exception. Correlation ID: '{CorrelationId}'", 
                 operationName, correlationId);
             throw;
-        }
         catch (Exception ex)
-        {
             logger.LogError(ex, "Proxy operation '{OperationName}' failed with unexpected exception. Correlation ID: '{CorrelationId}'", 
-                operationName, correlationId);
-            throw;
-        }
     }
 }
-

@@ -4,18 +4,17 @@
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Caching;
-
 /// <summary>
 /// Interceptor that provides caching for proxy operations to improve performance.
 /// </summary>
-public sealed class CachingInterceptor : IProxyInterceptor
+public sealed class CachingInterceptor : IOrderedProxyInterceptor
 {
+    /// <inheritdoc />
+    public int Order => 50; // Caching typically runs in the middle of the pipeline
     private readonly ILogger<CachingInterceptor> logger;
     private readonly IMemoryCache cache;
     private readonly CachingOptions options;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="CachingInterceptor"/> class.
     /// </summary>
@@ -23,18 +22,15 @@ public sealed class CachingInterceptor : IProxyInterceptor
     /// <param name="cache">The memory cache instance.</param>
     /// <param name="options">The caching options.</param>
     public CachingInterceptor(
-        ILogger<CachingInterceptor> logger, 
-        IMemoryCache cache, 
+        ILogger<CachingInterceptor> logger,
+        IMemoryCache cache,
         CachingOptions options)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.cache = cache ?? throw new ArgumentNullException(nameof(cache));
         this.options = options ?? throw new ArgumentNullException(nameof(options));
     }
-
-    /// <summary>
     /// Invokes the interceptor with caching logic for the proxy operation.
-    /// </summary>
     /// <typeparam name="T">The type of the response data.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
@@ -46,34 +42,33 @@ public sealed class CachingInterceptor : IProxyInterceptor
         var correlationId = context.CorrelationId ?? "None";
 
         // Check if caching is disabled for this operation
-        if (context.Metadata.TryGetValue("DisableCache", out var disableCache) && 
+        if (context.Metadata.TryGetValue("DisableCache", out var disableCache) &&
             disableCache is bool disabled && disabled)
         {
-            logger.LogDebug("Caching disabled for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
+            logger.LogDebug("Caching disabled for operation '{OperationName}'. Correlation ID: '{CorrelationId}'",
                 operationName, correlationId);
             return await next(context, cancellationToken);
         }
 
         // Generate cache key
         var cacheKey = GenerateCacheKey(context);
-        
+
         // Try to get from cache first
         if (cache.TryGetValue(cacheKey, out var cachedResponse) && cachedResponse is Response<T> cached)
         {
-            logger.LogDebug("Cache hit for operation '{OperationName}' with key '{CacheKey}'. Correlation ID: '{CorrelationId}'", 
+            logger.LogDebug("Cache hit for operation '{OperationName}' with key '{CacheKey}'. Correlation ID: '{CorrelationId}'",
                 operationName, cacheKey, correlationId);
-            
             context.Metadata["CacheHit"] = true;
             return cached;
         }
 
         // Execute the operation
-        logger.LogDebug("Cache miss for operation '{OperationName}' with key '{CacheKey}'. Correlation ID: '{CorrelationId}'", 
+        logger.LogDebug("Cache miss for operation '{OperationName}' with key '{CacheKey}'. Correlation ID: '{CorrelationId}'",
             operationName, cacheKey, correlationId);
 
         // If cache miss, call next delegate to get the result
         var response = await next(context, cancellationToken);
-        
+
         // Cache successful responses only
         if (response.IsSuccess)
         {
@@ -83,10 +78,8 @@ public sealed class CachingInterceptor : IProxyInterceptor
                 AbsoluteExpirationRelativeToNow = cacheDuration,
                 Priority = CacheItemPriority.Normal
             };
-
             cache.Set(cacheKey, response, cacheEntryOptions);
-            
-            logger.LogDebug("Cached successful response for operation '{OperationName}' with key '{CacheKey}' for {Duration}. Correlation ID: '{CorrelationId}'", 
+            logger.LogDebug("Cached successful response for operation '{OperationName}' with key '{CacheKey}' for {Duration}. Correlation ID: '{CorrelationId}'",
                 operationName, cacheKey, cacheDuration, correlationId);
         }
 

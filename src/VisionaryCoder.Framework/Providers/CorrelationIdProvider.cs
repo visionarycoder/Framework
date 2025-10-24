@@ -1,17 +1,19 @@
-namespace VisionaryCoder.Framework;
+using System;
+using System.Threading;
+using VisionaryCoder.Framework.Abstractions;
+
+namespace VisionaryCoder.Framework.Providers;
 
 /// <summary>
 /// Default implementation of <see cref="ICorrelationIdProvider"/>.
 /// </summary>
 public sealed class CorrelationIdProvider : ICorrelationIdProvider
-
 {
-    private static readonly AsyncLocal<string> currentCorrelationId = new();
+    private static readonly AsyncLocal<string?> currentCorrelationId = new();
 
     /// <inheritdoc />
     public string CorrelationId => currentCorrelationId.Value ?? GenerateNew();
 
-    /// <inheritdoc />
     public string GenerateNew()
     {
         var newId = Guid.NewGuid().ToString("N")[..12].ToUpperInvariant();
@@ -19,10 +21,12 @@ public sealed class CorrelationIdProvider : ICorrelationIdProvider
         return newId;
     }
 
-    /// <inheritdoc />
     public void SetCorrelationId(string correlationId)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(correlationId);
+        if (string.IsNullOrWhiteSpace(correlationId))
+        {
+            throw new ArgumentException("Correlation ID cannot be null or whitespace.", nameof(correlationId));
+        }
         currentCorrelationId.Value = correlationId;
     }
 }

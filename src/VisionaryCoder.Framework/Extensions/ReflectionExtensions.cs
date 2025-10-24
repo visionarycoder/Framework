@@ -1,7 +1,6 @@
 using System.Diagnostics;
 
 namespace VisionaryCoder.Framework.Extensions;
-
 /// <summary>
 /// Provides helper methods for reflection operations.
 /// </summary>
@@ -28,13 +27,9 @@ public static class ReflectionExtensions
             fullName = declaringType.FullName!;
         }
         while (declaringType.Module.Name.Equals("mscorlib.dll", StringComparison.OrdinalIgnoreCase));
-
         return fullName;
     }
-
-    /// <summary>
     /// Reads the stack frame to get the root calling type.
-    /// </summary>
     /// <returns>The type of the calling class, or <c>null</c> if not found.</returns>
     public static Type? TypeOfCallingClass()
     {
@@ -68,10 +63,11 @@ public static class ReflectionExtensions
     {
         ArgumentNullException.ThrowIfNull(obj);
         ArgumentNullException.ThrowIfNull(methodName);
-
         var method = obj.GetType().GetMethod(methodName);
         if (method is null)
+        {
             throw new MissingMethodException(methodName);
+        }
         return method.Invoke(obj, parameters);
     }
 }

@@ -87,7 +87,6 @@ public static class DateTimeExtensions
         /// Indicates that the date is in the future.
         /// </summary>
         ToFuture,
-
         /// <summary>
         /// Indicates that the date is in the past.
         /// </summary>

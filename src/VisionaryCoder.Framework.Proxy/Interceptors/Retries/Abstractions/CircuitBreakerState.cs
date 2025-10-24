@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Proxy.Interceptors;
+namespace VisionaryCoder.Framework.Proxy.Interceptors.Retries.Abstractions;
 
 /// <summary>
 /// Circuit breaker state enumeration.

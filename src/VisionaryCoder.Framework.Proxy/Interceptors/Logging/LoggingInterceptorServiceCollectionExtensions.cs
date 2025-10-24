@@ -2,7 +2,6 @@ using Microsoft.Extensions.DependencyInjection;
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Logging;
-
 /// <summary>
 /// Extension methods for adding logging interceptor services.
 /// </summary>

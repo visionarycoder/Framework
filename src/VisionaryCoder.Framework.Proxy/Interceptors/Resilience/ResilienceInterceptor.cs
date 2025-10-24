@@ -4,25 +4,19 @@
 using Microsoft.Extensions.Logging;
 using Polly;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Resilience;
-
 /// <summary>
 /// Interceptor that provides resilience capabilities using Microsoft.Extensions.Resilience and Polly.
 /// </summary>
-public sealed class ResilienceInterceptor : IProxyInterceptor
+public sealed class ResilienceInterceptor : IOrderedProxyInterceptor
 {
     private readonly ILogger<ResilienceInterceptor> logger;
     private readonly ResiliencePipeline resiliencePipeline;
-
     /// <summary>
     /// Gets the execution order for this interceptor.
     /// </summary>
-    public int Order => 180;
-
-    /// <summary>
+    public int Order => 10; // Resilience typically runs early in the pipeline
     /// Initializes a new instance of the <see cref="ResilienceInterceptor"/> class.
-    /// </summary>
     /// <param name="logger">The logger instance.</param>
     /// <param name="resiliencePipeline">The configured resilience pipeline.</param>
     public ResilienceInterceptor(ILogger<ResilienceInterceptor> logger, ResiliencePipeline? resiliencePipeline = null)
@@ -30,45 +24,30 @@ public sealed class ResilienceInterceptor : IProxyInterceptor
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.resiliencePipeline = resiliencePipeline ?? CreateDefaultPipeline();
     }
-
-    /// <summary>
     /// Invokes the interceptor with resilience protection.
-    /// </summary>
     /// <typeparam name="T">The type of the response data.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
     /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation with the response.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
-    {
-
         var operationName = context.OperationName ?? "Unknown";
         var correlationId = context.CorrelationId ?? "Undefined";
-
         try
         {
             logger.LogDebug("Applying resilience pipeline for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", operationName, correlationId);
-
             var response = await resiliencePipeline.ExecuteAsync(async (ct) => await next(context, ct), cancellationToken);
             context.Metadata["ResilienceApplied"] = "true";
             logger.LogDebug("Resilience pipeline completed successfully for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", operationName, correlationId);
             return response;
         }
         catch (Exception ex)
-        {
             context.Metadata["ResilienceException"] = ex.GetType().Name;
             logger.LogError(ex, "Resilience pipeline failed for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", operationName, correlationId);
             throw;
-        }
-
-    }
-
-    /// <summary>
     /// Creates a default resilience pipeline with retry and circuit breaker.
-    /// </summary>
     /// <returns>A configured resilience pipeline.</returns>
     private static ResiliencePipeline CreateDefaultPipeline()
-    {
         return new ResiliencePipelineBuilder()
             .AddRetry(new()
             {
@@ -78,13 +57,10 @@ public sealed class ResilienceInterceptor : IProxyInterceptor
                 UseJitter = true
             })
             .AddCircuitBreaker(new()
-            {
                 FailureRatio = 0.5,
                 SamplingDuration = TimeSpan.FromSeconds(30),
                 MinimumThroughput = 5,
                 BreakDuration = TimeSpan.FromMinutes(1)
-            })
             .AddTimeout(TimeSpan.FromSeconds(30))
             .Build();
-    }
 }

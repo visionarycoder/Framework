@@ -1,14 +1,18 @@
-namespace VisionaryCoder.Framework.Extensions;
+using VisionaryCoder.Framework.Abstractions;
 
+namespace VisionaryCoder.Framework.Extensions;
 public static class MonthExtensions
 {
-
     /// <summary>
     /// Gets the next month after the current month
     /// </summary>
     public static Month Next(this Month month)
     {
-        return new Month((month.Order + 1) % 13);
+        if(month.Ordinal == 0)
+            return Month.Unknown;
+        if(month.Ordinal == 12)
+            return Month.January;
+        return new Month((month.Ordinal + 1) % 13);
     }
 
     /// <summary>
@@ -16,7 +20,11 @@ public static class MonthExtensions
     /// </summary>
     public static Month Previous(this Month month)
     {
-        return new Month(month.Order == 0 ? 12 : month.Order - 1);
+        if (month.Ordinal == 0)
+            return Month.Unknown;
+        if (month.Ordinal == 1)      
+            return Month.December;
+        return new Month(month.Ordinal - 1);
     }
 
     /// <summary>
@@ -26,11 +34,9 @@ public static class MonthExtensions
     {
         if (quarter is < 1 or > 4)
             throw new ArgumentOutOfRangeException(nameof(quarter), "Quarter must be between 1 and 4");
-
-        if (month.Order == 0) // UNKNOWN month
+        if (month.Ordinal == 0) // UNKNOWN month
             return false;
-
-        var monthQuarter = (month.Order - 1) / 3 + 1;
+        var monthQuarter = (month.Ordinal - 1) / 3 + 1;
         return monthQuarter == quarter;
     }
 
@@ -39,10 +45,9 @@ public static class MonthExtensions
     /// </summary>
     public static int GetQuarter(this Month month)
     {
-        if (month.Order == 0) // UNKNOWN month
+        if (month.Ordinal == 0)
             return 0;
-
-        return (month.Order - 1) / 3 + 1;
+        return (month.Ordinal - 1) / 3 + 1;
     }
 
     /// <summary>
@@ -50,7 +55,7 @@ public static class MonthExtensions
     /// </summary>
     public static bool IsSummerMonth(this Month month)
     {
-        return month.Order is >= 6 and <= 8;
+        return month.Ordinal is >= 6 and <= 8;
     }
 
     /// <summary>
@@ -60,5 +65,4 @@ public static class MonthExtensions
     {
         return new Month(date.Month);
     }
-
 }

@@ -1,7 +1,6 @@
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
-
 /// <summary>
 /// Role-based authorization policy.
 /// </summary>
@@ -9,15 +8,11 @@ namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
 public class RoleBasedAuthorizationPolicy(ICollection<string> requiredRoles) : IAuthorizationPolicy
 {
     private readonly ICollection<string> requiredRoles = requiredRoles ?? throw new ArgumentNullException(nameof(requiredRoles));
-
     /// <summary>
     /// Gets the name of the authorization policy.
     /// </summary>
     public string Name => "RoleBased";
-
-    /// <summary>
     /// Evaluates role-based authorization.
-    /// </summary>
     /// <param name="context">The proxy context.</param>
     /// <returns>The authorization result.</returns>
     public Task<AuthorizationResult> EvaluateAsync(ProxyContext context)
@@ -27,10 +22,8 @@ public class RoleBasedAuthorizationPolicy(ICollection<string> requiredRoles) : I
         {
             return Task.FromResult(AuthorizationResult.Failure("No roles found in context"));
         }
-
         var hasRequiredRole = requiredRoles.Any(requiredRole => 
             userRoles.Contains(requiredRole, StringComparer.OrdinalIgnoreCase));
-
         return Task.FromResult(hasRequiredRole 
             ? AuthorizationResult.Success() 
             : AuthorizationResult.Failure($"User lacks required roles: {string.Join(", ", requiredRoles)}"));

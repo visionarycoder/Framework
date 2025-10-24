@@ -11,10 +11,7 @@ public interface IInterceptor
     /// </summary>
     int Order { get; }
 }
-
-/// <summary>
 /// Interface for caching interceptors.
-/// </summary>
 public interface ICachingInterceptor : IInterceptor
 {
     /// <summary>
@@ -26,10 +23,7 @@ public interface ICachingInterceptor : IInterceptor
     /// <returns>The result of the operation.</returns>
     Task<T> InterceptAsync<T>(string methodName, object[] parameters, Func<Task<T>> next);
 }
-
-/// <summary>
 /// Interface for logging interceptors.
-/// </summary>
 public interface ILoggingInterceptor : IInterceptor
 {
     /// <summary>

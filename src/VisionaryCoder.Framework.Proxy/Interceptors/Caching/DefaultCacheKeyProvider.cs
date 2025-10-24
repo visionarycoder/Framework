@@ -1,7 +1,6 @@
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Caching;
-
 /// <summary>
 /// Default implementation of ICacheKeyProvider.
 /// </summary>
@@ -22,7 +21,6 @@ public class DefaultCacheKeyProvider : ICacheKeyProvider
             context.Url ?? string.Empty,
             typeof(T).Name
         };
-
         // Include relevant headers in the key
         if (context.Headers.Count > 0)
         {
@@ -36,7 +34,6 @@ public class DefaultCacheKeyProvider : ICacheKeyProvider
                 keyComponents.Add(headerString);
             }
         }
-
         var combinedKey = string.Join("|", keyComponents);
         
         // Hash the key to ensure consistent length and avoid special characters
@@ -44,7 +41,6 @@ public class DefaultCacheKeyProvider : ICacheKeyProvider
         var hashBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(combinedKey));
         return Convert.ToBase64String(hashBytes);
     }
-
     /// <summary>
     /// Determines if a header should be included in the cache key.
     /// </summary>
@@ -59,7 +55,6 @@ public class DefaultCacheKeyProvider : ICacheKeyProvider
             "Content-Type",
             "X-API-Version"
         };
-
         return relevantHeaders.Any(h => h.Equals(headerName, StringComparison.OrdinalIgnoreCase));
     }
 }

@@ -1,7 +1,6 @@
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Caching;
-
 /// <summary>
 /// Interface for generating cache keys based on proxy context.
 /// </summary>

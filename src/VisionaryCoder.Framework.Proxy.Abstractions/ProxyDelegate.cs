@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
 namespace VisionaryCoder.Framework.Proxy.Abstractions;
-
 /// <summary>
 /// Delegate for proxy operations.
 /// </summary>

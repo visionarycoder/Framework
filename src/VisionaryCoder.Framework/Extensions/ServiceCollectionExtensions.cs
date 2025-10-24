@@ -1,8 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using VisionaryCoder.Framework.Abstractions;
+using VisionaryCoder.Framework.Providers;
 
 namespace VisionaryCoder.Framework;
-
 /// <summary>
 /// Extension methods for configuring the VisionaryCoder Framework services.
 /// </summary>
@@ -30,16 +31,12 @@ public static class ServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configureOptions);
-
         // Configure framework options
         services.Configure(configureOptions);
-
         // Register core framework services
         services.AddSingleton<IFrameworkInfoProvider, FrameworkInfoProvider>();
         services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
-
         // Framework services are now registered
-
         return services;
     }
 
@@ -50,11 +47,7 @@ public static class ServiceCollectionExtensions
     /// <returns>The service collection for method chaining.</returns>
     public static IServiceCollection AddFrameworkCorrelation(this IServiceCollection services)
     {
-        ArgumentNullException.ThrowIfNull(services);
-
-        services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
         services.AddScoped<IRequestIdProvider, RequestIdProvider>();
-
         return services;
     }
 }

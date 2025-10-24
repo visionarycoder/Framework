@@ -11,7 +11,8 @@ The framework follows a modular architecture organized by functional concerns:
 ### Core Projects
 
 #### 🏗️ VisionaryCoder.Framework.Abstractions
-**Foundation layer providing core base classes and abstractions**
+
+Foundation layer providing core base classes and abstractions
 
 - **ServiceBase&lt;T&gt;** - Base class for services with integrated logging and dependency injection patterns
 - **EntityBase** - Base entity class with audit fields, soft delete support, and optimistic concurrency
@@ -34,35 +35,37 @@ public class User : EntityBase
 }
 ```
 
-#### 🔄 VisionaryCoder.Framework.Services.Abstractions  
-**Service contract definitions following Microsoft dependency injection patterns**
+#### 🔄 VisionaryCoder.Framework.Abstractions.Services  
 
-- **IFileService** - Comprehensive async file operations with cancellation support
-- **IDirectoryService** - Directory manipulation and management operations
-- Clean, testable interfaces that support both sync and async operations
+##### Service contract definitions following Microsoft dependency injection patterns
+
+- **IFileSystem** - Unified interface for all file and directory operations with async support
+- Clean, testable interface that consolidates file system operations in one place
+- Follows Microsoft System.IO.Abstractions patterns for better testability
 
 ```csharp
-// Example: File service usage
+// Example: File system service usage
 public class DocumentProcessor : ServiceBase<DocumentProcessor>
 {
-    private readonly IFileService _fileService;
+    private readonly IFileSystem _fileSystem;
     
-    public DocumentProcessor(IFileService fileService, ILogger<DocumentProcessor> logger) 
+    public DocumentProcessor(IFileSystem fileSystem, ILogger<DocumentProcessor> logger) 
         : base(logger)
     {
-        _fileService = fileService;
+        _fileSystem = fileSystem;
     }
     
     public async Task ProcessAsync(string filePath, CancellationToken cancellationToken = default)
     {
-        var content = await _fileService.ReadAllTextAsync(filePath, cancellationToken);
+        var content = await _fileSystem.ReadAllTextAsync(filePath, cancellationToken);
         // Process content...
     }
 }
 ```
 
 #### 💾 VisionaryCoder.Framework.Data.Abstractions
-**Repository and Unit of Work patterns for data access**
+
+##### Repository and Unit of Work patterns for data access
 
 - **IRepository&lt;TEntity, TKey&gt;** - Generic repository with expression-based querying
 - **IUnitOfWork** - Transaction management and coordinated persistence
@@ -89,16 +92,18 @@ public class UserService : ServiceBase<UserService>
 ```
 
 #### 📁 VisionaryCoder.Framework.Services.FileSystem
-**Production-ready file system service implementations**
 
-- **FileService** - Complete implementation of IFileService with comprehensive logging and error handling
-- Async-first operations with proper cancellation token support
+##### Production-ready file system service implementations
+
+- **FileSystemService** - Unified implementation of IFileSystem with comprehensive logging and error handling
+- Async-first operations with proper cancellation token support  
 - Structured logging with correlation IDs for tracking operations
-- Microsoft I/O patterns and best practices
+- Microsoft I/O patterns and System.IO.Abstractions compatibility
 
 ## Key Features
 
 ### ✨ **Microsoft Best Practices**
+
 - PascalCase naming conventions throughout
 - **NO underscore prefixes** - follows Microsoft guidelines strictly
 - Async/await patterns for all I/O operations
@@ -106,24 +111,28 @@ public class UserService : ServiceBase<UserService>
 - Comprehensive XML documentation
 
 ### 🛡️ **Type Safety**
+
 - Strongly-typed identifiers prevent primitive obsession
 - Generic repository patterns with type constraints
 - Nullable reference types enabled throughout
 - Expression-based querying for compile-time safety
 
 ### 📊 **Enterprise Patterns**
+
 - Repository and Unit of Work for data access
 - Service layer abstractions for business logic
 - Base classes for common functionality
 - Audit fields and soft delete support built-in
 
 ### 🚀 **Performance & Scalability**
+
 - Async/await throughout for non-blocking operations
 - Cancellation token support for responsive applications
 - Optimistic concurrency with row versioning
 - Minimal allocations with record types and spans
 
 ### 🔍 **Observability**
+
 - Structured logging with Microsoft.Extensions.Logging
 - ServiceBase&lt;T&gt; provides built-in logging capabilities
 - Correlation ID support for request tracking
@@ -147,11 +156,11 @@ dotnet sln add src/VisionaryCoder.Framework.Services.FileSystem/VisionaryCoder.F
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
 using VisionaryCoder.Framework.Abstractions;
-using VisionaryCoder.Framework.Services.Abstractions;
+using VisionaryCoder.Framework.Abstractions.Services;
 using VisionaryCoder.Framework.Services.FileSystem;
 
 // Configure dependency injection
-services.AddScoped<IFileService, FileService>();
+services.AddFileSystemServices();
 services.AddScoped<DocumentService>();
 
 // Define strongly-typed entities
@@ -170,12 +179,12 @@ public class Document : EntityBase
 // Implement services using framework patterns
 public class DocumentService : ServiceBase<DocumentService>
 {
-    private readonly IFileService _fileService;
+    private readonly IFileSystem _fileSystem;
     
-    public DocumentService(IFileService fileService, ILogger<DocumentService> logger) 
+    public DocumentService(IFileSystem fileSystem, ILogger<DocumentService> logger) 
         : base(logger)
     {
-        _fileService = fileService;
+        _fileSystem = fileSystem;
     }
     
     public async Task<Document?> LoadDocumentAsync(string filePath)
@@ -214,15 +223,14 @@ All framework projects build successfully and demonstrate proper Microsoft patte
 
 ## Project Structure
 
-```
+```text
 src/
 ├── VisionaryCoder.Framework.Abstractions/           # Core abstractions and base classes
 │   ├── ServiceBase.cs                              # Base service with logging
 │   ├── EntityBase.cs                               # Base entity with audit fields  
 │   └── StronglyTypedId.cs                          # Strongly-typed identifier pattern
-├── VisionaryCoder.Framework.Services.Abstractions/ # Service contracts
-│   ├── IFileService.cs                             # File operation contracts
-│   └── IDirectoryService.cs                        # Directory operation contracts
+├── VisionaryCoder.Framework.Abstractions.Services/  # Service contracts
+│   └── IFileSystem.cs                              # Unified file system operations
 ├── VisionaryCoder.Framework.Data.Abstractions/     # Data access patterns
 │   ├── IRepository.cs                              # Generic repository pattern
 │   ├── IUnitOfWork.cs                              # Transaction coordination

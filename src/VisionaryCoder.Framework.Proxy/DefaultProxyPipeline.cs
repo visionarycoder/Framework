@@ -2,7 +2,6 @@ using System.Reflection;
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy;
-
 /// <summary>
 /// Default implementation of the proxy pipeline that executes interceptors in order.
 /// </summary>
@@ -12,7 +11,6 @@ public sealed class DefaultProxyPipeline(IEnumerable<IProxyInterceptor> intercep
 {
     private readonly IReadOnlyList<IProxyInterceptor> orderedInterceptors = Order(interceptors);
     private readonly IProxyTransport transport = transport ?? throw new ArgumentNullException(nameof(transport));
-
     /// <summary>
     /// Sends a request through the pipeline and returns a response.
     /// </summary>
@@ -24,29 +22,22 @@ public sealed class DefaultProxyPipeline(IEnumerable<IProxyInterceptor> intercep
     {
         if (context is null)
             throw new ArgumentNullException(nameof(context));
-
         // Build the pipeline by wrapping interceptors around the transport
         ProxyDelegate<T> terminal = (_, ct) => transport.SendCoreAsync<T>(context, ct);
-
         // Wrap each interceptor around the previous delegate (reverse order for proper execution)
         foreach (var interceptor in orderedInterceptors.Reverse())
         {
             var next = terminal;
             terminal = (ctx, ct) => interceptor.InvokeAsync<T>(ctx, next, ct);
         }
-
         return terminal(context, cancellationToken);
     }
-
-    /// <summary>
     /// Orders the interceptors based on their Order value.
-    /// </summary>
     /// <param name="interceptors">The interceptors to order.</param>
     /// <returns>An ordered list of interceptors.</returns>
     private static IReadOnlyList<IProxyInterceptor> Order(IEnumerable<IProxyInterceptor> interceptors)
-    {
-        var index = 0;
-        
+    { var index = 0;
+
         // DI preserves registration order—use index to keep stability for same order values
         return interceptors
             .Select(interceptor => new
@@ -58,22 +49,15 @@ public sealed class DefaultProxyPipeline(IEnumerable<IProxyInterceptor> intercep
             .OrderBy(x => x.Order)
             .ThenBy(x => x.Index)
             .Select(x => x.Interceptor)
-            .ToList();
-    }
-
-    /// <summary>
+            .ToList(); 
+            }
     /// Gets the order value for an interceptor.
-    /// </summary>
     /// <param name="interceptor">The interceptor to get the order for.</param>
     /// <returns>The order value.</returns>
     private static int GetOrder(IProxyInterceptor interceptor)
-    {
-        // Interface-based order takes precedence over attribute
+    {   // Interface-based order takes precedence over attribute
         if (interceptor is IOrderedProxyInterceptor orderedInterceptor)
-        {
             return orderedInterceptor.Order;
-        }
-
         // Fall back to attribute-based order
         var attribute = interceptor.GetType().GetCustomAttribute<ProxyInterceptorOrderAttribute>();
         return attribute?.Order ?? 0;

@@ -4,31 +4,38 @@ namespace VisionaryCoder.Framework.Extensions.Logging;
 
 public static class LogHelper
 {
+ 
     // Synchronous Methods
-    public static void LogTraceMessage(ILogger logger, string logMessage, Exception? exception = null)
+     public static void LogTraceMessage(ILogger logger, string logMessage, Exception? exception = null)
     {
         LogTrace(logger, logMessage, exception);
     }
+ 
     public static void LogDebugMessage(ILogger logger, string logMessage, Exception? exception = null)
     {
         LogDebug(logger, logMessage, exception);
     }
+ 
     public static void LogInformationMessage(ILogger logger, string logMessage, Exception? exception = null)
     {
         LogInformation(logger, logMessage, exception);
     }
+ 
     public static void LogWarningMessage(ILogger logger, string logMessage, Exception? exception = null)
     {
-        LogWarning(logger, logMessage, exception);
+        LogWarning(logger, logMessage, exception); 
     }
+ 
     public static void LogErrorMessage(ILogger logger, string logMessage, Exception? exception = null)
     {
         LogError(logger, logMessage, exception);
     }
+ 
     public static void LogCriticalMessage(ILogger logger, string logMessage, Exception? exception = null)
     {
         LogCritical(logger, logMessage, exception);
     }
+
     public static void Log(ILogger logger, string logMessage, LogLevel logLevel = LogLevel.Debug, Exception? exception = null)
     {
         switch (logLevel)
@@ -55,6 +62,7 @@ public static class LogHelper
                 throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, "Invalid log level.");
         }
     }
+
     // Asynchronous Methods with CancellationToken
     public static async Task LogTraceMessageAsync(ILogger logger, string logMessage, Exception? exception = null, CancellationToken cancellationToken = default)
     {
@@ -64,6 +72,7 @@ public static class LogHelper
             LogTrace(logger, logMessage, exception);
         }, cancellationToken);
     }
+    
     public static async Task LogDebugMessageAsync(ILogger logger, string logMessage, Exception? exception = null, CancellationToken cancellationToken = default)
     {
         await Task.Run(() =>
@@ -72,6 +81,7 @@ public static class LogHelper
             LogDebug(logger, logMessage, exception);
         }, cancellationToken);
     }
+
     public static async Task LogInformationMessageAsync(ILogger logger, string logMessage, Exception? exception = null, CancellationToken cancellationToken = default)
     {
         await Task.Run(() =>
@@ -80,6 +90,7 @@ public static class LogHelper
             LogInformation(logger, logMessage, exception);
         }, cancellationToken);
     }
+    
     public static async Task LogWarningMessageAsync(ILogger logger, string logMessage, Exception? exception = null, CancellationToken cancellationToken = default)
     {
         await Task.Run(() =>
@@ -88,6 +99,7 @@ public static class LogHelper
             LogWarning(logger, logMessage, exception);
         }, cancellationToken);
     }
+
     public static async Task LogErrorMessageAsync(ILogger logger, string logMessage, Exception? exception = null, CancellationToken cancellationToken = default)
     {
         await Task.Run(() =>
@@ -96,6 +108,7 @@ public static class LogHelper
             LogError(logger, logMessage, exception);
         }, cancellationToken);
     }
+
     public static async Task LogCriticalMessageAsync(ILogger logger, string logMessage, Exception? exception = null, CancellationToken cancellationToken = default)
     {
         await Task.Run(() =>
@@ -104,6 +117,7 @@ public static class LogHelper
             LogCritical(logger, logMessage, exception);
         }, cancellationToken);
     }
+
     public static async Task LogAsync(ILogger logger, string logMessage, LogLevel logLevel = LogLevel.Debug, Exception? exception = null, CancellationToken cancellationToken = default)
     {
         await Task.Run(() =>
@@ -112,6 +126,7 @@ public static class LogHelper
             Log(logger, logMessage, logLevel, exception);
         }, cancellationToken);
     }
+    
     // Private Helper Methods
     private static void LogTrace(ILogger logger, string logMessage, Exception? exception)
     {
@@ -120,6 +135,7 @@ public static class LogHelper
         else
             logger.LogTrace(exception, logMessage);
     }
+
     private static void LogDebug(ILogger logger, string logMessage, Exception? exception)
     {
         if (exception == null)
@@ -127,6 +143,7 @@ public static class LogHelper
         else
             logger.LogDebug(exception, logMessage);
     }
+    
     private static void LogInformation(ILogger logger, string logMessage, Exception? exception)
     {
         if (exception == null)
@@ -134,6 +151,7 @@ public static class LogHelper
         else
             logger.LogInformation(exception, logMessage);
     }
+
     private static void LogWarning(ILogger logger, string logMessage, Exception? exception)
     {
         if (exception == null)
@@ -141,6 +159,7 @@ public static class LogHelper
         else
             logger.LogWarning(exception, logMessage);
     }
+    
     private static void LogError(ILogger logger, string logMessage, Exception? exception)
     {
         if (exception == null)
@@ -148,6 +167,7 @@ public static class LogHelper
         else
             logger.LogError(exception, logMessage);
     }
+
     private static void LogCritical(ILogger logger, string logMessage, Exception? exception)
     {
         if (exception == null)

@@ -22,7 +22,7 @@ public class FrameworkResultTests
             var value = "test value";
 
             // Act
-            var result = FrameworkResult<string>.Success(value);
+            var result = ServiceResult<string>.Success(value);
 
             // Assert
             result.IsSuccess.Should().BeTrue();
@@ -36,7 +36,7 @@ public class FrameworkResultTests
         public void Success_WithNullValue_ShouldCreateSuccessfulResult()
         {
             // Act
-            var result = FrameworkResult<string?>.Success(null);
+            var result = ServiceResult<string?>.Success(null);
 
             // Assert
             result.IsSuccess.Should().BeTrue();
@@ -53,7 +53,7 @@ public class FrameworkResultTests
             var value = new { Id = 1, Name = "Test" };
 
             // Act
-            var result = FrameworkResult<object>.Success(value);
+            var result = ServiceResult<object>.Success(value);
 
             // Assert
             result.IsSuccess.Should().BeTrue();
@@ -71,7 +71,7 @@ public class FrameworkResultTests
             var errorMessage = "Something went wrong";
 
             // Act
-            var result = FrameworkResult<string>.Failure(errorMessage);
+            var result = ServiceResult<string>.Failure(errorMessage);
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -88,7 +88,7 @@ public class FrameworkResultTests
             var exception = new InvalidOperationException("Test exception");
 
             // Act
-            var result = FrameworkResult<string>.Failure(exception);
+            var result = ServiceResult<string>.Failure(exception);
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -106,7 +106,7 @@ public class FrameworkResultTests
             var exception = new ArgumentException("Argument exception");
 
             // Act
-            var result = FrameworkResult<string>.Failure(errorMessage, exception);
+            var result = ServiceResult<string>.Failure(errorMessage, exception);
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -125,7 +125,7 @@ public class FrameworkResultTests
         {
             // Arrange
             var value = "test value";
-            var result = FrameworkResult<string>.Success(value);
+            var result = ServiceResult<string>.Success(value);
             var successCalled = false;
             var failureCalled = false;
             string? capturedValue = null;
@@ -148,7 +148,7 @@ public class FrameworkResultTests
             // Arrange
             var errorMessage = "Test error";
             var exception = new InvalidOperationException("Test exception");
-            var result = FrameworkResult<string>.Failure(errorMessage, exception);
+            var result = ServiceResult<string>.Failure(errorMessage, exception);
             var successCalled = false;
             var failureCalled = false;
             string? capturedError = null;
@@ -171,7 +171,7 @@ public class FrameworkResultTests
         public void Match_WithSuccessfulResultButNullValue_ShouldExecuteFailureAction()
         {
             // Arrange
-            var result = FrameworkResult<string?>.Success(null);
+            var result = ServiceResult<string?>.Success(null);
             var successCalled = false;
             var failureCalled = false;
 
@@ -191,7 +191,7 @@ public class FrameworkResultTests
         {
             // Arrange
             var errorMessage = "Test error";
-            var result = FrameworkResult<string>.Failure(errorMessage);
+            var result = ServiceResult<string>.Failure(errorMessage);
             Exception? capturedException = new Exception("should be null");
 
             // Act
@@ -213,7 +213,7 @@ public class FrameworkResultTests
         {
             // Arrange
             var originalValue = 42;
-            var result = FrameworkResult<int>.Success(originalValue);
+            var result = ServiceResult<int>.Success(originalValue);
 
             // Act
             var mappedResult = result.Map(x => x.ToString());
@@ -231,7 +231,7 @@ public class FrameworkResultTests
             // Arrange
             var errorMessage = "Original error";
             var exception = new InvalidOperationException("Original exception");
-            var result = FrameworkResult<int>.Failure(errorMessage, exception);
+            var result = ServiceResult<int>.Failure(errorMessage, exception);
 
             // Act
             var mappedResult = result.Map(x => x.ToString());
@@ -248,7 +248,7 @@ public class FrameworkResultTests
         {
             // Arrange
             var errorMessage = "Original error";
-            var result = FrameworkResult<int>.Failure(errorMessage);
+            var result = ServiceResult<int>.Failure(errorMessage);
 
             // Act
             var mappedResult = result.Map(x => x.ToString());
@@ -265,7 +265,7 @@ public class FrameworkResultTests
         {
             // Arrange
             var originalValue = 42;
-            var result = FrameworkResult<int>.Success(originalValue);
+            var result = ServiceResult<int>.Success(originalValue);
             var mapperException = new InvalidOperationException("Mapper failed");
 
             // Act
@@ -282,7 +282,7 @@ public class FrameworkResultTests
         public void Map_WithSuccessfulResultButNullValue_ShouldReturnOriginalFailure()
         {
             // Arrange
-            var result = FrameworkResult<string?>.Success(null);
+            var result = ServiceResult<string?>.Success(null);
 
             // Act
             var mappedResult = result.Map(x => x?.Length ?? 0);
@@ -297,7 +297,7 @@ public class FrameworkResultTests
         {
             // Arrange
             var person = new { Name = "John", Age = 30 };
-            var result = FrameworkResult<object>.Success(person);
+            var result = ServiceResult<object>.Success(person);
 
             // Act
             var mappedResult = result.Map(p => $"{((dynamic)p).Name} is {((dynamic)p).Age} years old");
@@ -323,7 +323,7 @@ public class FrameworkResultTests
         public void Success_ShouldCreateSuccessfulResult()
         {
             // Act
-            var result = FrameworkResult.Success();
+            var result = ServiceResult.Success();
 
             // Assert
             result.IsSuccess.Should().BeTrue();
@@ -343,7 +343,7 @@ public class FrameworkResultTests
             var errorMessage = "Something went wrong";
 
             // Act
-            var result = FrameworkResult.Failure(errorMessage);
+            var result = ServiceResult.Failure(errorMessage);
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -359,7 +359,7 @@ public class FrameworkResultTests
             var exception = new InvalidOperationException("Test exception");
 
             // Act
-            var result = FrameworkResult.Failure(exception);
+            var result = ServiceResult.Failure(exception);
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -376,7 +376,7 @@ public class FrameworkResultTests
             var exception = new ArgumentException("Argument exception");
 
             // Act
-            var result = FrameworkResult.Failure(errorMessage, exception);
+            var result = ServiceResult.Failure(errorMessage, exception);
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -393,7 +393,7 @@ public class FrameworkResultTests
         public void Match_WithSuccessfulResult_ShouldExecuteSuccessAction()
         {
             // Arrange
-            var result = FrameworkResult.Success();
+            var result = ServiceResult.Success();
             var successCalled = false;
             var failureCalled = false;
 
@@ -414,7 +414,7 @@ public class FrameworkResultTests
             // Arrange
             var errorMessage = "Test error";
             var exception = new InvalidOperationException("Test exception");
-            var result = FrameworkResult.Failure(errorMessage, exception);
+            var result = ServiceResult.Failure(errorMessage, exception);
             var successCalled = false;
             var failureCalled = false;
             string? capturedError = null;
@@ -438,7 +438,7 @@ public class FrameworkResultTests
         {
             // Arrange
             var errorMessage = "Test error";
-            var result = FrameworkResult.Failure(errorMessage);
+            var result = ServiceResult.Failure(errorMessage);
             Exception? capturedException = new Exception("should be null");
 
             // Act
@@ -456,9 +456,9 @@ public class FrameworkResultTests
         {
             // This tests the "Unknown error" fallback in Match method
             // We need to create a result through reflection to test this edge case
-            var resultType = typeof(FrameworkResult);
+            var resultType = typeof(ServiceResult);
             var constructor = resultType.GetConstructors(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)[0];
-            var result = (FrameworkResult)constructor.Invoke(new object?[] { false, null, null });
+            var result = (ServiceResult)constructor.Invoke(new object?[] { false, null, null });
             
             string? capturedError = null;
 
@@ -483,10 +483,10 @@ public class FrameworkResultTests
     public void FrameworkResult_GenericAndNonGeneric_ShouldWorkTogether()
     {
         // Arrange
-        var nonGenericSuccess = FrameworkResult.Success();
-        var nonGenericFailure = FrameworkResult.Failure("Non-generic error");
-        var genericSuccess = FrameworkResult<string>.Success("test");
-        var genericFailure = FrameworkResult<string>.Failure("Generic error");
+        var nonGenericSuccess = ServiceResult.Success();
+        var nonGenericFailure = ServiceResult.Failure("Non-generic error");
+        var genericSuccess = ServiceResult<string>.Success("test");
+        var genericFailure = ServiceResult<string>.Failure("Generic error");
 
         // Assert
         nonGenericSuccess.IsSuccess.Should().BeTrue();
@@ -495,15 +495,15 @@ public class FrameworkResultTests
         genericFailure.IsFailure.Should().BeTrue();
 
         // Verify they're different types
-        nonGenericSuccess.GetType().Should().Be(typeof(FrameworkResult));
-        genericSuccess.GetType().Should().Be(typeof(FrameworkResult<string>));
+        nonGenericSuccess.GetType().Should().Be(typeof(ServiceResult));
+        genericSuccess.GetType().Should().Be(typeof(ServiceResult<string>));
     }
 
     [TestMethod]
     public void FrameworkResult_ChainedOperations_ShouldWorkCorrectly()
     {
         // Arrange
-        var initialResult = FrameworkResult<int>.Success(42);
+        var initialResult = ServiceResult<int>.Success(42);
 
         // Act
         var stringResult = initialResult.Map(x => x.ToString());
@@ -519,7 +519,7 @@ public class FrameworkResultTests
     {
         // Arrange
         var originalException = new ArgumentException("Original error");
-        var failedResult = FrameworkResult<int>.Failure("Custom message", originalException);
+        var failedResult = ServiceResult<int>.Failure("Custom message", originalException);
 
         // Act
         var mappedResult = failedResult.Map(x => x.ToString());

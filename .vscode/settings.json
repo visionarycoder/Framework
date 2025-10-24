@@ -99,5 +99,8 @@
         "Invoke-Expression": true,
         "iex": true
     },
-    "sarif-viewer.connectToGithubCodeScanning": "off"
+    "sarif-viewer.connectToGithubCodeScanning": "off",
+    "inlineChat.notebookAgent": true,
+    "inlineChat.finishOnType": true,
+    "inlineChat.enableV2": true
 }

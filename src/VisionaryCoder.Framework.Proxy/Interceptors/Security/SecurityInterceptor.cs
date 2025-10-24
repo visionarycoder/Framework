@@ -3,9 +3,7 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
-
 /// <summary>
 /// Security interceptor that handles authentication and authorization for proxy operations.
 /// Order: -200 (executes early in the pipeline).
@@ -15,10 +13,8 @@ public sealed class SecurityInterceptor : IOrderedProxyInterceptor
     private readonly ILogger<SecurityInterceptor> logger;
     private readonly IEnumerable<IProxySecurityEnricher> enrichers;
     private readonly IEnumerable<IProxyAuthorizationPolicy> policies;
-
     /// <inheritdoc />
     public int Order => -200;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="SecurityInterceptor"/> class.
     /// </summary>
@@ -34,13 +30,10 @@ public sealed class SecurityInterceptor : IOrderedProxyInterceptor
         this.enrichers = enrichers ?? throw new ArgumentNullException(nameof(enrichers));
         this.policies = policies ?? throw new ArgumentNullException(nameof(policies));
     }
-
-    /// <inheritdoc />
     public async Task<Response<T>> InvokeAsync<T>(
         ProxyContext context,
         ProxyDelegate<T> next,
         CancellationToken cancellationToken = default)
-    {
         using var _ = logger.BeginScope("SecurityInterceptor for {RequestType}", context.Request?.GetType().Name ?? "Unknown");
         
         try
@@ -50,25 +43,17 @@ public sealed class SecurityInterceptor : IOrderedProxyInterceptor
             {
                 await enricher.EnrichAsync(context, cancellationToken);
             }
-
             // Check authorization policies
             foreach (var policy in policies)
-            {
                 if (!await policy.IsAuthorizedAsync(context, cancellationToken))
                 {
                     logger.LogWarning("Authorization failed for policy {PolicyType}", policy.GetType().Name);
-                    return Response<T>.Failure(new NonRetryableTransportException("Authorization failed"));
+                    return Response<T>.Failure("Authorization failed");
                 }
-            }
-
             logger.LogDebug("Security validation passed, proceeding to next interceptor");
             return await next(context, cancellationToken);
         }
         catch (Exception ex) when (ex is not ProxyException)
-        {
             logger.LogError(ex, "Unexpected error during security processing");
-            return Response<T>.Failure(new NonRetryableTransportException("Security processing failed", ex));
-        }
-    }
+            return Response<T>.Failure("Security processing failed");
 }
-

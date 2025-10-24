@@ -3,9 +3,7 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
-
 /// <summary>
 /// Helper class for enriching proxy context with JWT Bearer authentication.
 /// </summary>
@@ -15,7 +13,6 @@ public class JwtBearerEnricher(ILogger<JwtBearerEnricher> logger, Func<Task<stri
 {
     private readonly ILogger<JwtBearerEnricher> logger = logger;
     private readonly Func<Task<string?>> tokenProvider = tokenProvider;
-
     /// <inheritdoc />
     public async Task EnrichAsync(ProxyContext context, CancellationToken cancellationToken = default)
     {
@@ -28,9 +25,7 @@ public class JwtBearerEnricher(ILogger<JwtBearerEnricher> logger, Func<Task<stri
                 logger.LogDebug("JWT Bearer token added to context");
             }
             else
-            {
                 logger.LogWarning("JWT token provider returned null or empty token");
-            }
         }
         catch (Exception ex)
         {

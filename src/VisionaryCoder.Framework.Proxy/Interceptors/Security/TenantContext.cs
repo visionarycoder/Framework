@@ -9,9 +9,6 @@ public class TenantContext
     /// Gets or sets the tenant identifier.
     /// </summary>
     public string TenantId { get; set; } = string.Empty;
-
-    /// <summary>
     /// Gets or sets the tenant name.
-    /// </summary>
     public string TenantName { get; set; } = string.Empty;
 }

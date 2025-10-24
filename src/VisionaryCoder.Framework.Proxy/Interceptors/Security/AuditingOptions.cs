@@ -9,14 +9,8 @@ public class AuditingOptions
     /// Gets or sets a value indicating whether to include request headers in audit records.
     /// </summary>
     public bool IncludeHeaders { get; set; } = true;
-
-    /// <summary>
     /// Gets or sets a value indicating whether to include error details in audit records.
-    /// </summary>
     public bool IncludeErrorDetails { get; set; } = true;
-
-    /// <summary>
     /// Gets or sets a value indicating whether to include response data size in audit records.
-    /// </summary>
     public bool IncludeResponseData { get; set; } = false;
 }

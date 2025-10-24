@@ -3,9 +3,7 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Correlation;
-
 /// <summary>
 /// Correlation interceptor that manages correlation IDs for proxy operations.
 /// Order: 0 (executes in the middle of the pipeline).
@@ -15,10 +13,8 @@ public sealed class CorrelationInterceptor : IOrderedProxyInterceptor
     private readonly ILogger<CorrelationInterceptor> logger;
     private readonly ICorrelationContext correlationContext;
     private readonly ICorrelationIdGenerator idGenerator;
-
     /// <inheritdoc />
     public int Order => 0;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="CorrelationInterceptor"/> class.
     /// </summary>
@@ -34,8 +30,6 @@ public sealed class CorrelationInterceptor : IOrderedProxyInterceptor
         this.correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
         this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
     }
-
-    /// <inheritdoc />
     public async Task<Response<T>> InvokeAsync<T>(
         ProxyContext context,
         ProxyDelegate<T> next,
@@ -53,10 +47,8 @@ public sealed class CorrelationInterceptor : IOrderedProxyInterceptor
         {
             logger.LogDebug("Using existing correlation ID: {CorrelationId}", correlationId);
         }
-
         // Add correlation ID to proxy context
         context.Items["CorrelationId"] = correlationId;
-
         // Add correlation ID to logging scope
         using var scope = logger.BeginScope("CorrelationId: {CorrelationId}", correlationId);
         

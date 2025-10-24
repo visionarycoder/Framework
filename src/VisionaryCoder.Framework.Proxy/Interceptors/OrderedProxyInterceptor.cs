@@ -1,7 +1,6 @@
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors;
-
 public sealed class OrderedProxyInterceptor<TInner>(TInner inner, int order) : IProxyInterceptor, IOrderedProxyInterceptor where TInner : IProxyInterceptor
 {
     public int Order => order;

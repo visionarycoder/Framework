@@ -1,9 +1,8 @@
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Secrets.Abstractions;
+using VisionaryCoder.Framework.Abstractions.Services;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
-
 /// <summary>
 /// JWT interceptor specialized for Key Vault authentication scenarios.
 /// Retrieves JWT tokens from Azure Key Vault and adds them to request headers.
@@ -14,7 +13,6 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
     private readonly ILogger<KeyVaultJwtInterceptor> logger;
     private readonly string secretName;
     private readonly string headerName;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="KeyVaultJwtInterceptor"/> class.
     /// </summary>
@@ -33,17 +31,13 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
         this.secretName = secretName ?? throw new ArgumentNullException(nameof(secretName));
         this.headerName = headerName ?? throw new ArgumentNullException(nameof(headerName));
     }
-
-    /// <summary>
     /// Intercepts the proxy call to add JWT authentication from Key Vault.
-    /// </summary>
     /// <typeparam name="T">The response type.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
     /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
-    {
         try
         {
             logger.LogDebug("Retrieving JWT token from Key Vault for secret: {SecretName}", secretName);
@@ -56,21 +50,14 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
                                 !jwtToken.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
                     ? $"Bearer {jwtToken}"
                     : jwtToken;
-
                 context.Headers[headerName] = tokenValue;
                 logger.LogDebug("JWT token added to {HeaderName} header", headerName);
             }
             else
-            {
                 logger.LogWarning("JWT token not found or empty for secret: {SecretName}", secretName);
-            }
         }
         catch (Exception ex)
-        {
             logger.LogError(ex, "Failed to retrieve JWT token from Key Vault for secret: {SecretName}", secretName);
             // Continue without authentication - let downstream decide how to handle
-        }
-
         return await next(context, cancellationToken);
-    }
 }

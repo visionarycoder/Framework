@@ -2,9 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
 using VisionaryCoder.Framework.Proxy.Abstractions;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
-
 /// <summary>
 /// Defines a contract for enriching security context in proxy operations.
 /// </summary>

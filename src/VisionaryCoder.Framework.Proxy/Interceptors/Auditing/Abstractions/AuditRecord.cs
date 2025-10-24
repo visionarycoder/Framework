@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Auditing.Abstractions;
-
 /// <summary>
 /// Represents an audit record for proxy operations.
 /// </summary>

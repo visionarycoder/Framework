@@ -15,6 +15,6 @@
   
   <ItemGroup>
     <ProjectReference Include="..\VisionaryCoder.Framework.Proxy.Abstractions\VisionaryCoder.Framework.Proxy.Abstractions.csproj" />
-    <ProjectReference Include="..\VisionaryCoder.Framework.Secrets.Abstractions\VisionaryCoder.Framework.Secrets.Abstractions.csproj" />
+    <ProjectReference Include="..\VisionaryCoder.Framework.Configuration\VisionaryCoder.Framework.Configuration.csproj" />
   </ItemGroup>
 </Project>

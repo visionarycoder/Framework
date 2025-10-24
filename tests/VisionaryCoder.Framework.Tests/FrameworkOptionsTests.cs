@@ -20,8 +20,8 @@ public class FrameworkOptionsTests
         options.EnableCorrelationId.Should().BeTrue();
         options.EnableRequestId.Should().BeTrue();
         options.EnableStructuredLogging.Should().BeTrue();
-        options.DefaultHttpTimeoutSeconds.Should().Be(FrameworkConstants.Timeouts.DefaultHttpTimeoutSeconds);
-        options.DefaultCacheExpirationMinutes.Should().Be(FrameworkConstants.Timeouts.DefaultCacheExpirationMinutes);
+        options.DefaultHttpTimeoutSeconds.Should().Be(Constants.Timeouts.DefaultHttpTimeoutSeconds);
+        options.DefaultCacheExpirationMinutes.Should().Be(Constants.Timeouts.DefaultCacheExpirationMinutes);
     }
 
     [TestMethod]

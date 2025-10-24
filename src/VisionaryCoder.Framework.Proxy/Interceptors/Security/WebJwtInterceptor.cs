@@ -2,7 +2,6 @@ using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
-
 /// <summary>
 /// JWT interceptor for web-based authentication scenarios.
 /// Handles OAuth flows and web-specific JWT token management.
@@ -12,7 +11,6 @@ public class WebJwtInterceptor : IProxyInterceptor
     private readonly ITokenProvider tokenProvider;
     private readonly ILogger<WebJwtInterceptor> logger;
     private readonly WebJwtOptions options;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="WebJwtInterceptor"/> class.
     /// </summary>
@@ -28,10 +26,7 @@ public class WebJwtInterceptor : IProxyInterceptor
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.options = options ?? throw new ArgumentNullException(nameof(options));
     }
-
-    /// <summary>
     /// Intercepts the request and adds web-based JWT authentication.
-    /// </summary>
     /// <typeparam name="T">The response type.</typeparam>
     /// <param name="context">The proxy context.</param>
     /// <param name="next">The next delegate in the pipeline.</param>
@@ -49,7 +44,6 @@ public class WebJwtInterceptor : IProxyInterceptor
                 Scopes = options.Scopes,
                 RefreshIfExpired = options.RefreshIfExpired
             });
-
             if (tokenResult.IsSuccess && !string.IsNullOrEmpty(tokenResult.AccessToken))
             {
                 context.Headers[options.HeaderName] = $"Bearer {tokenResult.AccessToken}";
@@ -70,7 +64,6 @@ public class WebJwtInterceptor : IProxyInterceptor
         {
             logger.LogError(ex, "Failed to retrieve web JWT token for audience: {Audience}", options.Audience);
         }
-
         return await next(context, cancellationToken);
     }
 }
