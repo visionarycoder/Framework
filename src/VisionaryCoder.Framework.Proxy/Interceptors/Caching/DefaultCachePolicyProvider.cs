@@ -45,7 +45,7 @@ public class DefaultCachePolicyProvider : ICachePolicyProvider
         // Return default policy
         return new CachePolicy
         {
-            Duration = GetExpiration(context),
+            Duration = GetExpiration(context) ?? options.DefaultDuration,
             Priority = options.DefaultPriority
         };
     }
@@ -83,7 +83,7 @@ public class DefaultCachePolicyProvider : ICachePolicyProvider
     /// </summary>
     /// <param name="context">The proxy context.</param>
     /// <returns>The cache expiration duration.</returns>
-    public TimeSpan GetExpiration(ProxyContext context)
+    public TimeSpan? GetExpiration(ProxyContext context)
     {
         if (context == null)
         {

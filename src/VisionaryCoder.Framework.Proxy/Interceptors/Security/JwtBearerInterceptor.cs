@@ -28,6 +28,7 @@ public sealed class JwtBearerInterceptor : IProxyInterceptor
     /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation with the response.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
+    {
         var operationName = context.OperationName ?? "Unknown";
         var correlationId = context.CorrelationId ?? "None";
         try
@@ -44,12 +45,18 @@ public sealed class JwtBearerInterceptor : IProxyInterceptor
             }
             // Add the Authorization header to the context
             if (!context.Metadata.ContainsKey("Authorization"))
+            {
                 context.Metadata["Authorization"] = $"Bearer {token}";
                 logger.LogDebug("Added JWT Bearer token to operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
+                    operationName, correlationId);
+            }
             return await next(context, cancellationToken);
         }
         catch (Exception ex) when (!(ex is ProxyException))
+        {
             logger.LogError(ex, "Authentication failed for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
                 operationName, correlationId);
             throw new TransientProxyException($"Authentication failed for operation '{operationName}': {ex.Message}", ex);
+        }
+    }
 }

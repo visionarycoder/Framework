@@ -20,7 +20,7 @@ internal sealed class HttpProxyTransport(HttpClient httpClient) : IProxyTranspor
     {
         try
         {
-            var request = new HttpRequestMessage(new HttpMethod(context.Method), context.Url);
+            var request = new HttpRequestMessage(new HttpMethod(context.Method ?? "GET"), context.Url);
             
             // Add headers from context
             foreach (var header in context.Headers)

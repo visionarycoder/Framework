@@ -47,14 +47,15 @@ public class AuditingInterceptor : IProxyInterceptor
             stopwatch.Stop();
             auditRecord.CompletedAt = DateTimeOffset.UtcNow.DateTime;
             auditRecord.Duration = stopwatch.Elapsed;
-            auditRecord.StatusCode = response.StatusCode;
-            auditRecord.IsSuccess = response.IsSuccess;
+            auditRecord.Success = response.IsSuccess;
             if (!response.IsSuccess && options.IncludeErrorDetails)
             {
                 auditRecord.ErrorMessage = response.ErrorMessage;
             }
             if (options.IncludeResponseData && response.IsSuccess && response.Data != null)
+            {
                 auditRecord.ResponseSize = CalculateResponseSize(response.Data);
+            }
             await auditSink.WriteAsync(auditRecord, cancellationToken);
             logger.LogDebug("Completed audit for request: {RequestId}, Duration: {Duration}ms", 
                 auditRecord.RequestId, auditRecord.Duration.TotalMilliseconds);
@@ -62,7 +63,7 @@ public class AuditingInterceptor : IProxyInterceptor
         }
         catch (Exception ex)
         {
-            auditRecord.IsSuccess = false;
+            auditRecord.Success = false;
             auditRecord.ErrorMessage = ex.Message;
             auditRecord.ExceptionType = ex.GetType().Name;
             try

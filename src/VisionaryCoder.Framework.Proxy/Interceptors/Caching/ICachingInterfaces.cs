@@ -16,8 +16,11 @@ public interface IProxyCache
     /// <param name="key">The cache key.</param>
     /// <returns>The cached response, or null if not found.</returns>
     Task<Response<T>?> GetAsync<T>(string key);
+    /// <summary>
     /// Sets a response in the cache with the given key and expiration.
+    /// </summary>
     /// <typeparam name="T">The type of the value to cache.</typeparam>
+    /// <param name="key">The cache key.</param>
     /// <param name="response">The response to cache.</param>
     /// <param name="expiration">The cache expiration time.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
@@ -25,6 +28,7 @@ public interface IProxyCache
 }
 /// Null object pattern implementation of caching interceptor that performs no operations.
 public sealed class NullCachingInterceptor : IOrderedProxyInterceptor
+{
     /// <inheritdoc />
     public int Order => 150;
     public Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
@@ -32,3 +36,4 @@ public sealed class NullCachingInterceptor : IOrderedProxyInterceptor
         // Pass through without any caching
         return next(context, cancellationToken);
     }
+}

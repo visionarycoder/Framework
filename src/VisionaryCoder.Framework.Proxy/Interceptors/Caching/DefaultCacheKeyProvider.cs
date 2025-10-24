@@ -17,7 +17,7 @@ public class DefaultCacheKeyProvider : ICacheKeyProvider
         var keyComponents = new List<string>
         {
             context.OperationName ?? "Unknown",
-            context.Method,
+            context.Method ?? "GET",
             context.Url ?? string.Empty,
             typeof(T).Name
         };
@@ -28,7 +28,10 @@ public class DefaultCacheKeyProvider : ICacheKeyProvider
                 .Where(h => IsRelevantHeader(h.Key))
                 .OrderBy(h => h.Key)
                 .Select(h => $"{h.Key}={h.Value}"));
-            
+            if (!string.IsNullOrEmpty(headerString))
+            {
+                keyComponents.Add(headerString);
+            }
             if (!string.IsNullOrEmpty(headerString))
             {
                 keyComponents.Add(headerString);

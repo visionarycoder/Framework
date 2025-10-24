@@ -31,6 +31,7 @@ public sealed class ResilienceInterceptor : IOrderedProxyInterceptor
     /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation with the response.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
+    {
         var operationName = context.OperationName ?? "Unknown";
         var correlationId = context.CorrelationId ?? "Undefined";
         try
@@ -42,12 +43,16 @@ public sealed class ResilienceInterceptor : IOrderedProxyInterceptor
             return response;
         }
         catch (Exception ex)
+        {
             context.Metadata["ResilienceException"] = ex.GetType().Name;
             logger.LogError(ex, "Resilience pipeline failed for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", operationName, correlationId);
             throw;
+        }
+    }
     /// Creates a default resilience pipeline with retry and circuit breaker.
     /// <returns>A configured resilience pipeline.</returns>
     private static ResiliencePipeline CreateDefaultPipeline()
+    {
         return new ResiliencePipelineBuilder()
             .AddRetry(new()
             {
@@ -57,10 +62,13 @@ public sealed class ResilienceInterceptor : IOrderedProxyInterceptor
                 UseJitter = true
             })
             .AddCircuitBreaker(new()
+            {
                 FailureRatio = 0.5,
                 SamplingDuration = TimeSpan.FromSeconds(30),
                 MinimumThroughput = 5,
                 BreakDuration = TimeSpan.FromMinutes(1)
+            })
             .AddTimeout(TimeSpan.FromSeconds(30))
             .Build();
+    }
 }

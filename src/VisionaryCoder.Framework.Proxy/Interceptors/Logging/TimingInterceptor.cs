@@ -38,12 +38,18 @@ public sealed class TimingInterceptor(ILogger<TimingInterceptor> logger) : IProx
                     operationName, elapsedMs, correlationId);
             }
             else
+            {
                 logger.LogDebug("Proxy operation '{OperationName}' completed in {ElapsedMs}ms. Correlation ID: '{CorrelationId}'", 
+                    operationName, elapsedMs, correlationId);
+            }
             return response;
         }
         catch (Exception ex)
+        {
+            stopwatch.Stop();
             logger.LogError(ex, "Proxy operation '{OperationName}' failed after {ElapsedMs}ms. Correlation ID: '{CorrelationId}'", 
-                operationName, elapsedMs, correlationId);
+                operationName, stopwatch.ElapsedMilliseconds, correlationId);
             throw;
+        }
     }
 }

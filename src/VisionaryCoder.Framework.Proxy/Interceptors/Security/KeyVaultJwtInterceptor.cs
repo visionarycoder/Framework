@@ -38,6 +38,7 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
     /// <param name="cancellationToken">The cancellation token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
+    {
         try
         {
             logger.LogDebug("Retrieving JWT token from Key Vault for secret: {SecretName}", secretName);
@@ -54,10 +55,15 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
                 logger.LogDebug("JWT token added to {HeaderName} header", headerName);
             }
             else
+            {
                 logger.LogWarning("JWT token not found or empty for secret: {SecretName}", secretName);
+            }
         }
         catch (Exception ex)
+        {
             logger.LogError(ex, "Failed to retrieve JWT token from Key Vault for secret: {SecretName}", secretName);
             // Continue without authentication - let downstream decide how to handle
+        }
         return await next(context, cancellationToken);
+    }
 }

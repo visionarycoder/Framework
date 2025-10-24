@@ -36,15 +36,23 @@ public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IOr
                     operationName, correlationId);
             }
             else
+            {
                 logger.LogWarning("Proxy operation '{OperationName}' completed with failure. Error: '{ErrorMessage}'. Correlation ID: '{CorrelationId}'", 
                     operationName, response.ErrorMessage, correlationId);
+            }
             return response;
         }
         catch (ProxyException ex)
+        {
             logger.LogError(ex, "Proxy operation '{OperationName}' failed with proxy exception. Correlation ID: '{CorrelationId}'", 
                 operationName, correlationId);
             throw;
+        }
         catch (Exception ex)
+        {
             logger.LogError(ex, "Proxy operation '{OperationName}' failed with unexpected exception. Correlation ID: '{CorrelationId}'", 
+                operationName, correlationId);
+            throw;
+        }
     }
 }

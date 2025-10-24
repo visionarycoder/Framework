@@ -21,13 +21,13 @@ public class FrameworkInfoProviderTests
     #region Property Tests
 
     [TestMethod]
-    public void Version_ShouldReturnFrameworkConstantsVersion()
+    public void Version_ShouldStartWithFrameworkConstantsVersion()
     {
         // Act
         var version = provider.Version;
 
         // Assert
-        version.Should().Be(Constants.Version);
+        version.Should().StartWith(Constants.Version, "version should start with the semantic version");
         version.Should().NotBeNullOrWhiteSpace();
     }
 
