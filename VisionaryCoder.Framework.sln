@@ -82,6 +82,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisionaryCoder.Framework.Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisionaryCoder.Framework.Proxy.Abstractions.Tests", "tests\VisionaryCoder.Framework.Proxy.Abstractions.Tests\VisionaryCoder.Framework.Proxy.Abstractions.Tests.csproj", "{440BF4BB-5054-4CFA-A65A-D33290B2E47C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "diagrams", "diagrams", "{68B90444-FE6C-470E-63D0-414A629AED40}"
+	ProjectSection(SolutionItems) = preProject
+		query-filter-sequence-diagram.mmd = query-filter-sequence-diagram.mmd
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -204,6 +209,7 @@ Global
 		{C964BF28-4A11-48AB-92E4-9E25C915D7D6} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{19950D84-F489-48BC-A55F-8E8FCDBFFABC} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{440BF4BB-5054-4CFA-A65A-D33290B2E47C} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{68B90444-FE6C-470E-63D0-414A629AED40} = {CB6260C4-9E72-4283-96F2-7D671B9CCB2C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E278ADA2-B7D4-46F5-91C8-988E8CB3B734}

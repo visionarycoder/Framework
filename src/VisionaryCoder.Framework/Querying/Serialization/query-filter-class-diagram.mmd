@@ -1,0 +1,24 @@
+classDiagram
+    class FilterNode {
+        <<abstract>>
+    }
+
+    class PropertyFilter {
+        string Operator
+        string Property
+        string? Value
+        bool IgnoreCase
+    }
+
+    class CompositeFilter {
+        string Operator
+        List<FilterNode> Children
+    }
+
+    class QueryFilter~T~ {
+        Expression<Func<T,bool>> Predicate
+    }
+
+    FilterNode <|-- PropertyFilter
+    FilterNode <|-- CompositeFilter
+    QueryFilter~T~ --> FilterNode : "rehydrated from"
