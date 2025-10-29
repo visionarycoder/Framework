@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
+using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
 /// <summary>
 /// Security interceptor that handles authentication and authorization for proxy operations.
@@ -35,17 +36,17 @@ public sealed class SecurityInterceptor : IOrderedProxyInterceptor
         ProxyDelegate<T> next,
         CancellationToken cancellationToken = default)
     {
-        using var _ = logger.BeginScope("SecurityInterceptor for {RequestType}", context.Request?.GetType().Name ?? "Unknown");
+        using IDisposable? _ = logger.BeginScope("SecurityInterceptor for {RequestType}", context.Request?.GetType().Name ?? "Unknown");
         
         try
         {
             // Enrich security context
-            foreach (var enricher in enrichers)
+            foreach (IProxySecurityEnricher enricher in enrichers)
             {
                 await enricher.EnrichAsync(context, cancellationToken);
             }
             // Check authorization policies
-            foreach (var policy in policies)
+            foreach (IProxyAuthorizationPolicy policy in policies)
             {
                 if (!await policy.IsAuthorizedAsync(context, cancellationToken))
                 {

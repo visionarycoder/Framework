@@ -3,6 +3,8 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
+using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
+
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
 /// <summary>
 /// Interceptor that adds JWT Bearer authentication to proxy operations.
@@ -29,12 +31,12 @@ public sealed class JwtBearerInterceptor : IProxyInterceptor
     /// <returns>A task representing the asynchronous operation with the response.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
-        var operationName = context.OperationName ?? "Unknown";
-        var correlationId = context.CorrelationId ?? "None";
+        string operationName = context.OperationName ?? "Unknown";
+        string correlationId = context.CorrelationId ?? "None";
         try
         {
             // Get the JWT token
-            var token = await tokenProvider(cancellationToken);
+            string? token = await tokenProvider(cancellationToken);
             
             if (string.IsNullOrEmpty(token))
             {

@@ -3,6 +3,7 @@
 
 using FluentAssertions;
 using VisionaryCoder.Framework.Proxy.Abstractions;
+using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 
 namespace VisionaryCoder.Framework.Proxy.Abstractions.Tests.Exceptions;
 
@@ -13,7 +14,7 @@ public sealed class RetryableTransportExceptionTests
     public void Constructor_WithMessage_ShouldSetMessage()
     {
         // Arrange
-        var message = "Transport error can be retried";
+        string message = "Transport error can be retried";
 
         // Act
         var exception = new RetryableTransportException(message);
@@ -27,7 +28,7 @@ public sealed class RetryableTransportExceptionTests
     public void Constructor_WithMessageAndInnerException_ShouldSetBoth()
     {
         // Arrange
-        var message = "Retryable transport failure";
+        string message = "Retryable transport failure";
         var innerException = new TimeoutException("Request timed out");
 
         // Act
@@ -62,7 +63,7 @@ public sealed class RetryableTransportExceptionTests
     public void RetryableTransportException_CanBeThrown()
     {
         // Arrange
-        var message = "Transient transport error";
+        string message = "Transient transport error";
 
         // Act
         Action act = () => throw new RetryableTransportException(message);
@@ -76,7 +77,7 @@ public sealed class RetryableTransportExceptionTests
     public void RetryableTransportException_CanBeCaughtAsProxyException()
     {
         // Arrange
-        var message = "Temporary transport failure";
+        string message = "Temporary transport failure";
 
         // Act
         Action act = () => throw new RetryableTransportException(message);
@@ -92,7 +93,7 @@ public sealed class RetryableTransportExceptionTests
     {
         // Arrange
         var innerException = new TimeoutException("Operation timed out after 30 seconds");
-        var message = "Request timeout - can retry";
+        string message = "Request timeout - can retry";
 
         // Act
         var exception = new RetryableTransportException(message, innerException);
@@ -116,7 +117,7 @@ public sealed class RetryableTransportExceptionTests
     public void RetryableTransportException_ShouldIndicateCanRetry()
     {
         // Arrange
-        var message = "Service unavailable - retry recommended";
+        string message = "Service unavailable - retry recommended";
 
         // Act
         var exception = new RetryableTransportException(message);

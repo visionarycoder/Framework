@@ -32,7 +32,7 @@ public static class CollectionExtensions
     public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> items)
     {
         ArgumentNullException.ThrowIfNull(collection);
-        foreach (var item in items)
+        foreach (T item in items)
         {
             collection.Add(item);
         }
@@ -68,7 +68,7 @@ public static class CollectionExtensions
         ArgumentNullException.ThrowIfNull(collection);
         ArgumentNullException.ThrowIfNull(predicate);
         var itemsToRemove = collection.Where(item => predicate(item)).ToList();
-        foreach (var item in itemsToRemove)
+        foreach (T item in itemsToRemove)
         {
             collection.Remove(item);
         }

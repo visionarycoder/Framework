@@ -16,7 +16,7 @@ public sealed class CorrelationIdProvider : ICorrelationIdProvider
 
     public string GenerateNew()
     {
-        var newId = Guid.NewGuid().ToString("N")[..12].ToUpperInvariant();
+        string newId = Guid.NewGuid().ToString("N")[..12].ToUpperInvariant();
         currentCorrelationId.Value = newId;
         return newId;
     }

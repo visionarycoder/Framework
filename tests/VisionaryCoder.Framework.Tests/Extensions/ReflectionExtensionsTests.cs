@@ -1,8 +1,9 @@
-using FluentAssertions;
 using System.Collections;
 using System.Reflection;
+using FluentAssertions;
+using VisionaryCoder.Framework.Extensions;
 
-namespace VisionaryCoder.Framework.Extensions.Tests;
+namespace VisionaryCoder.Framework.Tests.Extensions;
 
 [TestClass]
 public class ReflectionExtensionsTests
@@ -13,7 +14,7 @@ public class ReflectionExtensionsTests
     public void NameOfCallingClass_FromTestMethod_ShouldReturnTestClassName()
     {
         // Act
-        var result = GetCallingClassName();
+        string result = GetCallingClassName();
 
         // Assert
         result.Should().Contain("ReflectionExtensionsTests");
@@ -23,7 +24,7 @@ public class ReflectionExtensionsTests
     public void NameOfCallingClass_FromNestedCall_ShouldReturnOriginalCaller()
     {
         // Act
-        var result = GetCallingClassNameNested();
+        string result = GetCallingClassNameNested();
 
         // Assert
         result.Should().Contain("ReflectionExtensionsTests");
@@ -33,7 +34,7 @@ public class ReflectionExtensionsTests
     public void NameOfCallingClass_FromStaticMethod_ShouldReturnCallingClass()
     {
         // Act
-        var result = StaticHelper.GetCallingClass();
+        string result = StaticHelper.GetCallingClass();
 
         // Assert
         result.Should().Contain("ReflectionExtensionsTests");
@@ -58,7 +59,7 @@ public class ReflectionExtensionsTests
     public void TypeOfCallingClass_FromTestMethod_ShouldReturnTestClassType()
     {
         // Act
-        var result = GetCallingClassType();
+        Type? result = GetCallingClassType();
 
         // Assert
         result.Should().NotBeNull();
@@ -69,7 +70,7 @@ public class ReflectionExtensionsTests
     public void TypeOfCallingClass_FromNestedCall_ShouldReturnOriginalCallerType()
     {
         // Act
-        var result = GetCallingClassTypeNested();
+        Type? result = GetCallingClassTypeNested();
 
         // Assert
         result.Should().NotBeNull();
@@ -80,7 +81,7 @@ public class ReflectionExtensionsTests
     public void TypeOfCallingClass_FromStaticMethod_ShouldReturnCallingClassType()
     {
         // Act
-        var result = StaticHelper.GetCallingType();
+        Type? result = StaticHelper.GetCallingType();
 
         // Assert
         result.Should().NotBeNull();
@@ -106,8 +107,8 @@ public class ReflectionExtensionsTests
     public void ImplementsInterface_WithTypeImplementingInterface_ShouldReturnTrue()
     {
         // Arrange
-        var type = typeof(List<string>);
-        var interfaceType = typeof(IList);
+        Type type = typeof(List<string>);
+        Type interfaceType = typeof(IList);
 
         // Act
         var result = type.ImplementsInterface(interfaceType);
@@ -120,8 +121,8 @@ public class ReflectionExtensionsTests
     public void ImplementsInterface_WithTypeNotImplementingInterface_ShouldReturnFalse()
     {
         // Arrange
-        var type = typeof(string);
-        var interfaceType = typeof(IList);
+        Type type = typeof(string);
+        Type interfaceType = typeof(IList);
 
         // Act
         var result = type.ImplementsInterface(interfaceType);
@@ -134,8 +135,8 @@ public class ReflectionExtensionsTests
     public void ImplementsInterface_WithGenericInterface_ShouldReturnTrue()
     {
         // Arrange
-        var type = typeof(List<int>);
-        var interfaceType = typeof(IEnumerable<int>);
+        Type type = typeof(List<int>);
+        Type interfaceType = typeof(IEnumerable<int>);
 
         // Act
         var result = type.ImplementsInterface(interfaceType);
@@ -148,8 +149,8 @@ public class ReflectionExtensionsTests
     public void ImplementsInterface_WithNonInterfaceType_ShouldReturnFalse()
     {
         // Arrange
-        var type = typeof(List<string>);
-        var interfaceType = typeof(string); // Not an interface
+        Type type = typeof(List<string>);
+        Type interfaceType = typeof(string); // Not an interface
 
         // Act
         var result = type.ImplementsInterface(interfaceType);
@@ -162,7 +163,7 @@ public class ReflectionExtensionsTests
     public void ImplementsInterface_WithSameType_ShouldReturnTrueForInterface()
     {
         // Arrange
-        var interfaceType = typeof(IDisposable);
+        Type interfaceType = typeof(IDisposable);
 
         // Act
         var result = interfaceType.ImplementsInterface(interfaceType);
@@ -175,7 +176,7 @@ public class ReflectionExtensionsTests
     public void ImplementsInterface_WithSameType_ShouldReturnFalseForClass()
     {
         // Arrange
-        var classType = typeof(string);
+        Type classType = typeof(string);
 
         // Act
         var result = classType.ImplementsInterface(classType);
@@ -189,10 +190,10 @@ public class ReflectionExtensionsTests
     {
         // Arrange
         Type? type = null;
-        var interfaceType = typeof(IDisposable);
+        Type interfaceType = typeof(IDisposable);
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => type!.ImplementsInterface(interfaceType));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => type!.ImplementsInterface(interfaceType));
         exception.ParamName.Should().Be("type");
     }
 
@@ -200,11 +201,11 @@ public class ReflectionExtensionsTests
     public void ImplementsInterface_WithNullInterfaceType_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var type = typeof(string);
+        Type type = typeof(string);
         Type? interfaceType = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => type.ImplementsInterface(interfaceType!));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => type.ImplementsInterface(interfaceType!));
         exception.ParamName.Should().Be("interfaceType");
     }
 
@@ -212,8 +213,8 @@ public class ReflectionExtensionsTests
     public void ImplementsInterface_WithComplexInheritance_ShouldReturnTrue()
     {
         // Arrange
-        var type = typeof(Dictionary<string, int>);
-        var interfaceType = typeof(IEnumerable);
+        Type type = typeof(Dictionary<string, int>);
+        Type interfaceType = typeof(IEnumerable);
 
         // Act
         var result = type.ImplementsInterface(interfaceType);
@@ -230,8 +231,8 @@ public class ReflectionExtensionsTests
     public void InvokeMethod_WithValidMethodAndNoParameters_ShouldThrowAmbiguousMatchException()
     {
         // Arrange
-        var obj = "Hello World";
-        var methodName = "GetHashCode"; // This method has overloads causing ambiguous match
+        string obj = "Hello World";
+        string methodName = "GetHashCode"; // This method has overloads causing ambiguous match
 
         // Act & Assert - GetHashCode has overloads causing AmbiguousMatchException
         var act = () => obj.InvokeMethod(methodName);
@@ -242,9 +243,9 @@ public class ReflectionExtensionsTests
     public void InvokeMethod_WithValidMethodAndParameters_ShouldThrowAmbiguousMatchException()
     {
         // Arrange
-        var obj = "Hello World";
-        var methodName = "IndexOf";
-        var parameters = new object[] { "World" };
+        string obj = "Hello World";
+        string methodName = "IndexOf";
+        object[] parameters = new object[] { "World" };
 
         // Act & Assert - IndexOf has overloads causing AmbiguousMatchException
         var act = () => obj.InvokeMethod(methodName, parameters);
@@ -255,9 +256,9 @@ public class ReflectionExtensionsTests
     public void InvokeMethod_WithMultipleParameters_ShouldThrowAmbiguousMatchException()
     {
         // Arrange
-        var obj = "Hello World";
-        var methodName = "Replace";
-        var parameters = new object[] { "World", "Universe" };
+        string obj = "Hello World";
+        string methodName = "Replace";
+        object[] parameters = new object[] { "World", "Universe" };
 
         // Act & Assert - Replace has overloads causing AmbiguousMatchException
         var act = () => obj.InvokeMethod(methodName, parameters);
@@ -269,8 +270,8 @@ public class ReflectionExtensionsTests
     {
         // Arrange
         var list = new List<string>();
-        var methodName = "Add";
-        var parameters = new object[] { "test" };
+        string methodName = "Add";
+        object[] parameters = new object[] { "test" };
 
         // Act
         var result = list.InvokeMethod(methodName, parameters);
@@ -285,7 +286,7 @@ public class ReflectionExtensionsTests
     {
         // Arrange
         var obj = new TestClass();
-        var methodName = "GetValue";
+        string methodName = "GetValue";
 
         // Act
         var result = obj.InvokeMethod(methodName);
@@ -299,10 +300,10 @@ public class ReflectionExtensionsTests
     {
         // Arrange
         var obj = new TestClass();
-        var methodName = "ThrowException";
+        string methodName = "ThrowException";
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<System.Reflection.TargetInvocationException>(() => obj.InvokeMethod(methodName));
+        TargetInvocationException? exception = Assert.ThrowsExactly<System.Reflection.TargetInvocationException>(() => obj.InvokeMethod(methodName));
         exception.InnerException.Should().BeOfType<InvalidOperationException>();
     }
 
@@ -310,11 +311,11 @@ public class ReflectionExtensionsTests
     public void InvokeMethod_WithNonExistentMethod_ShouldThrowMissingMethodException()
     {
         // Arrange
-        var obj = "test";
-        var methodName = "NonExistentMethod";
+        string obj = "test";
+        string methodName = "NonExistentMethod";
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<MissingMethodException>(() => obj.InvokeMethod(methodName));
+        MissingMethodException? exception = Assert.ThrowsExactly<MissingMethodException>(() => obj.InvokeMethod(methodName));
         exception.Message.Should().Contain("NonExistentMethod");
     }
 
@@ -323,10 +324,10 @@ public class ReflectionExtensionsTests
     {
         // Arrange
         object? obj = null;
-        var methodName = "ToString";
+        string methodName = "ToString";
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => obj!.InvokeMethod(methodName));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => obj!.InvokeMethod(methodName));
         exception.ParamName.Should().Be("obj");
     }
 
@@ -334,11 +335,11 @@ public class ReflectionExtensionsTests
     public void InvokeMethod_WithNullMethodName_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var obj = "test";
+        string obj = "test";
         string? methodName = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => obj.InvokeMethod(methodName!));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => obj.InvokeMethod(methodName!));
         exception.ParamName.Should().Be("methodName");
     }
 
@@ -346,9 +347,9 @@ public class ReflectionExtensionsTests
     public void InvokeMethod_WithWrongParameterTypes_ShouldThrowAmbiguousMatchException()
     {
         // Arrange
-        var obj = "Hello World";
-        var methodName = "IndexOf";
-        var parameters = new object[] { 123, "extra param" }; // Wrong parameter types/count
+        string obj = "Hello World";
+        string methodName = "IndexOf";
+        object[] parameters = new object[] { 123, "extra param" }; // Wrong parameter types/count
 
         // Act & Assert
         // Note: The implementation has a flaw - it doesn't handle overloaded methods properly
@@ -360,7 +361,7 @@ public class ReflectionExtensionsTests
     {
         // Arrange
         var obj = new TestClass();
-        var methodName = "OverloadedMethod";
+        string methodName = "OverloadedMethod";
 
         // Act & Assert
         // Note: The current implementation doesn't handle method overloads properly
@@ -387,11 +388,11 @@ public class ReflectionExtensionsTests
         result.Should().Be("TestValue");
 
         // Test calling class detection
-        var callingClass = GetCallingClassName();
+        string callingClass = GetCallingClassName();
         callingClass.Should().Contain("ReflectionExtensionsTests");
 
         // Test calling type detection
-        var callingType = GetCallingClassType();
+        Type? callingType = GetCallingClassType();
         callingType.Should().NotBeNull();
         callingType!.Name.Should().Contain("ReflectionExtensionsTests");
     }
@@ -423,43 +424,3 @@ public class ReflectionExtensionsTests
 }
 
 // Helper classes for testing
-public static class StaticHelper
-{
-    public static string GetCallingClass()
-    {
-        return ReflectionExtensions.NameOfCallingClass();
-    }
-
-    public static Type? GetCallingType()
-    {
-        return ReflectionExtensions.TypeOfCallingClass();
-    }
-}
-
-public class TestClass : IDisposable
-{
-    public string GetValue()
-    {
-        return "TestValue";
-    }
-
-    public void ThrowException()
-    {
-        throw new InvalidOperationException("Test exception");
-    }
-
-    public string OverloadedMethod()
-    {
-        return "NoParam";
-    }
-
-    public string OverloadedMethod(string param)
-    {
-        return $"WithParam:{param}";
-    }
-
-    public void Dispose()
-    {
-        // Test implementation
-    }
-}

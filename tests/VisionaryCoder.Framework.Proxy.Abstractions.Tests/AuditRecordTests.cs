@@ -222,7 +222,7 @@ public class AuditRecordTests
     {
         // Arrange
         var record = new AuditRecord();
-        var unicodeUrl = "https://api.example.com/用户/123";
+        string unicodeUrl = "https://api.example.com/用户/123";
 
         // Act
         record.Url = unicodeUrl;
@@ -236,7 +236,7 @@ public class AuditRecordTests
     {
         // Arrange
         var record = new AuditRecord();
-        var longUserAgent = new string('A', 10000);
+        string longUserAgent = new string('A', 10000);
 
         // Act
         record.UserAgent = longUserAgent;
@@ -250,7 +250,7 @@ public class AuditRecordTests
     {
         // Arrange
         var record = new AuditRecord();
-        var unicodeError = "エラーが発生しました";
+        string unicodeError = "エラーが発生しました";
 
         // Act
         record.ErrorMessage = unicodeError;

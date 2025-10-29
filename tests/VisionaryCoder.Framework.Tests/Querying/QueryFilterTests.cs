@@ -94,7 +94,7 @@ public class QueryFilterTests
         // Arrange
         Expression<Func<TestUser, bool>> predicate = u => u.Age > 25;
         var filter = new QueryFilter<TestUser>(predicate);
-        var users = new List<TestUser>
+        IQueryable<TestUser> users = new List<TestUser>
         {
             new("John", 30),
             new("Jane", 20),
@@ -344,7 +344,7 @@ public class QueryFilterTests
     public void QueryFilter_ShouldBeSealed()
     {
         // Arrange & Act
-        var type = typeof(QueryFilter<TestUser>);
+        Type type = typeof(QueryFilter<TestUser>);
 
         // Assert
         type.IsSealed.Should().BeTrue();
@@ -354,7 +354,7 @@ public class QueryFilterTests
     public void QueryFilter_ShouldBeClass()
     {
         // Arrange & Act
-        var type = typeof(QueryFilter<TestUser>);
+        Type type = typeof(QueryFilter<TestUser>);
 
         // Assert
         type.IsClass.Should().BeTrue();

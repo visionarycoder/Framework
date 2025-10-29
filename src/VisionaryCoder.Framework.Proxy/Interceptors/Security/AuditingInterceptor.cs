@@ -36,14 +36,14 @@ public class AuditingInterceptor : IProxyInterceptor
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
-        var auditRecord = CreateAuditRecord(context);
+        AuditRecord auditRecord = CreateAuditRecord(context);
         var stopwatch = Stopwatch.StartNew();
         
         try
         {
             logger.LogDebug("Starting audit for request: {RequestId}", auditRecord.RequestId);
             
-            var response = await next(context, cancellationToken);
+            Response<T> response = await next(context, cancellationToken);
             stopwatch.Stop();
             auditRecord.CompletedAt = DateTimeOffset.UtcNow.DateTime;
             auditRecord.Duration = stopwatch.Elapsed;
@@ -100,11 +100,11 @@ public class AuditingInterceptor : IProxyInterceptor
     private static string? ExtractUserId(ProxyContext context)
     {
         // Look for common user identification patterns
-        if (context.Headers.TryGetValue("X-User-ID", out var userId))
+        if (context.Headers.TryGetValue("X-User-ID", out string? userId))
         {
             return userId;
         }
-        if (context.Headers.TryGetValue("Authorization", out var auth) && auth.StartsWith("Bearer "))
+        if (context.Headers.TryGetValue("Authorization", out string? auth) && auth.StartsWith("Bearer "))
         {
             // Could extract from JWT token here if needed
             return "jwt-user";
@@ -115,7 +115,7 @@ public class AuditingInterceptor : IProxyInterceptor
     /// <returns>The user agent if available.</returns>
     private static string? ExtractUserAgent(ProxyContext context)
     {
-        context.Headers.TryGetValue("User-Agent", out var userAgent);
+        context.Headers.TryGetValue("User-Agent", out string? userAgent);
         return userAgent;
     }
     /// Extracts the IP address from the context.
@@ -123,19 +123,19 @@ public class AuditingInterceptor : IProxyInterceptor
     private static string? ExtractIpAddress(ProxyContext context)
     {
         // Look for forwarded IP headers first
-        if (context.Headers.TryGetValue("X-Forwarded-For", out var forwardedFor))
+        if (context.Headers.TryGetValue("X-Forwarded-For", out string? forwardedFor))
         {
-            var firstIp = forwardedFor.Split(',').FirstOrDefault()?.Trim();
+            string? firstIp = forwardedFor.Split(',').FirstOrDefault()?.Trim();
             if (!string.IsNullOrEmpty(firstIp))
             {
                 return firstIp;
             }
         }
-        if (context.Headers.TryGetValue("X-Real-IP", out var realIp))
+        if (context.Headers.TryGetValue("X-Real-IP", out string? realIp))
         {
             return realIp;
         }
-        if (context.Headers.TryGetValue("Remote-Addr", out var remoteAddr))
+        if (context.Headers.TryGetValue("Remote-Addr", out string? remoteAddr))
         {
             return remoteAddr;
         }
@@ -151,10 +151,10 @@ public class AuditingInterceptor : IProxyInterceptor
             return null;
         }
         var sanitized = new Dictionary<string, string>();
-        foreach (var header in headers)
+        foreach (KeyValuePair<string, string> header in headers)
         {
-            var key = header.Key;
-            var value = header.Value;
+            string key = header.Key;
+            string value = header.Value;
             // Sanitize sensitive headers
             if (IsSensitiveHeader(key))
             {
@@ -169,7 +169,7 @@ public class AuditingInterceptor : IProxyInterceptor
     /// <returns>True if sensitive.</returns>
     private static bool IsSensitiveHeader(string headerName)
     {
-        var sensitiveHeaders = new[]
+        string[] sensitiveHeaders = new[]
         {
             "Authorization",
             "Cookie",
@@ -184,8 +184,8 @@ public class AuditingInterceptor : IProxyInterceptor
     private static long CalculateRequestSize(ProxyContext context)
     {
         // Basic calculation - could be enhanced based on actual request body
-        var headerSize = context.Headers.Sum(h => h.Key.Length + h.Value.Length);
-        var urlSize = context.Url?.Length ?? 0;
+        int headerSize = context.Headers.Sum(h => h.Key.Length + h.Value.Length);
+        int urlSize = context.Url?.Length ?? 0;
         return headerSize + urlSize;
     }
     /// Calculates the response size.
@@ -195,7 +195,7 @@ public class AuditingInterceptor : IProxyInterceptor
     {
         try
         {
-            var json = JsonSerializer.Serialize(data);
+            string json = JsonSerializer.Serialize(data);
             return System.Text.Encoding.UTF8.GetByteCount(json);
         }
         catch

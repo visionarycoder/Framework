@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using VisionaryCoder.Framework.Proxy.Abstractions;
 using VisionaryCoder.Framework.Proxy.Interceptors;
+using VisionaryCoder.Framework.Proxy.Interceptors.Logging;
 
 namespace VisionaryCoder.Framework.Proxy.Tests.Interceptors.Logging;
 
@@ -24,7 +25,7 @@ public class TimingInterceptorTests
     {
         // Arrange
         var context = new ProxyContext { OperationName = "TestOperation" };
-        var wasCalled = false;
+        bool wasCalled = false;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -41,7 +42,7 @@ public class TimingInterceptorTests
         result.IsSuccess.Should().BeTrue();
         context.Metadata.Should().ContainKey("ExecutionTimeMs");
         context.Metadata["ExecutionTimeMs"].Should().BeOfType<long>();
-        ((long)context.Metadata["ExecutionTimeMs"]).Should().BeGreaterOrEqualTo(0);
+        ((long)(context.Metadata["ExecutionTimeMs"] ?? -1)).Should().BeGreaterOrEqualTo(0);
     }
 
     [TestMethod]

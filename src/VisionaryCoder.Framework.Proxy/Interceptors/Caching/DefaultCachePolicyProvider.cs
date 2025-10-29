@@ -1,4 +1,5 @@
 using VisionaryCoder.Framework.Proxy.Abstractions;
+using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Caching;
 
@@ -25,10 +26,7 @@ public class DefaultCachePolicyProvider : ICachePolicyProvider
     /// <returns>The cache policy to apply.</returns>
     public CachePolicy GetPolicy(ProxyContext context)
     {
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
+        ArgumentNullException.ThrowIfNull(context);
 
         // Use the new interface methods for consistency
         if (!ShouldCache(context))
@@ -37,7 +35,7 @@ public class DefaultCachePolicyProvider : ICachePolicyProvider
         }
 
         // Check for specific operation policies
-        if (options.OperationPolicies.TryGetValue(context.OperationName ?? string.Empty, out var policy))
+        if (options.OperationPolicies.TryGetValue(context.OperationName ?? string.Empty, out CachePolicy? policy))
         {
             return policy;
         }
@@ -57,10 +55,7 @@ public class DefaultCachePolicyProvider : ICachePolicyProvider
     /// <returns>True if the request should be cached; otherwise, false.</returns>
     public bool ShouldCache(ProxyContext context)
     {
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
+        ArgumentNullException.ThrowIfNull(context);
 
         // Only cache GET operations by default
         if (!string.Equals(context.Method, "GET", StringComparison.OrdinalIgnoreCase))
@@ -69,7 +64,7 @@ public class DefaultCachePolicyProvider : ICachePolicyProvider
         }
 
         // Check if specific operation has caching disabled
-        if (options.OperationPolicies.TryGetValue(context.OperationName ?? string.Empty, out var policy))
+        if (options.OperationPolicies.TryGetValue(context.OperationName ?? string.Empty, out CachePolicy? policy))
         {
             return policy.IsCachingEnabled;
         }
@@ -85,13 +80,10 @@ public class DefaultCachePolicyProvider : ICachePolicyProvider
     /// <returns>The cache expiration duration.</returns>
     public TimeSpan? GetExpiration(ProxyContext context)
     {
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
+        ArgumentNullException.ThrowIfNull(context);
 
         // Check for specific operation policies
-        if (options.OperationPolicies.TryGetValue(context.OperationName ?? string.Empty, out var policy))
+        if (options.OperationPolicies.TryGetValue(context.OperationName ?? string.Empty, out CachePolicy? policy))
         {
             return policy.Duration;
         }

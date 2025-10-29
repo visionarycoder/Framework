@@ -1,6 +1,7 @@
 using FluentAssertions;
+using VisionaryCoder.Framework.Extensions;
 
-namespace VisionaryCoder.Framework.Extensions.Tests;
+namespace VisionaryCoder.Framework.Tests.Extensions;
 
 [TestClass]
 public class HashSetExtensionsTests
@@ -15,7 +16,7 @@ public class HashSetExtensionsTests
         var collection = new List<int> { 1, 2, 3 };
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => target!.AddRange(collection));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => target!.AddRange(collection));
         exception.ParamName.Should().Be("target");
     }
 
@@ -27,7 +28,7 @@ public class HashSetExtensionsTests
         ICollection<int>? collection = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => target.AddRange(collection!));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => target.AddRange(collection!));
         exception.ParamName.Should().Be("collection");
     }
 
@@ -103,7 +104,7 @@ public class HashSetExtensionsTests
         var collection = new List<int> { 1, 2, 3 };
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => target!.RemoveRange(collection));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => target!.RemoveRange(collection));
         exception.ParamName.Should().Be("target");
     }
 
@@ -115,7 +116,7 @@ public class HashSetExtensionsTests
         ICollection<int>? collection = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => target.RemoveRange(collection!));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => target.RemoveRange(collection!));
         exception.ParamName.Should().Be("collection");
     }
 
@@ -191,7 +192,7 @@ public class HashSetExtensionsTests
         var collection = new List<int> { 1, 2, 3 };
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => target!.ContainsAll(collection));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => target!.ContainsAll(collection));
         exception.ParamName.Should().Be("target");
     }
 
@@ -203,7 +204,7 @@ public class HashSetExtensionsTests
         ICollection<int>? collection = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => target.ContainsAll(collection!));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => target.ContainsAll(collection!));
         exception.ParamName.Should().Be("collection");
     }
 
@@ -303,7 +304,7 @@ public class HashSetExtensionsTests
         var collection = new List<int> { 1, 2, 3 };
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => target!.ContainsAny(collection));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => target!.ContainsAny(collection));
         exception.ParamName.Should().Be("target");
     }
 
@@ -315,7 +316,7 @@ public class HashSetExtensionsTests
         ICollection<int>? collection = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => target.ContainsAny(collection!));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => target.ContainsAny(collection!));
         exception.ParamName.Should().Be("collection");
     }
 

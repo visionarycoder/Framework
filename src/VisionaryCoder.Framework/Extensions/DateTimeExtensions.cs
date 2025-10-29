@@ -13,7 +13,7 @@ public static class DateTimeExtensions
     /// <returns>The date of the next occurrence of the specified weekday.</returns>
     public static DateTime GetProceedingWeekday(this DateTime input, DayOfWeek dayOfWeek = DayOfWeek.Sunday)
     {
-        var offset = ((int)dayOfWeek - (int)input.DayOfWeek + 7) % 7;
+        int offset = ((int)dayOfWeek - (int)input.DayOfWeek + 7) % 7;
         offset = offset == 0 ? 7 : offset; // Ensure it always returns a future date
         return input.AddDays(offset).Date;
     }
@@ -26,7 +26,7 @@ public static class DateTimeExtensions
     /// <returns>The date of the previous occurrence of the specified weekday.</returns>
     public static DateTime GetPreviousWeekday(this DateTime input, DayOfWeek dayOfWeek)
     {
-        var offset = ((int)input.DayOfWeek - (int)dayOfWeek + 7) % 7;
+        int offset = ((int)input.DayOfWeek - (int)dayOfWeek + 7) % 7;
         offset = offset == 0 ? 7 : offset; // Ensure it always returns a past date
         return input.AddDays(-offset).Date;
     }
@@ -40,7 +40,7 @@ public static class DateTimeExtensions
     /// <returns>The date part of the <see cref="DateTime"/> after applying the offset.</returns>
     public static DateTime GetDateOnly(this DateTime dateTime, TimeSpan offset, ShiftDate shiftDate = ShiftDate.ToPast)
     {
-        var offsetDateTime = shiftDate == ShiftDate.ToPast
+        DateTime offsetDateTime = shiftDate == ShiftDate.ToPast
             ? dateTime.Subtract(offset)
             : dateTime.Add(offset);
         return offsetDateTime.Date;
@@ -74,7 +74,7 @@ public static class DateTimeExtensions
     /// <returns>The date of the start of the week.</returns>
     public static DateTime GetStartOfWeek(this DateTime dateTime, DayOfWeek startOfWeek = DayOfWeek.Monday)
     {
-        var diff = (7 + (dateTime.DayOfWeek - startOfWeek)) % 7;
+        int diff = (7 + (dateTime.DayOfWeek - startOfWeek)) % 7;
         return dateTime.AddDays(-diff).Date;
     }
 

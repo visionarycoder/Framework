@@ -3,7 +3,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Proxy.Interceptors.Retry;
+using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
+using VisionaryCoder.Framework.Proxy.Interceptors.Retries;
 
 namespace VisionaryCoder.Framework.Proxy.Tests.Interceptors.Retries;
 
@@ -57,7 +58,7 @@ public class RetryInterceptorTests
     {
         // Arrange
         var context = new ProxyContext();
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -78,7 +79,7 @@ public class RetryInterceptorTests
     {
         // Arrange
         var context = new ProxyContext();
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<int>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -102,7 +103,7 @@ public class RetryInterceptorTests
     {
         // Arrange
         var context = new ProxyContext();
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -122,7 +123,7 @@ public class RetryInterceptorTests
     {
         // Arrange
         var context = new ProxyContext();
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -155,7 +156,7 @@ public class RetryInterceptorTests
     {
         // Arrange
         var context = new ProxyContext();
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -185,7 +186,7 @@ public class RetryInterceptorTests
     {
         // Arrange
         var context = new ProxyContext();
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -215,7 +216,7 @@ public class RetryInterceptorTests
     {
         // Arrange
         var context = new ProxyContext();
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -245,7 +246,7 @@ public class RetryInterceptorTests
     {
         // Arrange
         var context = new ProxyContext();
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<bool>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -274,7 +275,7 @@ public class RetryInterceptorTests
     {
         // Arrange
         var context = new ProxyContext();
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {

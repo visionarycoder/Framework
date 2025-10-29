@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Configuration.Secrets;
+namespace VisionaryCoder.Framework.Secrets.Azure;
 
 public sealed record SecretOptions
 {

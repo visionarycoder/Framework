@@ -38,7 +38,7 @@ public class WebJwtInterceptor : IProxyInterceptor
         {
             logger.LogDebug("Retrieving JWT token for audience: {Audience}", options.Audience);
             
-            var tokenResult = await tokenProvider.GetTokenAsync(new TokenRequest
+            TokenResult tokenResult = await tokenProvider.GetTokenAsync(new TokenRequest
             {
                 Audience = options.Audience,
                 Scopes = options.Scopes,

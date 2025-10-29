@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Proxy.Abstractions;
+namespace VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 
 /// <summary>
 /// Defines a contract for authorization policies.

@@ -24,7 +24,7 @@ public class NullTelemetryInterceptorTests
         var interceptor = new NullTelemetryInterceptor();
         var context = new ProxyContext { MethodName = "TrackedMethod" };
         var expectedData = new List<int> { 1, 2, 3 };
-        var wasCalled = false;
+        bool wasCalled = false;
 
         Task<Response<List<int>>> next(ProxyContext ctx, CancellationToken ct)
         {

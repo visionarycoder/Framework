@@ -31,7 +31,7 @@ public class GuidCorrelationIdGeneratorTests
         var correlationId = generator.GenerateCorrelationId();
 
         // Assert
-        Guid.TryParse(correlationId, out var parsedGuid).Should().BeTrue();
+        Guid.TryParse(correlationId, out Guid parsedGuid).Should().BeTrue();
         parsedGuid.Should().NotBeEmpty();
     }
 

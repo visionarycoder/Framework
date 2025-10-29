@@ -1,7 +1,6 @@
 using FluentAssertions;
-using VisionaryCoder.Framework.Abstractions;
 
-namespace VisionaryCoder.Framework.Extensions.Tests;
+namespace VisionaryCoder.Framework.Tests.Extensions;
 
 /// <summary>
 /// Unit tests for the Month class to ensure 100% code coverage.

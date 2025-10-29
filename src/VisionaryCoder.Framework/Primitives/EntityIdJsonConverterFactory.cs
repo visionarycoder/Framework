@@ -9,8 +9,8 @@ public sealed class EntityIdJsonConverterFactory : JsonConverterFactory
         typeToConvert.GetGenericTypeDefinition() == typeof(EntityId<,>);
     public override JsonConverter CreateConverter(Type type, JsonSerializerOptions options)
     {
-        var args = type.GetGenericArguments(); // [TEntity, TKey]
-        var convType = typeof(EntityIdJsonConverter<,>).MakeGenericType(args[0], args[1]);
+        Type[] args = type.GetGenericArguments(); // [TEntity, TKey]
+        Type convType = typeof(EntityIdJsonConverter<,>).MakeGenericType(args[0], args[1]);
         return (JsonConverter)Activator.CreateInstance(convType)!;
     }
     private sealed class EntityIdJsonConverter<TEntity, TKey> : JsonConverter<EntityId<TEntity, TKey>>
@@ -30,7 +30,7 @@ public sealed class EntityIdJsonConverterFactory : JsonConverterFactory
             if (typeof(TKey) == typeof(short))
                 return new((TKey)(object)reader.GetInt16());
             // Fallback: read as string then Parse
-            var str = reader.GetString() ?? throw new JsonException("Null ID.");
+            string str = reader.GetString() ?? throw new JsonException("Null ID.");
             return EntityId<TEntity, TKey>.Parse(str);
         }
         public override void Write(Utf8JsonWriter writer, EntityId<TEntity, TKey> value, JsonSerializerOptions options)

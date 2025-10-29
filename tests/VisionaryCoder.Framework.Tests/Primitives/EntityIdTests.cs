@@ -1,12 +1,10 @@
 using FluentAssertions;
+using VisionaryCoder.Framework.Abstractions;
 using VisionaryCoder.Framework.Primitives;
 
 namespace VisionaryCoder.Framework.Tests.Primitives;
 
 // Test entities for EntityId tests
-public class TestUser { public string Name { get; set; } = string.Empty; }
-public class TestProduct { public string Name { get; set; } = string.Empty; }
-public class TestOrder { public int OrderNumber { get; set; } }
 
 [TestClass]
 public class EntityIdTests
@@ -31,7 +29,7 @@ public class EntityIdTests
     public void Constructor_WithValidStringValue_ShouldCreateEntityId()
     {
         // Arrange
-        var value = "user-123";
+        string value = "user-123";
 
         // Act
         var id = new EntityId<TestUser, string>(value);
@@ -161,7 +159,7 @@ public class EntityIdTests
     public void ToString_WithStringValue_ShouldReturnValue()
     {
         // Arrange
-        var value = "test-id-123";
+        string value = "test-id-123";
         var id = new EntityId<TestUser, string>(value);
 
         // Act
@@ -255,7 +253,7 @@ public class EntityIdTests
         var id = new EntityId<TestUser, int>(value);
 
         // Act
-        var result = (int)id;
+        int result = (int)id;
 
         // Assert
         result.Should().Be(value);
@@ -265,11 +263,11 @@ public class EntityIdTests
     public void ExplicitConversion_ToString_ShouldReturnValue()
     {
         // Arrange
-        var value = "test-id";
+        string value = "test-id";
         var id = new EntityId<TestUser, string>(value);
 
         // Act
-        var result = (string)id;
+        string? result = (string)id;
 
         // Assert
         result.Should().Be(value);
@@ -326,7 +324,7 @@ public class EntityIdTests
     public void Parse_WithValidGuidString_ShouldReturnEntityId()
     {
         // Arrange
-        var guidString = "12345678-1234-1234-1234-123456789012";
+        string guidString = "12345678-1234-1234-1234-123456789012";
         var expectedGuid = Guid.Parse(guidString);
 
         // Act
@@ -430,7 +428,7 @@ public class EntityIdTests
     public void TryParse_WithValidGuidString_ShouldReturnTrue()
     {
         // Arrange
-        var guidString = "12345678-1234-1234-1234-123456789012";
+        string guidString = "12345678-1234-1234-1234-123456789012";
         var expectedGuid = Guid.Parse(guidString);
 
         // Act
@@ -530,7 +528,7 @@ public class EntityIdTests
     public void IEntityId_BoxedValue_ShouldReturnValueAsObject()
     {
         // Arrange
-        var value = 42;
+        int value = 42;
         var id = new EntityId<TestUser, int>(value);
         var iEntityId = (IEntityId)id;
 
@@ -618,7 +616,7 @@ public class EntityIdTests
     public void Parse_WithVeryLongString_ShouldSucceed()
     {
         // Arrange
-        var longString = new string('a', 10000);
+        string longString = new string('a', 10000);
 
         // Act
         var id = EntityId<TestUser, string>.Parse(longString);
@@ -631,7 +629,7 @@ public class EntityIdTests
     public void Parse_WithSpecialCharacters_ShouldSucceed()
     {
         // Arrange
-        var specialString = "id!@#$%^&*()_+-=[]{}|;':\"<>?,./`~";
+        string specialString = "id!@#$%^&*()_+-=[]{}|;':\"<>?,./`~";
 
         // Act
         var id = EntityId<TestUser, string>.Parse(specialString);
@@ -644,7 +642,7 @@ public class EntityIdTests
     public void Parse_WithUnicodeCharacters_ShouldSucceed()
     {
         // Arrange
-        var unicodeString = "用户ID-123-émile-naïve-Übermensch";
+        string unicodeString = "用户ID-123-émile-naïve-Übermensch";
 
         // Act
         var id = EntityId<TestUser, string>.Parse(unicodeString);

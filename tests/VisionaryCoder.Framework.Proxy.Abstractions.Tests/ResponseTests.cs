@@ -23,7 +23,7 @@ public class ResponseTests
     public void Success_WithData_ShouldCreateSuccessfulResponse()
     {
         // Arrange
-        var data = "test data";
+        string data = "test data";
 
         // Act
         var response = Response<string>.Success(data);
@@ -39,8 +39,8 @@ public class ResponseTests
     public void Success_WithDataAndStatusCode_ShouldCreateSuccessfulResponse()
     {
         // Arrange
-        var data = 42;
-        var statusCode = 200;
+        int data = 42;
+        int statusCode = 200;
 
         // Act
         var response = Response<int>.Success(data, statusCode);
@@ -56,7 +56,7 @@ public class ResponseTests
     public void Failure_WithErrorMessage_ShouldCreateFailedResponse()
     {
         // Arrange
-        var errorMessage = "An error occurred";
+        string errorMessage = "An error occurred";
 
         // Act
         var response = Response<string>.Failure(errorMessage);
@@ -114,7 +114,7 @@ public class ResponseTests
     public void Failure_WithLongErrorMessage_ShouldPreserve()
     {
         // Arrange
-        var longError = new string('E', 10000);
+        string longError = new string('E', 10000);
 
         // Act
         var response = Response<string>.Failure(longError);
@@ -128,7 +128,7 @@ public class ResponseTests
     public void Failure_WithUnicodeErrorMessage_ShouldPreserve()
     {
         // Arrange
-        var unicodeError = "エラーが発生しました: 操作に失敗しました";
+        string unicodeError = "エラーが発生しました: 操作に失敗しました";
 
         // Act
         var response = Response<string>.Failure(unicodeError);

@@ -18,7 +18,7 @@ public class UserContextEnricher(IUserContextProvider userProvider) : ISecurityE
     /// <returns>A task representing the enrichment operation.</returns>
     public async Task EnrichAsync(ProxyContext context, CancellationToken cancellationToken = default)
     {
-        var userContext = await userProvider.GetCurrentUserAsync(cancellationToken);
+        UserContext? userContext = await userProvider.GetCurrentUserAsync(cancellationToken);
         if (userContext != null)
         {
             context.Metadata["UserId"] = userContext.UserId;

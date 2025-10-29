@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Primitives;
+namespace VisionaryCoder.Framework.Abstractions;
 
 public interface IEntityId
 {

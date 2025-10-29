@@ -1,6 +1,7 @@
 using FluentAssertions;
+using VisionaryCoder.Framework.Extensions;
 
-namespace VisionaryCoder.Framework.Extensions.Tests;
+namespace VisionaryCoder.Framework.Tests.Extensions;
 
 /// <summary>
 /// Unit tests for CollectionExtensions to ensure 100% code coverage.
@@ -153,7 +154,7 @@ public class CollectionExtensionsTests
     {
         // Arrange
         var collection = new List<string> { "existing" };
-        var itemsToAdd = new[] { "item1", "item2", "item3" };
+        string[] itemsToAdd = new[] { "item1", "item2", "item3" };
 
         // Act
         collection.AddRange(itemsToAdd);
@@ -171,7 +172,7 @@ public class CollectionExtensionsTests
     {
         // Arrange
         var collection = new List<string> { "existing" };
-        var itemsToAdd = Array.Empty<string>();
+        string[] itemsToAdd = Array.Empty<string>();
 
         // Act
         collection.AddRange(itemsToAdd);
@@ -186,7 +187,7 @@ public class CollectionExtensionsTests
     {
         // Arrange
         ICollection<string>? collection = null;
-        var itemsToAdd = new[] { "item1" };
+        string[] itemsToAdd = new[] { "item1" };
 
         // Act & Assert
         var action = () => collection!.AddRange(itemsToAdd);
@@ -198,7 +199,7 @@ public class CollectionExtensionsTests
     {
         // Arrange
         var collection = new List<string>();
-        var itemsToAdd = new[] { "item", "item", "item" };
+        string[] itemsToAdd = new[] { "item", "item", "item" };
 
         // Act
         collection.AddRange(itemsToAdd);

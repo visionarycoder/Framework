@@ -48,7 +48,7 @@ public class ProxyContextTests
     {
         // Arrange
         var context = new ProxyContext();
-        var customId = "custom-operation-id";
+        string customId = "custom-operation-id";
 
         // Act
         context.OperationId = customId;
@@ -112,7 +112,7 @@ public class ProxyContextTests
     {
         // Arrange
         var context = new ProxyContext();
-        var correlationId = Guid.NewGuid().ToString();
+        string correlationId = Guid.NewGuid().ToString();
 
         // Act
         context.CorrelationId = correlationId;
@@ -256,7 +256,7 @@ public class ProxyContextTests
     {
         // Arrange
         var context = new ProxyContext();
-        var requestId = Guid.NewGuid().ToString();
+        string requestId = Guid.NewGuid().ToString();
 
         // Act
         context.RequestId = requestId;
@@ -346,7 +346,7 @@ public class ProxyContextTests
     {
         // Arrange
         var context = new ProxyContext();
-        var unicodeUrl = "https://api.example.com/用户/123";
+        string unicodeUrl = "https://api.example.com/用户/123";
 
         // Act
         context.Url = unicodeUrl;

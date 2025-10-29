@@ -23,8 +23,8 @@ public class NullSecurityInterceptorTests
         // Arrange
         var interceptor = new NullSecurityInterceptor();
         var context = new ProxyContext { MethodName = "SecureMethod" };
-        var expectedData = 123;
-        var wasCalled = false;
+        int expectedData = 123;
+        bool wasCalled = false;
 
         Task<Response<int>> next(ProxyContext ctx, CancellationToken ct)
         {

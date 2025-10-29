@@ -36,7 +36,7 @@ public static class MonthExtensions
             throw new ArgumentOutOfRangeException(nameof(quarter), "Quarter must be between 1 and 4");
         if (month.Ordinal == 0) // UNKNOWN month
             return false;
-        var monthQuarter = (month.Ordinal - 1) / 3 + 1;
+        int monthQuarter = (month.Ordinal - 1) / 3 + 1;
         return monthQuarter == quarter;
     }
 

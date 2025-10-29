@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using VisionaryCoder.Framework.Abstractions.Services;
 using VisionaryCoder.Framework.Abstractions;
 
 namespace VisionaryCoder.Framework.Extensions;
@@ -18,7 +17,7 @@ public static class DataConfigurationServiceCollectionExtensions
     /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddConnectionString(this IServiceCollection services, IConfiguration configuration, string connectionName)
     {
-        var connectionStringValue = configuration.GetConnectionString(connectionName);
+        string? connectionStringValue = configuration.GetConnectionString(connectionName);
 
         if (string.IsNullOrWhiteSpace(connectionStringValue))
         {
@@ -41,7 +40,7 @@ public static class DataConfigurationServiceCollectionExtensions
         string connectionName,
         string serviceName)
     {
-        var connectionStringValue = configuration.GetConnectionString(connectionName);
+        string? connectionStringValue = configuration.GetConnectionString(connectionName);
         if (string.IsNullOrWhiteSpace(connectionStringValue))
         {
             throw new InvalidOperationException($"Connection string '{connectionName}' is not configured.");
@@ -58,8 +57,8 @@ public static class DataConfigurationServiceCollectionExtensions
     {
         services.AddSingleton<string>(provider =>
         {
-            var secretProvider = provider.GetRequiredService<ISecretProvider>();
-            var connectionStringValue = secretProvider.GetAsync(secretName).GetAwaiter().GetResult();
+            ISecretProvider secretProvider = provider.GetRequiredService<ISecretProvider>();
+            string? connectionStringValue = secretProvider.GetAsync(secretName).GetAwaiter().GetResult();
             if (string.IsNullOrWhiteSpace(connectionStringValue))
             {
                 throw new InvalidOperationException($"Connection string secret '{secretName}' is not available or empty.");

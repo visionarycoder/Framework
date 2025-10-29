@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
+using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Logging;
 /// <summary>
 /// Interceptor that logs proxy operations for monitoring and debugging purposes.
@@ -21,14 +22,14 @@ public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IOr
     /// <returns>A task representing the asynchronous operation with the response.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
-        var operationName = context.OperationName ?? "Unknown";
-        var correlationId = context.CorrelationId ?? "None";
+        string operationName = context.OperationName ?? "Unknown";
+        string correlationId = context.CorrelationId ?? "None";
         
         logger.LogDebug("Starting proxy operation '{OperationName}' with correlation ID '{CorrelationId}'", 
             operationName, correlationId);
         try
         {
-            var response = await next(context, cancellationToken);
+            Response<T> response = await next(context, cancellationToken);
             
             if (response.IsSuccess)
             {
@@ -44,8 +45,7 @@ public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IOr
         }
         catch (ProxyException ex)
         {
-            logger.LogError(ex, "Proxy operation '{OperationName}' failed with proxy exception. Correlation ID: '{CorrelationId}'", 
-                operationName, correlationId);
+            logger.LogError(ex, "Proxy operation '{OperationName}' failed with proxy exception. Correlation ID: '{CorrelationId}'", operationName, correlationId);
             throw;
         }
         catch (Exception ex)

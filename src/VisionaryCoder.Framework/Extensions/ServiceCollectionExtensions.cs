@@ -1,9 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using VisionaryCoder.Framework.Abstractions;
 using VisionaryCoder.Framework.Providers;
 
-namespace VisionaryCoder.Framework;
+namespace VisionaryCoder.Framework.Extensions;
 /// <summary>
 /// Extension methods for configuring the VisionaryCoder Framework services.
 /// </summary>

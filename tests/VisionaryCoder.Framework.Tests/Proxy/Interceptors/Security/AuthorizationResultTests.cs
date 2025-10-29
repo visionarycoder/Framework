@@ -35,7 +35,7 @@ public class AuthorizationResultTests
     public void Failure_WithReason_ShouldCreateUnauthorizedResult()
     {
         // Arrange
-        var reason = "Insufficient permissions";
+        string reason = "Insufficient permissions";
 
         // Act
         var result = AuthorizationResult.Failure(reason);
@@ -183,7 +183,7 @@ public class AuthorizationResultTests
     public void Failure_WithVeryLongReason_ShouldStoreCompletely()
     {
         // Arrange
-        var longReason = new string('A', 10000);
+        string longReason = new string('A', 10000);
 
         // Act
         var result = AuthorizationResult.Failure(longReason);
@@ -197,7 +197,7 @@ public class AuthorizationResultTests
     public void Failure_WithUnicodeReason_ShouldPreserveCharacters()
     {
         // Arrange
-        var unicodeReason = "授权失败 🔒 Access denied";
+        string unicodeReason = "授权失败 🔒 Access denied";
 
         // Act
         var result = AuthorizationResult.Failure(unicodeReason);

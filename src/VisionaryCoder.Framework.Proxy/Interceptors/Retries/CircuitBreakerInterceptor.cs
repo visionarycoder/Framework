@@ -3,8 +3,10 @@
 
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
+using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 using VisionaryCoder.Framework.Proxy.Interceptors.Retries.Abstractions;
-namespace VisionaryCoder.Framework.Proxy.Interceptors;
+
+namespace VisionaryCoder.Framework.Proxy.Interceptors.Retries;
 /// <summary>
 /// Interceptor that implements the circuit breaker pattern to prevent cascading failures.
 /// </summary>
@@ -49,8 +51,8 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
     /// <returns>A task representing the asynchronous operation with the response.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
-        var operationName = context.OperationName ?? "Unknown";
-        var correlationId = context.CorrelationId ?? "None";
+        string operationName = context.OperationName ?? "Unknown";
+        string correlationId = context.CorrelationId ?? "None";
         lock (lockObject)
         {
             switch (state)
@@ -80,7 +82,7 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
         }
         try
         {
-            var response = await next(context, cancellationToken);
+            Response<T> response = await next(context, cancellationToken);
             lock (lockObject)
             {
                 // Success - reset failure count and close circuit if needed

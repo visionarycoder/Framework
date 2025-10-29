@@ -36,7 +36,7 @@ public sealed class CorrelationInterceptor : IOrderedProxyInterceptor
         CancellationToken cancellationToken = default)
     {
         // Get or generate correlation ID
-        var correlationId = correlationContext.CorrelationId;
+        string? correlationId = correlationContext.CorrelationId;
         if (string.IsNullOrEmpty(correlationId))
         {
             correlationId = idGenerator.GenerateId();
@@ -50,7 +50,7 @@ public sealed class CorrelationInterceptor : IOrderedProxyInterceptor
         // Add correlation ID to proxy context
         context.Items["CorrelationId"] = correlationId;
         // Add correlation ID to logging scope
-        using var scope = logger.BeginScope("CorrelationId: {CorrelationId}", correlationId);
+        using IDisposable? scope = logger.BeginScope("CorrelationId: {CorrelationId}", correlationId);
         
         try
         {

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using VisionaryCoder.Framework.Abstractions;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Abstractions.Services;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
 /// <summary>
@@ -21,7 +21,7 @@ public static class SecurityInterceptorServiceCollectionExtensions
     {
         services.AddSingleton<IProxyInterceptor>(provider =>
         {
-            var logger = provider.GetRequiredService<ILogger<JwtBearerInterceptor>>();
+            ILogger<JwtBearerInterceptor> logger = provider.GetRequiredService<ILogger<JwtBearerInterceptor>>();
             return new JwtBearerInterceptor(logger, tokenProvider);
         });
         return services;
@@ -39,7 +39,7 @@ public static class SecurityInterceptorServiceCollectionExtensions
         services.AddSingleton<IProxyInterceptor>(provider =>
         {
             var secretProvider = provider.GetRequiredService<ISecretProvider>();
-            var logger = provider.GetRequiredService<ILogger<JwtBearerInterceptor>>();
+            ILogger<JwtBearerInterceptor> logger = provider.GetRequiredService<ILogger<JwtBearerInterceptor>>();
             Func<CancellationToken, Task<string?>> tokenProvider = async (cancellationToken) =>
             {
                 return await secretProvider.GetAsync(secretName, cancellationToken);

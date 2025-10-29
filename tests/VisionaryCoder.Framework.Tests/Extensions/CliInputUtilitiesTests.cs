@@ -1,7 +1,7 @@
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using VisionaryCoder.Framework.Extensions.CLI;
 
-namespace VisionaryCoder.Framework.Extensions.Tests;
+namespace VisionaryCoder.Framework.Tests.Extensions;
 
 [TestClass]
 public class CliInputUtilitiesTests
@@ -29,7 +29,7 @@ public class CliInputUtilitiesTests
 
     private void SetConsoleInput(params string[] inputs)
     {
-        var inputString = string.Join(Environment.NewLine, inputs);
+        string inputString = string.Join(Environment.NewLine, inputs);
         consoleInput = new StringReader(inputString);
         Console.SetIn(consoleInput);
     }
@@ -251,7 +251,7 @@ public class CliInputUtilitiesTests
     public void PromptForInputFile_WithValidFilePath_ShouldReturnFileInfo()
     {
         // Arrange
-        var tempFile = Path.GetTempFileName();
+        string tempFile = Path.GetTempFileName();
         try
         {
             SetConsoleInput(tempFile);
@@ -275,8 +275,8 @@ public class CliInputUtilitiesTests
     public void PromptForInputFile_WithNonExistentFile_ShouldShowErrorAndRetry()
     {
         // Arrange
-        var tempFile = Path.GetTempFileName();
-        var nonExistentFile = Path.Combine(Path.GetTempPath(), "nonexistent.txt");
+        string tempFile = Path.GetTempFileName();
+        string nonExistentFile = Path.Combine(Path.GetTempPath(), "nonexistent.txt");
         try
         {
             SetConsoleInput(nonExistentFile, tempFile);
@@ -300,7 +300,7 @@ public class CliInputUtilitiesTests
     public void PromptForInputFile_WithEmptyInput_ShouldShowErrorAndRetry()
     {
         // Arrange
-        var tempFile = Path.GetTempFileName();
+        string tempFile = Path.GetTempFileName();
         try
         {
             SetConsoleInput("", tempFile);
@@ -376,7 +376,7 @@ public class CliInputUtilitiesTests
     public void PromptForInputFolder_WithValidFolderPath_ShouldReturnDirectoryInfo()
     {
         // Arrange
-        var tempFolder = Path.GetTempPath();
+        string tempFolder = Path.GetTempPath();
         SetConsoleInput(tempFolder);
 
         // Act
@@ -393,8 +393,8 @@ public class CliInputUtilitiesTests
     public void PromptForInputFolder_WithNonExistentFolder_ShouldShowErrorAndRetry()
     {
         // Arrange
-        var tempFolder = Path.GetTempPath();
-        var nonExistentFolder = Path.Combine(Path.GetTempPath(), "nonexistent");
+        string tempFolder = Path.GetTempPath();
+        string nonExistentFolder = Path.Combine(Path.GetTempPath(), "nonexistent");
         SetConsoleInput(nonExistentFolder, tempFolder);
 
         // Act
@@ -409,7 +409,7 @@ public class CliInputUtilitiesTests
     public void PromptForInputFolder_WithEmptyInput_ShouldShowErrorAndRetry()
     {
         // Arrange
-        var tempFolder = Path.GetTempPath();
+        string tempFolder = Path.GetTempPath();
         SetConsoleInput("", tempFolder);
 
         // Act
@@ -476,7 +476,7 @@ public class CliInputUtilitiesTests
     public void PromptForInputFolder_WithWhitespaceAroundPath_ShouldTrimAndValidate()
     {
         // Arrange
-        var tempFolder = Path.GetTempPath();
+        string tempFolder = Path.GetTempPath();
         SetConsoleInput($"  {tempFolder}  ");
 
         // Act

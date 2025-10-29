@@ -64,11 +64,11 @@ public class CorrelationInterceptorTests
     public async Task InvokeAsync_WithExistingCorrelationId_ShouldUseExisting()
     {
         // Arrange
-        var existingCorrelationId = "existing-123";
+        string existingCorrelationId = "existing-123";
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns(existingCorrelationId);
         
         var context = new ProxyContext { MethodName = "TestMethod" };
-        var wasCalled = false;
+        bool wasCalled = false;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -91,7 +91,7 @@ public class CorrelationInterceptorTests
     public async Task InvokeAsync_WithoutCorrelationId_ShouldGenerateNew()
     {
         // Arrange
-        var generatedId = "generated-456";
+        string generatedId = "generated-456";
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns((string?)null);
         mockIdGenerator.Setup(g => g.GenerateId()).Returns(generatedId);
         
@@ -114,7 +114,7 @@ public class CorrelationInterceptorTests
     public async Task InvokeAsync_WithEmptyCorrelationId_ShouldGenerateNew()
     {
         // Arrange
-        var generatedId = "new-789";
+        string generatedId = "new-789";
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns(string.Empty);
         mockIdGenerator.Setup(g => g.GenerateId()).Returns(generatedId);
         
@@ -135,7 +135,7 @@ public class CorrelationInterceptorTests
     public async Task InvokeAsync_WhenGeneratingId_ShouldLogDebug()
     {
         // Arrange
-        var generatedId = "new-corr-id";
+        string generatedId = "new-corr-id";
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns((string?)null);
         mockIdGenerator.Setup(g => g.GenerateId()).Returns(generatedId);
         
@@ -162,7 +162,7 @@ public class CorrelationInterceptorTests
     public async Task InvokeAsync_WhenUsingExistingId_ShouldLogDebug()
     {
         // Arrange
-        var existingId = "existing-corr-id";
+        string existingId = "existing-corr-id";
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns(existingId);
         
         var context = new ProxyContext();
@@ -188,7 +188,7 @@ public class CorrelationInterceptorTests
     public async Task InvokeAsync_WhenExceptionThrown_ShouldLogErrorAndRethrow()
     {
         // Arrange
-        var correlationId = "error-corr-id";
+        string correlationId = "error-corr-id";
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns(correlationId);
         
         var context = new ProxyContext();

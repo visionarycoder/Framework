@@ -1,5 +1,6 @@
 using FluentAssertions;
-using VisionaryCoder.Framework.Configuration.Secrets;
+using VisionaryCoder.Framework.Abstractions;
+using VisionaryCoder.Framework.Secrets;
 
 namespace VisionaryCoder.Framework.Tests.Secrets;
 
@@ -94,7 +95,7 @@ public class NullSecretProviderTests
     {
         // Arrange
         var provider = NullSecretProvider.Instance;
-        var secretName = "test-secret";
+        string secretName = "test-secret";
 
         // Act
         var result1 = await provider.GetAsync(secretName);
@@ -119,7 +120,7 @@ public class NullSecretProviderTests
         {
             tasks.Add(provider.GetAsync($"secret-{i}"));
         }
-        var results = await Task.WhenAll(tasks);
+        string?[] results = await Task.WhenAll(tasks);
 
         // Assert
         results.Should().AllBe(null, "all results should be null");
@@ -145,6 +146,6 @@ public class NullSecretProviderTests
         var provider = NullSecretProvider.Instance;
 
         // Assert
-        provider.Should().BeAssignableTo<VisionaryCoder.Framework.Abstractions.Services.ISecretProvider>();
+        provider.Should().BeAssignableTo<ISecretProvider>();
     }
 }

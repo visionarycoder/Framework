@@ -1,6 +1,7 @@
 using FluentAssertions;
 using System.Reflection;
 using VisionaryCoder.Framework.Abstractions;
+using VisionaryCoder.Framework.Providers;
 
 namespace VisionaryCoder.Framework.Tests;
 
@@ -97,13 +98,13 @@ public class FrameworkInfoProviderTests
     public void FrameworkInfoProvider_ShouldImplementAllInterfaceProperties()
     {
         // Arrange
-        var interfaceType = typeof(IFrameworkInfoProvider);
-        var implementationType = typeof(FrameworkInfoProvider);
+        Type interfaceType = typeof(IFrameworkInfoProvider);
+        Type implementationType = typeof(FrameworkInfoProvider);
 
         // Act & Assert
-        foreach (var property in interfaceType.GetProperties())
+        foreach (PropertyInfo property in interfaceType.GetProperties())
         {
-            var implementationProperty = implementationType.GetProperty(property.Name);
+            PropertyInfo? implementationProperty = implementationType.GetProperty(property.Name);
             implementationProperty.Should().NotBeNull($"Property {property.Name} should be implemented");
             implementationProperty!.PropertyType.Should().Be(property.PropertyType);
         }
@@ -119,7 +120,7 @@ public class FrameworkInfoProviderTests
         // Arrange
         var assembly = Assembly.GetExecutingAssembly();
         var fileInfo = new FileInfo(assembly.Location);
-        var expectedTime = fileInfo.CreationTime;
+        DateTime expectedTime = fileInfo.CreationTime;
 
         // Act
         var actualTime = provider.CompiledAt;
@@ -133,7 +134,7 @@ public class FrameworkInfoProviderTests
     public void CompiledAt_ShouldBeReadOnlyProperty()
     {
         // Arrange
-        var propertyInfo = typeof(FrameworkInfoProvider).GetProperty(nameof(FrameworkInfoProvider.CompiledAt));
+        PropertyInfo? propertyInfo = typeof(FrameworkInfoProvider).GetProperty(nameof(FrameworkInfoProvider.CompiledAt));
 
         // Assert
         propertyInfo.Should().NotBeNull();

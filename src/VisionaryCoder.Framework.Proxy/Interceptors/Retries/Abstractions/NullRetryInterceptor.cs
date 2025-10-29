@@ -2,7 +2,8 @@
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
 using VisionaryCoder.Framework.Proxy.Abstractions;
-namespace VisionaryCoder.Framework.Proxy.Interceptors.Retry.Abstractions;
+
+namespace VisionaryCoder.Framework.Proxy.Interceptors.Retries.Abstractions;
 /// <summary>
 /// Null object pattern implementation of retry interceptor that performs no operations.
 /// </summary>

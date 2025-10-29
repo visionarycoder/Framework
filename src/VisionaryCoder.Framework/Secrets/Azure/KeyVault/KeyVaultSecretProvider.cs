@@ -2,9 +2,9 @@ using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using VisionaryCoder.Framework.Abstractions.Services;
+using VisionaryCoder.Framework.Abstractions;
 
-namespace VisionaryCoder.Framework.Configuration.Azure;
+namespace VisionaryCoder.Framework.Secrets.Azure.KeyVault;
     /// <summary>
     /// Azure Key Vault implementation of ISecretProvider with caching support.
     /// </summary>
@@ -36,7 +36,7 @@ namespace VisionaryCoder.Framework.Configuration.Azure;
             {
                 throw new ArgumentException("Secret name cannot be null or empty.", nameof(name));
             }
-            var cacheKey = $"secret:{name}";
+            string cacheKey = $"secret:{name}";
             // Try cache first
             if (cache.TryGetValue(cacheKey, out string? cachedValue))
             {
@@ -73,7 +73,7 @@ namespace VisionaryCoder.Framework.Configuration.Azure;
         /// </summary>
         public async Task<IDictionary<string, string?>> GetMultipleAsync(IEnumerable<string> names, CancellationToken cancellationToken = default)
         {
-            var secretNames = names?.ToList() ?? throw new ArgumentNullException(nameof(names));
+            List<string> secretNames = names?.ToList() ?? throw new ArgumentNullException(nameof(names));
             if (!secretNames.Any())
             {
                 return new Dictionary<string, string?>();
@@ -81,7 +81,7 @@ namespace VisionaryCoder.Framework.Configuration.Azure;
             logger.LogDebug("Retrieving {SecretCount} secrets from Key Vault", secretNames.Count);
             var tasks = secretNames.Select(async name =>
             {
-                var value = await GetAsync(name, cancellationToken);
+                string? value = await GetAsync(name, cancellationToken);
                 return new { Name = name, Value = value };
             });
             var results = await Task.WhenAll(tasks);

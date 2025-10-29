@@ -18,16 +18,16 @@ public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEn
     public int Order => 300;
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
-        var requestType = context.Request?.GetType().Name ?? "Unknown";
-        var correlationId = context.Items.TryGetValue("CorrelationId", out var corrId) ? 
+        string requestType = context.Request?.GetType().Name ?? "Unknown";
+        string correlationId = context.Items.TryGetValue("CorrelationId", out object? corrId) ? 
             corrId?.ToString() ?? Guid.NewGuid().ToString("D") : 
             Guid.NewGuid().ToString("D");
         
-        var startTime = DateTime.UtcNow;
+        DateTime startTime = DateTime.UtcNow;
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
         try
         {
-            var result = await next(context, cancellationToken);
+            Response<T> result = await next(context, cancellationToken);
             
             stopwatch.Stop();
             // Create audit record
@@ -74,7 +74,7 @@ public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEn
     }
     private async Task EmitAuditRecord(AuditRecord auditRecord, CancellationToken cancellationToken = default)
     {
-        foreach (var sink in auditSinks)
+        foreach (IAuditSink sink in auditSinks)
         {
             try
             {
@@ -96,7 +96,7 @@ public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEn
             ["ResultType"] = context.ResultType?.Name ?? "Unknown"
         };
         // Add context items (excluding sensitive data)
-        foreach (var item in context.Items.Where(kvp => !IsSensitiveKey(kvp.Key)))
+        foreach (KeyValuePair<string, object?> item in context.Items.Where(kvp => !IsSensitiveKey(kvp.Key)))
         {
             metadata[$"Context.{item.Key}"] = item.Value;
         }
@@ -109,7 +109,7 @@ public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEn
     }
     private static bool IsSensitiveKey(string key)
     {
-        var sensitiveKeys = new[] { "Authorization", "Password", "Secret", "Token", "Key" };
+        string[] sensitiveKeys = new[] { "Authorization", "Password", "Secret", "Token", "Key" };
         return sensitiveKeys.Any(sensitive => 
             key.Contains(sensitive, StringComparison.OrdinalIgnoreCase));
     }

@@ -3,6 +3,7 @@
 
 using FluentAssertions;
 using VisionaryCoder.Framework.Proxy.Abstractions;
+using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 
 namespace VisionaryCoder.Framework.Proxy.Abstractions.Tests.Exceptions;
 
@@ -13,7 +14,7 @@ public sealed class BusinessExceptionTests
     public void Constructor_WithMessage_ShouldSetMessage()
     {
         // Arrange
-        var message = "Business rule violation occurred";
+        string message = "Business rule violation occurred";
 
         // Act
         var exception = new BusinessException(message);
@@ -27,7 +28,7 @@ public sealed class BusinessExceptionTests
     public void Constructor_WithMessageAndInnerException_ShouldSetBoth()
     {
         // Arrange
-        var message = "Business operation failed";
+        string message = "Business operation failed";
         var innerException = new InvalidOperationException("Inner error");
 
         // Act
@@ -62,7 +63,7 @@ public sealed class BusinessExceptionTests
     public void BusinessException_CanBeThrown()
     {
         // Arrange
-        var message = "Test business exception";
+        string message = "Test business exception";
 
         // Act
         Action act = () => throw new BusinessException(message);
@@ -76,7 +77,7 @@ public sealed class BusinessExceptionTests
     public void BusinessException_CanBeCaughtAsProxyException()
     {
         // Arrange
-        var message = "Business error";
+        string message = "Business error";
 
         // Act
         Action act = () => throw new BusinessException(message);

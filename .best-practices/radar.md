@@ -89,15 +89,18 @@ flowchart LR
       QH7[Observability: Infra-only metrics, Unstructured logs]
     end
 
-    classDef adopt fill=#b7f5c7,stroke=#2f7,stroke-width=1px,color=#000;
-    classDef trial fill=#cbe8ff,stroke=#39f,stroke-width=1px,color=#000;
-    classDef assess fill=#fff1a8,stroke=#fc3,stroke-width=1px,color=#000;
-    classDef hold fill=#ffc2c2,stroke=#f55,stroke-width=1px,color=#000;
-
     class Q1 adopt;
+    classDef adopt fill='#b7f5c7',stroke='#2f7',stroke-width='1px',color='#000';
+
     class Q2 trial;
+    classDef trial fill='#cbe8ff',stroke='#39f',stroke-width='1px',color='#000';
+
     class Q3 assess;
+    classDef assess fill='#fff1a8',stroke='#fc3',stroke-width='1px',color='#000';
+
     class Q4 hold;
+    classDef hold fill='#ffc2c2',stroke='#f55',stroke-width='1px',color='#000';
+
 ```
 ---
 ## Related Governance Docs

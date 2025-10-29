@@ -329,7 +329,7 @@ public class LogDelegatesTests
         // Arrange
         object[]? capturedArgs = null;
         LogInformation logInfo = (message, args) => capturedArgs = args;
-        var args = Enumerable.Range(1, 100).Cast<object>().ToArray();
+        object[] args = Enumerable.Range(1, 100).Cast<object>().ToArray();
 
         // Act
         logInfo("Many args", args);
@@ -348,7 +348,7 @@ public class LogDelegatesTests
         // Arrange
         string? captured = null;
         LogError logError = (message, args) => captured = message;
-        var specialMessage = "Error: \n\t\r Special \"chars\" & symbols! @#$%";
+        string specialMessage = "Error: \n\t\r Special \"chars\" & symbols! @#$%";
 
         // Act
         logError(specialMessage);
@@ -363,7 +363,7 @@ public class LogDelegatesTests
         // Arrange
         string? captured = null;
         LogWarning logWarning = (message, args) => captured = message;
-        var unicodeMessage = "警告: émile naïve Übermensch";
+        string unicodeMessage = "警告: émile naïve Übermensch";
 
         // Act
         logWarning(unicodeMessage);
@@ -378,7 +378,7 @@ public class LogDelegatesTests
         // Arrange
         string? captured = null;
         LogCritical logCritical = (message, args) => captured = message;
-        var longMessage = new string('A', 10000);
+        string longMessage = new string('A', 10000);
 
         // Act
         logCritical(longMessage);

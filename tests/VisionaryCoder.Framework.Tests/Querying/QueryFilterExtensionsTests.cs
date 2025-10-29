@@ -576,7 +576,7 @@ public sealed class QueryFilterExtensionsTests
     public void Apply_WithValidFilter_ShouldFilterQueryable()
     {
         // Arrange
-        var data = new[]
+        IQueryable<TestEntity> data = new[]
         {
             new TestEntity(1, "Alice", "alice@test.com"),
             new TestEntity(2, "Bob", "bob@test.com"),
@@ -612,7 +612,7 @@ public sealed class QueryFilterExtensionsTests
     public void Apply_WithNullFilter_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var source = Array.Empty<TestEntity>().AsQueryable();
+        IQueryable<TestEntity> source = Array.Empty<TestEntity>().AsQueryable();
         QueryFilter<TestEntity> filter = null!;
 
         // Act
@@ -630,7 +630,7 @@ public sealed class QueryFilterExtensionsTests
     public void ApplyAll_WithMultipleFilters_ShouldApplyAllSequentially()
     {
         // Arrange
-        var data = new[]
+        IQueryable<TestEntity> data = new[]
         {
             new TestEntity(1, "Alice", "alice@test.com"),
             new TestEntity(2, "Bob", "bob@test.com"),
@@ -657,7 +657,7 @@ public sealed class QueryFilterExtensionsTests
     public void ApplyAll_WithNullFiltersInSequence_ShouldSkipNulls()
     {
         // Arrange
-        var data = new[]
+        IQueryable<TestEntity> data = new[]
         {
             new TestEntity(1, "Alice", "alice@test.com"),
             new TestEntity(2, "Bob", "bob@test.com")
@@ -695,7 +695,7 @@ public sealed class QueryFilterExtensionsTests
     public void ApplyAll_WithNullFiltersCollection_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var source = Array.Empty<TestEntity>().AsQueryable();
+        IQueryable<TestEntity> source = Array.Empty<TestEntity>().AsQueryable();
         IEnumerable<QueryFilter<TestEntity>> filters = null!;
 
         // Act
@@ -713,7 +713,7 @@ public sealed class QueryFilterExtensionsTests
     public void QueryFilter_ComplexComposition_ShouldWork()
     {
         // Arrange
-        var data = new[]
+        IQueryable<TestEntity> data = new[]
         {
             new TestEntity(1, "Alice Anderson", "alice@gmail.com"),
             new TestEntity(2, "Bob Brown", "bob@yahoo.com"),
@@ -738,7 +738,7 @@ public sealed class QueryFilterExtensionsTests
     public void QueryFilter_MultipleOrConditions_ShouldWork()
     {
         // Arrange
-        var data = new[]
+        IQueryable<TestEntity> data = new[]
         {
             new TestEntity(1, "Alice", "alice@gmail.com"),
             new TestEntity(2, "Bob", "bob@yahoo.com"),
@@ -762,7 +762,7 @@ public sealed class QueryFilterExtensionsTests
     public void QueryFilter_NotWithCombination_ShouldWork()
     {
         // Arrange
-        var data = new[]
+        IQueryable<TestEntity> data = new[]
         {
             new TestEntity(1, "Alice", "alice@test.com"),
             new TestEntity(2, "Bob", "bob@test.com"),

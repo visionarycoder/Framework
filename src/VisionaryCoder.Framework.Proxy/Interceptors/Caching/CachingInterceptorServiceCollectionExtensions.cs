@@ -28,9 +28,9 @@ public static class CachingInterceptorServiceCollectionExtensions
         }
         services.AddSingleton<IProxyInterceptor>(provider =>
         {
-            var logger = provider.GetRequiredService<ILogger<CachingInterceptor>>();
-            var cache = provider.GetRequiredService<IMemoryCache>();
-            var options = provider.GetService<IOptions<CachingOptions>>()?.Value ?? new CachingOptions();
+            ILogger<CachingInterceptor> logger = provider.GetRequiredService<ILogger<CachingInterceptor>>();
+            IMemoryCache cache = provider.GetRequiredService<IMemoryCache>();
+            CachingOptions options = provider.GetService<IOptions<CachingOptions>>()?.Value ?? new CachingOptions();
             
             return new CachingInterceptor(
                 logger, 

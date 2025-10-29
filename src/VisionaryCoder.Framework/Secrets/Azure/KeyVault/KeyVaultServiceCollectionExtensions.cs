@@ -1,13 +1,14 @@
+using Azure;
+using Azure.Core;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using VisionaryCoder.Framework.Abstractions.Services;
-using VisionaryCoder.Framework.Configuration.Secrets;
-using Azure.Core;
+using VisionaryCoder.Framework.Abstractions;
+using VisionaryCoder.Framework.Secrets.Local;
 
-namespace VisionaryCoder.Framework.Configuration.Azure;
+namespace VisionaryCoder.Framework.Secrets.Azure.KeyVault;
 
 /// <summary>
 /// Extension methods for configuring Azure Key Vault secret services.
@@ -41,14 +42,14 @@ public static class KeyVaultServiceCollectionExtensions
         });
 
         // Local-first toggle (explicit) OR missing vault URI => local
-        var useLocal = options.UseLocalSecrets || options.VaultUri is null;
+        bool useLocal = options.UseLocalSecrets || options.VaultUri is null;
         if (useLocal)
         {
             services.AddSingleton<ISecretProvider>(provider =>
             {
                 var config = provider.GetRequiredService<IConfiguration>();
                 var keyVaultOptions = provider.GetRequiredService<IOptions<KeyVaultOptions>>().Value;
-                return new VisionaryCoder.Framework.Configuration.Secrets.LocalSecretProvider(config, keyVaultOptions);
+                return new LocalSecretProvider(config, keyVaultOptions);
             });
             return services;
         }

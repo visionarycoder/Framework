@@ -6,16 +6,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Proxy.Abstractions.Interceptors;
 using VisionaryCoder.Framework.Proxy.Interceptors.Auditing;
 using VisionaryCoder.Framework.Proxy.Interceptors.Caching;
 using VisionaryCoder.Framework.Proxy.Interceptors.Correlation;
 using VisionaryCoder.Framework.Proxy.Interceptors.Logging;
 using VisionaryCoder.Framework.Proxy.Interceptors.Resilience;
-using VisionaryCoder.Framework.Proxy.Interceptors.Retry;
+using VisionaryCoder.Framework.Proxy.Interceptors.Retries;
 using VisionaryCoder.Framework.Proxy.Interceptors.Security;
 using VisionaryCoder.Framework.Proxy.Interceptors.Telemetry;
-namespace VisionaryCoder.Framework.Proxy.Extensions;
+using IProxyCache = VisionaryCoder.Framework.Proxy.Abstractions.IProxyCache;
+
+namespace VisionaryCoder.Framework.Proxy.Interceptors;
 /// <summary>
 /// Extension methods for configuring proxy interceptors in the dependency injection container.
 /// </summary>
@@ -83,7 +84,7 @@ public static class ProxyInterceptorServiceCollectionExtensions
     {
         services.TryAddTransient<IProxySecurityEnricher>(provider =>
         {
-            var logger = provider.GetRequiredService<ILogger<JwtBearerEnricher>>();
+            ILogger<JwtBearerEnricher> logger = provider.GetRequiredService<ILogger<JwtBearerEnricher>>();
             return new JwtBearerEnricher(logger, () => tokenProvider(provider));
         });
         return services;

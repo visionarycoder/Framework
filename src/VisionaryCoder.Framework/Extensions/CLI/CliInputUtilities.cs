@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace VisionaryCoder.Framework.Extensions;
+namespace VisionaryCoder.Framework.Extensions.CLI;
 public static class CliInputUtilities
 {
     public const string InvalidInputMessage = "Invalid input.  Please try again.";
@@ -15,8 +15,8 @@ public static class CliInputUtilities
     {
         do
         {
-            var trimmedInput = GetTrimmedInput();
-            if (decimal.TryParse(trimmedInput, out var value))
+            string? trimmedInput = GetTrimmedInput();
+            if (decimal.TryParse(trimmedInput, out decimal value))
             {
                 return value;
             }
@@ -28,8 +28,8 @@ public static class CliInputUtilities
     {
         do
         {
-            var trimmedInput = GetTrimmedInput();
-            if (int.TryParse(trimmedInput, out var value))
+            string? trimmedInput = GetTrimmedInput();
+            if (int.TryParse(trimmedInput, out int value))
             {
                 return value;
             }
@@ -39,7 +39,7 @@ public static class CliInputUtilities
 
     public static string GetStringInput()
     {
-        var trimmedInput = GetTrimmedInput()?.ToUpperInvariant();
+        string? trimmedInput = GetTrimmedInput()?.ToUpperInvariant();
         if (!string.IsNullOrWhiteSpace(trimmedInput))
         {
             return trimmedInput;
@@ -60,7 +60,7 @@ public static class CliInputUtilities
 
     private static string? GetTrimmedInput()
     {
-        var rawInput = Console.ReadLine();
+        string? rawInput = Console.ReadLine();
         return rawInput?.Trim();
     }
 
@@ -69,7 +69,7 @@ public static class CliInputUtilities
         while (true)
         {
             Console.WriteLine(promptMessage);
-            var path = GetTrimmedInput();
+            string? path = GetTrimmedInput();
             if (IsNullOrEmpty(path))
             {
                 Console.WriteLine(emptyErrorMessage);
@@ -79,7 +79,7 @@ public static class CliInputUtilities
             {
                 return null;
             }
-            var pathInfo = getPathInfoFunc(path!);
+            T? pathInfo = getPathInfoFunc(path!);
             if (pathInfo != null)
             {
                 return pathInfo;

@@ -1,7 +1,7 @@
 using System.Reflection;
 using VisionaryCoder.Framework.Abstractions;
 
-namespace VisionaryCoder.Framework;
+namespace VisionaryCoder.Framework.Providers;
 
 /// <summary>
 /// Default implementation of <see cref="IFrameworkInfoProvider"/>.

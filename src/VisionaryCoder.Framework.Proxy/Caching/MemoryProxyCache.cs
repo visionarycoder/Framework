@@ -9,7 +9,7 @@ public sealed class MemoryProxyCache(IMemoryCache cache) : IProxyCache
 
     public Task<T?> GetAsync<T>(string key)
     {
-        if (cache.TryGetValue(key, out var obj) && obj is T typed)
+        if (cache.TryGetValue(key, out object? obj) && obj is T typed)
         {
             return Task.FromResult<T?>(typed);
         }

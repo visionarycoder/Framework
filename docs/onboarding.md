@@ -1,38 +1,30 @@
 # Developer Onboarding
 
-Welcome to the project! This guide helps you set up your environment so you can build, test, and consume our libraries.
+Welcome to the VisionaryCoder Framework project! This guide helps you set up your development environment so you can build, test, and contribute to our libraries.
 
 ---
 
 ## 1. Prerequisites
-- Install [.NET SDK 8.0+](https://dotnet.microsoft.com/download).
-- Install Git and clone the repository.
-- Ensure you have access to our GitHub organization.
+
+### Required Tools
+- **[.NET SDK 8.0+](https://dotnet.microsoft.com/download)** - The project targets .NET 8
+- **Git** - For version control and cloning the repository
+- **Visual Studio 2022** (17.8+) or **Visual Studio Code** with C# Dev Kit
+- **GitHub Account** with access to the VisionaryCoder organization
+
+### Recommended Tools
+- **GitHub CLI** (`gh`) - For authentication and workflow management
+- **dotnet-format** - For code style enforcement (included in .NET SDK)
+- **ReportGenerator** - For code coverage visualization
 
 ---
 
-## 2. NuGet Configuration
+## 2. Clone and Build
 
-We publish packages to **NuGet.org** (stable) and **GitHub Packages** (nightly/previews).  
-To restore packages locally, configure your `NuGet.config`:
+### Clone the Repository
 
-### Repo Root `NuGet.config`
+### Restore Dependencies
 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-  <packageSources>
-    <!-- Official NuGet feed -->
-    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
+### Build the Solution
 
-    <!-- GitHub Packages feed -->
-    <add key="github" value="https://nuget.pkg.github.com/OWNER/index.json" />
-  </packageSources>
-
-  <packageSourceCredentials>
-    <github>
-      <add key="Username" value="OWNER" />
-      <add key="ClearTextPassword" value="YOUR_GITHUB_PAT" />
-    </github>
-  </packageSourceCredentials>
-</configuration>
+### Run Tests

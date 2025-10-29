@@ -1,7 +1,7 @@
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using VisionaryCoder.Framework.Extensions.CLI;
 
-namespace VisionaryCoder.Framework.Extensions.Tests;
+namespace VisionaryCoder.Framework.Tests.Extensions;
 
 [TestClass]
 public class MenuHelperTests
@@ -29,7 +29,7 @@ public class MenuHelperTests
 
     private void SetConsoleInput(params string[] inputs)
     {
-        var inputString = string.Join(Environment.NewLine, inputs);
+        string inputString = string.Join(Environment.NewLine, inputs);
         consoleInput = new StringReader(inputString);
         Console.SetIn(consoleInput);
     }
@@ -38,15 +38,15 @@ public class MenuHelperTests
     public void ShowIntroduction_WithAppName_ShouldDisplayFormattedIntroduction()
     {
         // Arrange
-        var appName = "Test Application";
-        var expectedWidth = 72;
+        string appName = "Test Application";
+        int expectedWidth = 72;
 
         // Act
         MenuHelper.ShowIntroduction(appName);
 
         // Assert
-        var output = consoleOutput.ToString();
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        string output = consoleOutput.ToString();
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         lines.Should().HaveCount(5);
         lines[0].Should().Be(new string('-', expectedWidth));
@@ -60,15 +60,15 @@ public class MenuHelperTests
     public void ShowIntroduction_WithCustomWidth_ShouldDisplayIntroductionWithCustomWidth()
     {
         // Arrange
-        var appName = "Custom App";
-        var customWidth = 50;
+        string appName = "Custom App";
+        int customWidth = 50;
 
         // Act
         MenuHelper.ShowIntroduction(appName, customWidth);
 
         // Assert
-        var output = consoleOutput.ToString();
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        string output = consoleOutput.ToString();
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         lines.Should().HaveCount(5);
         lines[0].Should().Be(new string('-', customWidth));
@@ -82,14 +82,14 @@ public class MenuHelperTests
     public void ShowIntroduction_WithEmptyAppName_ShouldDisplayIntroductionWithEmptyName()
     {
         // Arrange
-        var appName = "";
+        string appName = "";
 
         // Act
         MenuHelper.ShowIntroduction(appName);
 
         // Assert
-        var output = consoleOutput.ToString();
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        string output = consoleOutput.ToString();
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         lines.Should().HaveCount(5);
         lines[1].Should().Be("--");
@@ -101,14 +101,14 @@ public class MenuHelperTests
     public void ShowIntroduction_WithVeryLongAppName_ShouldDisplayIntroductionWithLongName()
     {
         // Arrange
-        var appName = "This is a very long application name that exceeds normal length";
+        string appName = "This is a very long application name that exceeds normal length";
 
         // Act
         MenuHelper.ShowIntroduction(appName);
 
         // Assert
-        var output = consoleOutput.ToString();
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        string output = consoleOutput.ToString();
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         lines.Should().HaveCount(5);
         lines[2].Should().Be($"-- {appName}");
@@ -118,14 +118,14 @@ public class MenuHelperTests
     public void ShowIntroduction_WithSpecialCharactersInAppName_ShouldDisplayIntroductionWithSpecialChars()
     {
         // Arrange
-        var appName = "App@Name!123#$%";
+        string appName = "App@Name!123#$%";
 
         // Act
         MenuHelper.ShowIntroduction(appName);
 
         // Assert
-        var output = consoleOutput.ToString();
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        string output = consoleOutput.ToString();
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         lines.Should().HaveCount(5);
         lines[2].Should().Be($"-- {appName}");
@@ -135,15 +135,15 @@ public class MenuHelperTests
     public void ShowIntroduction_WithZeroWidth_ShouldDisplayIntroductionWithNoSeparator()
     {
         // Arrange
-        var appName = "Test App";
-        var zeroWidth = 0;
+        string appName = "Test App";
+        int zeroWidth = 0;
 
         // Act
         MenuHelper.ShowIntroduction(appName, zeroWidth);
 
         // Assert
-        var output = consoleOutput.ToString();
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        string output = consoleOutput.ToString();
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         lines.Should().HaveCount(3); // Only the -- lines, no separators
         lines[0].Should().Be("--");
@@ -155,15 +155,15 @@ public class MenuHelperTests
     public void ShowIntroduction_WithMinimalWidth_ShouldDisplayIntroductionWithMinimalSeparator()
     {
         // Arrange
-        var appName = "App";
-        var minimalWidth = 5;
+        string appName = "App";
+        int minimalWidth = 5;
 
         // Act
         MenuHelper.ShowIntroduction(appName, minimalWidth);
 
         // Assert
-        var output = consoleOutput.ToString();
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        string output = consoleOutput.ToString();
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         lines.Should().HaveCount(5);
         lines[0].Should().Be(new string('-', minimalWidth));
@@ -180,8 +180,8 @@ public class MenuHelperTests
         MenuHelper.ShowExit();
 
         // Assert
-        var output = consoleOutput.ToString();
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        string output = consoleOutput.ToString();
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         lines.Should().HaveCount(3);
         lines[0].Should().Be(new string('-', 72));
@@ -193,15 +193,15 @@ public class MenuHelperTests
     public void ShowExit_WithCustomWidth_ShouldDisplayExitMessageWithDefaultWidthSeparator()
     {
         // Arrange - ShowExit ignores the separateWidth parameter and uses default width for separators
-        var customWidth = 40;
+        int customWidth = 40;
         SetConsoleInput(""); // Simulate pressing ENTER
 
         // Act
         MenuHelper.ShowExit(customWidth);
 
         // Assert
-        var output = consoleOutput.ToString();
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        string output = consoleOutput.ToString();
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         lines.Should().HaveCount(3);
         lines[0].Should().Be(new string('-', 72)); // ShowExit always uses default width
@@ -213,16 +213,16 @@ public class MenuHelperTests
     public void ShowExit_ParameterIgnored_DocumentsBugInImplementation()
     {
         // Arrange - This test documents a bug: separateWidth parameter is ignored
-        var expectedWidth = 100;
-        var actualWidth = 72; // Default width that's actually used
+        int expectedWidth = 100;
+        int actualWidth = 72; // Default width that's actually used
         SetConsoleInput(""); // Simulate pressing ENTER
 
         // Act
         MenuHelper.ShowExit(expectedWidth);
 
         // Assert - The parameter is ignored, method uses default width
-        var output = consoleOutput.ToString();
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        string output = consoleOutput.ToString();
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         lines.Should().HaveCount(3);
         lines[0].Should().Be(new string('-', actualWidth)); // Bug: ignores expectedWidth
@@ -243,8 +243,8 @@ public class MenuHelperTests
         MenuHelper.ShowExit(0);
 
         // Assert
-        var output = consoleOutput.ToString();
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        string output = consoleOutput.ToString();
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         lines.Should().HaveCount(3); // ShowExit always displays separators with default width
         lines[0].Should().Be(new string('-', 72));
@@ -259,7 +259,7 @@ public class MenuHelperTests
         MenuHelper.ShowSeparator();
 
         // Assert
-        var output = consoleOutput.ToString().Trim();
+        string output = consoleOutput.ToString().Trim();
         output.Should().Be(new string('-', 72));
     }
 
@@ -267,13 +267,13 @@ public class MenuHelperTests
     public void ShowSeparator_WithCustomWidth_ShouldDisplayCustomSeparator()
     {
         // Arrange
-        var customWidth = 50;
+        int customWidth = 50;
 
         // Act
         MenuHelper.ShowSeparator(customWidth);
 
         // Assert
-        var output = consoleOutput.ToString().Trim();
+        string output = consoleOutput.ToString().Trim();
         output.Should().Be(new string('-', customWidth));
     }
 
@@ -284,7 +284,7 @@ public class MenuHelperTests
         MenuHelper.ShowSeparator(0);
 
         // Assert
-        var output = consoleOutput.ToString().Trim();
+        string output = consoleOutput.ToString().Trim();
         output.Should().Be("");
     }
 
@@ -301,13 +301,13 @@ public class MenuHelperTests
     public void ShowSeparator_WithLargeWidth_ShouldDisplayLargeSeparator()
     {
         // Arrange
-        var largeWidth = 200;
+        int largeWidth = 200;
 
         // Act
         MenuHelper.ShowSeparator(largeWidth);
 
         // Assert
-        var output = consoleOutput.ToString().Trim();
+        string output = consoleOutput.ToString().Trim();
         output.Should().Be(new string('-', largeWidth));
         output.Length.Should().Be(largeWidth);
     }
@@ -321,8 +321,8 @@ public class MenuHelperTests
         MenuHelper.ShowSeparator(5);
 
         // Assert
-        var output = consoleOutput.ToString();
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        string output = consoleOutput.ToString();
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         lines.Should().HaveCount(3);
         lines[0].Should().Be(new string('-', 10));
@@ -335,7 +335,7 @@ public class MenuHelperTests
     public void MenuHelper_IntegrationTest_ShouldDisplayCompleteMenuFlow()
     {
         // Arrange
-        var appName = "Integration Test App";
+        string appName = "Integration Test App";
         SetConsoleInput(""); // For ShowExit
 
         // Act
@@ -344,7 +344,7 @@ public class MenuHelperTests
         MenuHelper.ShowExit(50);
 
         // Assert
-        var output = consoleOutput.ToString();
+        string output = consoleOutput.ToString();
         output.Should().Contain($"-- {appName}");
         output.Should().Contain(new string('-', 50));
         output.Should().Contain(new string('-', 30));
@@ -355,8 +355,8 @@ public class MenuHelperTests
     public void MenuHelper_ConsistentWidthUsage_ShouldMaintainConsistentFormatting()
     {
         // Arrange
-        var width = 80;
-        var appName = "Consistent Width Test";
+        int width = 80;
+        string appName = "Consistent Width Test";
         SetConsoleInput(""); // For ShowExit
 
         // Act
@@ -365,8 +365,8 @@ public class MenuHelperTests
         MenuHelper.ShowExit(width); // Note: ShowExit ignores the width parameter for separators
 
         // Assert
-        var output = consoleOutput.ToString();
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        string output = consoleOutput.ToString();
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         // Count lines with the specified width (80) and default width (72)
         var width80Lines = lines.Where(line => line.Length == 80 && line.All(c => c == '-')).ToList();

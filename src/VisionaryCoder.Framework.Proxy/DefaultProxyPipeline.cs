@@ -20,14 +20,13 @@ public sealed class DefaultProxyPipeline(IEnumerable<IProxyInterceptor> intercep
     /// <returns>A task representing the asynchronous operation with the response.</returns>
     public Task<Response<T>> SendAsync<T>(ProxyContext context, CancellationToken cancellationToken = default)
     {
-        if (context is null)
-            throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
         // Build the pipeline by wrapping interceptors around the transport
         ProxyDelegate<T> terminal = (_, ct) => transport.SendCoreAsync<T>(context, ct);
         // Wrap each interceptor around the previous delegate (reverse order for proper execution)
-        foreach (var interceptor in orderedInterceptors.Reverse())
+        foreach (IProxyInterceptor interceptor in orderedInterceptors.Reverse())
         {
-            var next = terminal;
+            ProxyDelegate<T> next = terminal;
             terminal = (ctx, ct) => interceptor.InvokeAsync<T>(ctx, next, ct);
         }
         return terminal(context, cancellationToken);
@@ -36,7 +35,7 @@ public sealed class DefaultProxyPipeline(IEnumerable<IProxyInterceptor> intercep
     /// <param name="interceptors">The interceptors to order.</param>
     /// <returns>An ordered list of interceptors.</returns>
     private static IReadOnlyList<IProxyInterceptor> Order(IEnumerable<IProxyInterceptor> interceptors)
-    { var index = 0;
+    { int index = 0;
 
         // DI preserves registration order—use index to keep stability for same order values
         return interceptors
@@ -59,7 +58,7 @@ public sealed class DefaultProxyPipeline(IEnumerable<IProxyInterceptor> intercep
         if (interceptor is IOrderedProxyInterceptor orderedInterceptor)
             return orderedInterceptor.Order;
         // Fall back to attribute-based order
-        var attribute = interceptor.GetType().GetCustomAttribute<ProxyInterceptorOrderAttribute>();
+        ProxyInterceptorOrderAttribute? attribute = interceptor.GetType().GetCustomAttribute<ProxyInterceptorOrderAttribute>();
         return attribute?.Order ?? 0;
     }
 }

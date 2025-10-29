@@ -1,7 +1,7 @@
 using FluentAssertions;
-using VisionaryCoder.Framework.Abstractions;
+using VisionaryCoder.Framework.Extensions;
 
-namespace VisionaryCoder.Framework.Extensions.Tests;
+namespace VisionaryCoder.Framework.Tests.Extensions;
 
 [TestClass]
 public class MonthExtensionsTests
@@ -245,7 +245,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.January);
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => month.IsInQuarter(0));
+        ArgumentOutOfRangeException? exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => month.IsInQuarter(0));
         exception.ParamName.Should().Be("quarter");
         exception.Message.Should().Contain("Quarter must be between 1 and 4");
     }
@@ -257,7 +257,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.May);
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => month.IsInQuarter(5));
+        ArgumentOutOfRangeException? exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => month.IsInQuarter(5));
         exception.ParamName.Should().Be("quarter");
         exception.Message.Should().Contain("Quarter must be between 1 and 4");
     }

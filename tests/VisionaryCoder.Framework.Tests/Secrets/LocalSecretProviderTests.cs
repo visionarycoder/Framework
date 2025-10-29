@@ -1,8 +1,10 @@
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using VisionaryCoder.Framework.Abstractions;
 using VisionaryCoder.Framework.Configuration.Azure;
-using VisionaryCoder.Framework.Configuration.Secrets;
+using VisionaryCoder.Framework.Secrets.Azure.KeyVault;
+using VisionaryCoder.Framework.Secrets.Local;
 
 namespace VisionaryCoder.Framework.Tests.Secrets;
 
@@ -100,8 +102,8 @@ public class LocalSecretProviderTests
     public async Task GetAsync_WithPrefixedKeyInConfiguration_ShouldReturnValue()
     {
         // Arrange
-        var secretName = "ApiKey";
-        var expectedValue = "test-api-key-value";
+        string secretName = "ApiKey";
+        string expectedValue = "test-api-key-value";
         mockConfiguration.SetupGet(c => c["Secrets:ApiKey"]).Returns(expectedValue);
         
         var provider = new LocalSecretProvider(mockConfiguration.Object, options);
@@ -117,8 +119,8 @@ public class LocalSecretProviderTests
     public async Task GetAsync_WithDirectKeyInConfiguration_ShouldReturnValue()
     {
         // Arrange
-        var secretName = "DatabasePassword";
-        var expectedValue = "direct-password";
+        string secretName = "DatabasePassword";
+        string expectedValue = "direct-password";
         mockConfiguration.SetupGet(c => c["Secrets:DatabasePassword"]).Returns((string?)null);
         mockConfiguration.SetupGet(c => c["DatabasePassword"]).Returns(expectedValue);
         
@@ -135,8 +137,8 @@ public class LocalSecretProviderTests
     public async Task GetAsync_WithEnvironmentVariable_ShouldReturnValue()
     {
         // Arrange
-        var secretName = "TEST_ENV_SECRET";
-        var expectedValue = "env-secret-value";
+        string secretName = "TEST_ENV_SECRET";
+        string expectedValue = "env-secret-value";
         Environment.SetEnvironmentVariable(secretName, expectedValue);
         
         mockConfiguration.SetupGet(c => c[$"Secrets:{secretName}"]).Returns((string?)null);
@@ -162,9 +164,9 @@ public class LocalSecretProviderTests
     public async Task GetAsync_PrefixedKeyTakesPriority_OverDirectKey()
     {
         // Arrange
-        var secretName = "ConnectionString";
-        var prefixedValue = "prefixed-connection-string";
-        var directValue = "direct-connection-string";
+        string secretName = "ConnectionString";
+        string prefixedValue = "prefixed-connection-string";
+        string directValue = "direct-connection-string";
         
         mockConfiguration.SetupGet(c => c["Secrets:ConnectionString"]).Returns(prefixedValue);
         mockConfiguration.SetupGet(c => c["ConnectionString"]).Returns(directValue);
@@ -182,9 +184,9 @@ public class LocalSecretProviderTests
     public async Task GetAsync_DirectKeyTakesPriority_OverEnvironmentVariable()
     {
         // Arrange
-        var secretName = "TEST_PRIORITY_SECRET";
-        var configValue = "config-value";
-        var envValue = "env-value";
+        string secretName = "TEST_PRIORITY_SECRET";
+        string configValue = "config-value";
+        string envValue = "env-value";
         
         Environment.SetEnvironmentVariable(secretName, envValue);
         mockConfiguration.SetupGet(c => c[$"Secrets:{secretName}"]).Returns((string?)null);
@@ -210,7 +212,7 @@ public class LocalSecretProviderTests
     public async Task GetAsync_WithNonExistentSecret_ShouldReturnNull()
     {
         // Arrange
-        var secretName = "NonExistentSecret";
+        string secretName = "NonExistentSecret";
         mockConfiguration.SetupGet(c => c[It.IsAny<string>()]).Returns((string?)null);
         
         var provider = new LocalSecretProvider(mockConfiguration.Object, options);
@@ -274,9 +276,9 @@ public class LocalSecretProviderTests
     public async Task GetAsync_CalledMultipleTimes_ShouldCheckConfigurationEachTime()
     {
         // Arrange
-        var secretName = "ApiKey";
-        var value1 = "value-1";
-        var value2 = "value-2";
+        string secretName = "ApiKey";
+        string value1 = "value-1";
+        string value2 = "value-2";
         
         var setupSequence = mockConfiguration.SetupSequence(c => c[$"Secrets:{secretName}"])
             .Returns(value1)
@@ -298,8 +300,8 @@ public class LocalSecretProviderTests
     {
         // Arrange
         var customOptions = new KeyVaultOptions { LocalSecretsPrefix = "CustomSecrets" };
-        var secretName = "ApiKey";
-        var expectedValue = "custom-api-key";
+        string secretName = "ApiKey";
+        string expectedValue = "custom-api-key";
         
         mockConfiguration.SetupGet(c => c["CustomSecrets:ApiKey"]).Returns(expectedValue);
         var provider = new LocalSecretProvider(mockConfiguration.Object, customOptions);
@@ -318,6 +320,6 @@ public class LocalSecretProviderTests
         var provider = new LocalSecretProvider(mockConfiguration.Object, options);
 
         // Assert
-        provider.Should().BeAssignableTo<VisionaryCoder.Framework.Abstractions.Services.ISecretProvider>();
+        provider.Should().BeAssignableTo<ISecretProvider>();
     }
 }

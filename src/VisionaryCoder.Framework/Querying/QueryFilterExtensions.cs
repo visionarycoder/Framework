@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace VisionaryCoder.Framework.Querying;
 
@@ -50,9 +51,9 @@ public static class QueryFilterExtensions
         ArgumentNullException.ThrowIfNull(left);
         ArgumentNullException.ThrowIfNull(right);
 
-        var parameter = left.Predicate.Parameters[0];
-        var rightBody = right.Predicate.Body.ReplaceParameter(right.Predicate.Parameters[0], parameter);
-        var body = Expression.AndAlso(left.Predicate.Body, rightBody);
+        ParameterExpression parameter = left.Predicate.Parameters[0];
+        Expression rightBody = right.Predicate.Body.ReplaceParameter(right.Predicate.Parameters[0], parameter);
+        BinaryExpression body = Expression.AndAlso(left.Predicate.Body, rightBody);
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, parameter));
     }
 
@@ -71,9 +72,9 @@ public static class QueryFilterExtensions
         ArgumentNullException.ThrowIfNull(left);
         ArgumentNullException.ThrowIfNull(right);
 
-        var parameter = left.Predicate.Parameters[0];
-        var rightBody = right.Predicate.Body.ReplaceParameter(right.Predicate.Parameters[0], parameter);
-        var body = Expression.OrElse(left.Predicate.Body, rightBody);
+        ParameterExpression parameter = left.Predicate.Parameters[0];
+        Expression rightBody = right.Predicate.Body.ReplaceParameter(right.Predicate.Parameters[0], parameter);
+        BinaryExpression body = Expression.OrElse(left.Predicate.Body, rightBody);
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, parameter));
     }
 
@@ -89,8 +90,8 @@ public static class QueryFilterExtensions
     public static QueryFilter<T> Not<T>(this QueryFilter<T> filter)
     {
         ArgumentNullException.ThrowIfNull(filter);
-        var parameter = filter.Predicate.Parameters[0];
-        var body = Expression.Not(filter.Predicate.Body);
+        ParameterExpression parameter = filter.Predicate.Parameters[0];
+        UnaryExpression body = Expression.Not(filter.Predicate.Body);
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, parameter));
     }
 
@@ -112,9 +113,9 @@ public static class QueryFilterExtensions
             return True<T>();
         }
 
-        var param = selector.Parameters[0];
-        var constant = Expression.Constant(value, typeof(string));
-        var body = Expression.Call(selector.Body, nameof(string.Contains), Type.EmptyTypes, constant);
+        ParameterExpression param = selector.Parameters[0];
+        ConstantExpression constant = Expression.Constant(value, typeof(string));
+        MethodCallExpression body = Expression.Call(selector.Body, nameof(string.Contains), Type.EmptyTypes, constant);
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
     }
 
@@ -136,9 +137,9 @@ public static class QueryFilterExtensions
             return True<T>();
         }
 
-        var param = selector.Parameters[0];
-        var constant = Expression.Constant(value, typeof(string));
-        var body = Expression.Call(selector.Body, nameof(string.StartsWith), Type.EmptyTypes, constant);
+        ParameterExpression param = selector.Parameters[0];
+        ConstantExpression constant = Expression.Constant(value, typeof(string));
+        MethodCallExpression body = Expression.Call(selector.Body, nameof(string.StartsWith), Type.EmptyTypes, constant);
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
     }
 
@@ -160,9 +161,9 @@ public static class QueryFilterExtensions
             return True<T>();
         }
 
-        var param = selector.Parameters[0];
-        var constant = Expression.Constant(value, typeof(string));
-        var body = Expression.Call(selector.Body, nameof(string.EndsWith), Type.EmptyTypes, constant);
+        ParameterExpression param = selector.Parameters[0];
+        ConstantExpression constant = Expression.Constant(value, typeof(string));
+        MethodCallExpression body = Expression.Call(selector.Body, nameof(string.EndsWith), Type.EmptyTypes, constant);
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
     }
 
@@ -183,16 +184,16 @@ public static class QueryFilterExtensions
     public static QueryFilter<T> Join<T>(this IEnumerable<QueryFilter<T>> filters, bool useAnd = true)
     {
         ArgumentNullException.ThrowIfNull(filters);
-        using var e = filters.GetEnumerator();
+        using IEnumerator<QueryFilter<T>> e = filters.GetEnumerator();
         if (!e.MoveNext())
         {
             return True<T>();
         }
 
-        var current = e.Current ?? True<T>();
+        QueryFilter<T> current = e.Current ?? True<T>();
         while (e.MoveNext())
         {
-            var next = e.Current ?? True<T>();
+            QueryFilter<T> next = e.Current ?? True<T>();
             current = useAnd ? current.And(next) : current.Or(next);
         }
         return current;
@@ -206,7 +207,7 @@ public static class QueryFilterExtensions
 
     private static QueryFilter<T> True<T>()
     {
-        var p = Expression.Parameter(typeof(T), "x");
+        ParameterExpression p = Expression.Parameter(typeof(T), "x");
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(Expression.Constant(true), p));
     }
 
@@ -234,16 +235,16 @@ public static class QueryFilterExtensions
         ArgumentNullException.ThrowIfNull(selector);
         if (string.IsNullOrWhiteSpace(value)) return True<T>();
 
-        var param = selector.Parameters[0];
+        ParameterExpression param = selector.Parameters[0];
         // x => x.Prop != null && x.Prop.ToLowerInvariant().Contains(value.ToLowerInvariant())
-        var toLowerInvariant = typeof(string).GetMethod(nameof(string.ToLowerInvariant), Type.EmptyTypes)!;
-        var contains = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!;
+        MethodInfo toLowerInvariant = typeof(string).GetMethod(nameof(string.ToLowerInvariant), Type.EmptyTypes)!;
+        MethodInfo contains = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!;
 
-        var notNull = Expression.NotEqual(selector.Body, Expression.Constant(null, typeof(string)));
-        var left = Expression.Call(selector.Body, toLowerInvariant);
-        var right = Expression.Constant(value.ToLowerInvariant());
-        var containsCall = Expression.Call(left, contains, right);
-        var body = Expression.AndAlso(notNull, containsCall);
+        BinaryExpression notNull = Expression.NotEqual(selector.Body, Expression.Constant(null, typeof(string)));
+        MethodCallExpression left = Expression.Call(selector.Body, toLowerInvariant);
+        ConstantExpression right = Expression.Constant(value.ToLowerInvariant());
+        MethodCallExpression containsCall = Expression.Call(left, contains, right);
+        BinaryExpression body = Expression.AndAlso(notNull, containsCall);
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
     }
 
@@ -261,15 +262,15 @@ public static class QueryFilterExtensions
         ArgumentNullException.ThrowIfNull(selector);
         if (string.IsNullOrWhiteSpace(value)) return True<T>();
 
-        var param = selector.Parameters[0];
-        var toLowerInvariant = typeof(string).GetMethod(nameof(string.ToLowerInvariant), Type.EmptyTypes)!;
-        var startsWith = typeof(string).GetMethod(nameof(string.StartsWith), new[] { typeof(string) })!;
+        ParameterExpression param = selector.Parameters[0];
+        MethodInfo toLowerInvariant = typeof(string).GetMethod(nameof(string.ToLowerInvariant), Type.EmptyTypes)!;
+        MethodInfo startsWith = typeof(string).GetMethod(nameof(string.StartsWith), new[] { typeof(string) })!;
 
-        var notNull = Expression.NotEqual(selector.Body, Expression.Constant(null, typeof(string)));
-        var left = Expression.Call(selector.Body, toLowerInvariant);
-        var right = Expression.Constant(value.ToLowerInvariant());
-        var call = Expression.Call(left, startsWith, right);
-        var body = Expression.AndAlso(notNull, call);
+        BinaryExpression notNull = Expression.NotEqual(selector.Body, Expression.Constant(null, typeof(string)));
+        MethodCallExpression left = Expression.Call(selector.Body, toLowerInvariant);
+        ConstantExpression right = Expression.Constant(value.ToLowerInvariant());
+        MethodCallExpression call = Expression.Call(left, startsWith, right);
+        BinaryExpression body = Expression.AndAlso(notNull, call);
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
     }
 
@@ -287,15 +288,15 @@ public static class QueryFilterExtensions
         ArgumentNullException.ThrowIfNull(selector);
         if (string.IsNullOrWhiteSpace(value)) return True<T>();
 
-        var param = selector.Parameters[0];
-        var toLowerInvariant = typeof(string).GetMethod(nameof(string.ToLowerInvariant), Type.EmptyTypes)!;
-        var endsWith = typeof(string).GetMethod(nameof(string.EndsWith), new[] { typeof(string) })!;
+        ParameterExpression param = selector.Parameters[0];
+        MethodInfo toLowerInvariant = typeof(string).GetMethod(nameof(string.ToLowerInvariant), Type.EmptyTypes)!;
+        MethodInfo endsWith = typeof(string).GetMethod(nameof(string.EndsWith), new[] { typeof(string) })!;
 
-        var notNull = Expression.NotEqual(selector.Body, Expression.Constant(null, typeof(string)));
-        var left = Expression.Call(selector.Body, toLowerInvariant);
-        var right = Expression.Constant(value.ToLowerInvariant());
-        var call = Expression.Call(left, endsWith, right);
-        var body = Expression.AndAlso(notNull, call);
+        BinaryExpression notNull = Expression.NotEqual(selector.Body, Expression.Constant(null, typeof(string)));
+        MethodCallExpression left = Expression.Call(selector.Body, toLowerInvariant);
+        ConstantExpression right = Expression.Constant(value.ToLowerInvariant());
+        MethodCallExpression call = Expression.Call(left, endsWith, right);
+        BinaryExpression body = Expression.AndAlso(notNull, call);
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
     }
 
@@ -335,7 +336,7 @@ public static class QueryFilterExtensions
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(filters);
-        var query = source;
+        IQueryable<T> query = source;
         foreach (var f in filters)
         {
             if (f is null) continue;

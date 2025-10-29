@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Configuration;
-using VisionaryCoder.Framework.Abstractions.Services;
-using VisionaryCoder.Framework.Configuration.Azure;
+using VisionaryCoder.Framework.Abstractions;
+using VisionaryCoder.Framework.Secrets.Azure.KeyVault;
 
-namespace VisionaryCoder.Framework.Configuration.Secrets;
+namespace VisionaryCoder.Framework.Secrets.Local;
 /// <summary>
 /// Local implementation of ISecretProvider for development scenarios.
 /// </summary>
@@ -23,10 +23,10 @@ public sealed class LocalSecretProvider(IConfiguration configuration, KeyVaultOp
             throw new ArgumentException("Secret name cannot be null or empty.", nameof(name));
         }
         // Try configuration with prefix first
-        var prefixedKey = $"{options.LocalSecretsPrefix}:{name}";
-        var value = configuration[prefixedKey] 
-                   ?? configuration[name] 
-                   ?? Environment.GetEnvironmentVariable(name);
+        string prefixedKey = $"{options.LocalSecretsPrefix}:{name}";
+        string? value = configuration[prefixedKey] 
+                        ?? configuration[name] 
+                        ?? Environment.GetEnvironmentVariable(name);
         return Task.FromResult(value);
     }
 }

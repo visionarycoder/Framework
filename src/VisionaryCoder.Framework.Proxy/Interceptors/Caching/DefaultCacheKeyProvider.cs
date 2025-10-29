@@ -24,7 +24,7 @@ public class DefaultCacheKeyProvider : ICacheKeyProvider
         // Include relevant headers in the key
         if (context.Headers.Count > 0)
         {
-            var headerString = string.Join(";", context.Headers
+            string headerString = string.Join(";", context.Headers
                 .Where(h => IsRelevantHeader(h.Key))
                 .OrderBy(h => h.Key)
                 .Select(h => $"{h.Key}={h.Value}"));
@@ -37,11 +37,11 @@ public class DefaultCacheKeyProvider : ICacheKeyProvider
                 keyComponents.Add(headerString);
             }
         }
-        var combinedKey = string.Join("|", keyComponents);
+        string combinedKey = string.Join("|", keyComponents);
         
         // Hash the key to ensure consistent length and avoid special characters
         using var sha256 = System.Security.Cryptography.SHA256.Create();
-        var hashBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(combinedKey));
+        byte[] hashBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(combinedKey));
         return Convert.ToBase64String(hashBytes);
     }
     /// <summary>
@@ -51,7 +51,7 @@ public class DefaultCacheKeyProvider : ICacheKeyProvider
     /// <returns>True if the header should be included.</returns>
     private static bool IsRelevantHeader(string headerName)
     {
-        var relevantHeaders = new[]
+        string[] relevantHeaders = new[]
         {
             "Accept",
             "Accept-Language",

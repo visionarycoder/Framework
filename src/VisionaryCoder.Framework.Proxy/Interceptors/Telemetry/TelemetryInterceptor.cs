@@ -30,14 +30,14 @@ public sealed class TelemetryInterceptor : IOrderedProxyInterceptor
         ProxyDelegate<T> next,
         CancellationToken cancellationToken = default)
     {
-        var requestType = context.Request?.GetType().Name ?? "Unknown";
-        var operationName = $"Proxy.{requestType}";
-        using var activity = activitySource.StartActivity(operationName);
+        string requestType = context.Request?.GetType().Name ?? "Unknown";
+        string operationName = $"Proxy.{requestType}";
+        using Activity? activity = activitySource.StartActivity(operationName);
         
         // Enrich activity with context information
         activity?.SetTag("proxy.request_type", requestType);
         activity?.SetTag("proxy.result_type", context.ResultType?.Name);
-        if (context.Items.TryGetValue("CorrelationId", out var correlationId))
+        if (context.Items.TryGetValue("CorrelationId", out object? correlationId))
         {
             activity?.SetTag("proxy.correlation_id", correlationId?.ToString());
         }
@@ -46,7 +46,7 @@ public sealed class TelemetryInterceptor : IOrderedProxyInterceptor
         {
             logger.LogDebug("Starting telemetry for {RequestType}", requestType);
             
-            var result = await next(context, cancellationToken);
+            Response<T> result = await next(context, cancellationToken);
             stopwatch.Stop();
             activity?.SetTag("proxy.duration_ms", stopwatch.ElapsedMilliseconds);
             activity?.SetTag("proxy.success", true);

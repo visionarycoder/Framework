@@ -325,7 +325,7 @@ public class ConstantsTests
     public void Constants_ShouldBeStaticClass()
     {
         // Arrange & Act
-        var type = typeof(Constants);
+        Type type = typeof(Constants);
 
         // Assert
         type.IsAbstract.Should().BeTrue("static classes are abstract");
@@ -336,7 +336,7 @@ public class ConstantsTests
     public void Constants_Timeouts_ShouldBeStaticClass()
     {
         // Arrange & Act
-        var type = typeof(Constants.Timeouts);
+        Type type = typeof(Constants.Timeouts);
 
         // Assert
         type.IsAbstract.Should().BeTrue("static classes are abstract");
@@ -347,7 +347,7 @@ public class ConstantsTests
     public void Constants_Headers_ShouldBeStaticClass()
     {
         // Arrange & Act
-        var type = typeof(Constants.Headers);
+        Type type = typeof(Constants.Headers);
 
         // Assert
         type.IsAbstract.Should().BeTrue("static classes are abstract");
@@ -358,7 +358,7 @@ public class ConstantsTests
     public void Constants_Logging_ShouldBeStaticClass()
     {
         // Arrange & Act
-        var type = typeof(Constants.Logging);
+        Type type = typeof(Constants.Logging);
 
         // Assert
         type.IsAbstract.Should().BeTrue("static classes are abstract");
@@ -369,7 +369,7 @@ public class ConstantsTests
     public void Constants_ShouldBePublic()
     {
         // Arrange & Act
-        var type = typeof(Constants);
+        Type type = typeof(Constants);
 
         // Assert
         type.IsPublic.Should().BeTrue();
@@ -379,9 +379,9 @@ public class ConstantsTests
     public void Constants_NestedClasses_ShouldBePublic()
     {
         // Arrange & Act
-        var timeoutsType = typeof(Constants.Timeouts);
-        var headersType = typeof(Constants.Headers);
-        var loggingType = typeof(Constants.Logging);
+        Type timeoutsType = typeof(Constants.Timeouts);
+        Type headersType = typeof(Constants.Headers);
+        Type loggingType = typeof(Constants.Logging);
 
         // Assert
         timeoutsType.IsNestedPublic.Should().BeTrue();

@@ -18,7 +18,7 @@ public class PageExtensionsTests
     public async Task ToPageAsync_WithFirstPage_ShouldReturnCorrectPage()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageNumber: 1, pageSize: 5);
 
@@ -38,7 +38,7 @@ public class PageExtensionsTests
     public async Task ToPageAsync_WithMiddlePage_ShouldReturnCorrectPage()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageNumber: 2, pageSize: 5);
 
@@ -58,7 +58,7 @@ public class PageExtensionsTests
     public async Task ToPageAsync_WithLastPage_ShouldReturnRemainingItems()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageNumber: 3, pageSize: 5);
 
@@ -78,7 +78,7 @@ public class PageExtensionsTests
     public async Task ToPageAsync_WithPageBeyondData_ShouldReturnEmptyPage()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageNumber: 10, pageSize: 5);
 
@@ -96,7 +96,7 @@ public class PageExtensionsTests
     public async Task ToPageAsync_WithLargePageSize_ShouldReturnAllItems()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageNumber: 1, pageSize: 100);
 
@@ -114,7 +114,7 @@ public class PageExtensionsTests
     public async Task ToPageAsync_WithEmptyDataset_ShouldReturnEmptyPage()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         var request = new PageRequest(pageNumber: 1, pageSize: 5);
 
         // Act
@@ -131,7 +131,7 @@ public class PageExtensionsTests
     public async Task ToPageAsync_WithFilteredQuery_ShouldReturnFilteredPage()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageNumber: 1, pageSize: 5);
 
@@ -151,7 +151,7 @@ public class PageExtensionsTests
     public async Task ToPageAsync_WithOrderedQuery_ShouldMaintainOrder()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageNumber: 1, pageSize: 5);
 
@@ -170,7 +170,7 @@ public class PageExtensionsTests
     public async Task ToPageAsync_WithPageSizeOne_ShouldReturnSingleItem()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageNumber: 5, pageSize: 1);
 
@@ -187,7 +187,7 @@ public class PageExtensionsTests
     public async Task ToPageAsync_WithCancellationToken_ShouldHonorCancellation()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageNumber: 1, pageSize: 5);
         using var cts = new CancellationTokenSource();
@@ -207,7 +207,7 @@ public class PageExtensionsTests
     public async Task ToPageWithTokenAsync_WithCustomPagination_ShouldReturnPage()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageSize: 5);
 
@@ -217,7 +217,7 @@ public class PageExtensionsTests
             async (query, token, pageSize, ct) =>
             {
                 var items = await query.Take(pageSize).ToListAsync(ct);
-                var nextToken = items.Count == pageSize ? "next-page-token" : null;
+                string? nextToken = items.Count == pageSize ? "next-page-token" : null;
                 return (items, nextToken);
             });
 
@@ -233,7 +233,7 @@ public class PageExtensionsTests
     public async Task ToPageWithTokenAsync_WithLastPage_ShouldReturnNullNextToken()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageSize: 100);
 
@@ -243,7 +243,7 @@ public class PageExtensionsTests
             async (query, token, pageSize, ct) =>
             {
                 var items = await query.Take(pageSize).ToListAsync(ct);
-                var nextToken = items.Count == pageSize ? "next-token" : null;
+                string? nextToken = items.Count == pageSize ? "next-token" : null;
                 return (items, nextToken);
             });
 
@@ -256,7 +256,7 @@ public class PageExtensionsTests
     public async Task ToPageWithTokenAsync_WithContinuationToken_ShouldUsePreviousToken()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageSize: 5, continuationToken: "page-2");
         string? receivedToken = null;
@@ -281,7 +281,7 @@ public class PageExtensionsTests
     public async Task ToPageWithTokenAsync_WithEmptyResult_ShouldReturnEmptyPage()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         var request = new PageRequest(pageSize: 5);
 
         // Act
@@ -302,7 +302,7 @@ public class PageExtensionsTests
     public async Task ToPageWithTokenAsync_WithCancellation_ShouldHonorCancellation()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageSize: 5);
         using var cts = new CancellationTokenSource();
@@ -329,7 +329,7 @@ public class PageExtensionsTests
     public async Task ToPageAsync_WithComplexQuery_ShouldWorkCorrectly()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageNumber: 1, pageSize: 3);
 
@@ -348,7 +348,7 @@ public class PageExtensionsTests
     public async Task ToPageAsync_WithMultipleCalls_ShouldBeConsistent()
     {
         // Arrange
-        await using var context = CreateInMemoryContext();
+        await using TestDbContext context = CreateInMemoryContext();
         await SeedTestData(context);
         var request = new PageRequest(pageNumber: 2, pageSize: 5);
 
@@ -367,7 +367,7 @@ public class PageExtensionsTests
 
     private static TestDbContext CreateInMemoryContext()
     {
-        var options = new DbContextOptionsBuilder<TestDbContext>()
+        DbContextOptions<TestDbContext> options = new DbContextOptionsBuilder<TestDbContext>()
             .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
             .Options;
         return new TestDbContext(options);
@@ -382,9 +382,8 @@ public class PageExtensionsTests
         await context.SaveChangesAsync();
     }
 
-    private class TestDbContext : DbContext
+    private class TestDbContext(DbContextOptions<TestDbContext> options) : DbContext(options)
     {
-        public TestDbContext(DbContextOptions<TestDbContext> options) : base(options) { }
         public DbSet<TestEntity> TestEntities => Set<TestEntity>();
     }
 

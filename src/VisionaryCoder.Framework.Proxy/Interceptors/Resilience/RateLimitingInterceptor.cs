@@ -1,11 +1,13 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
+using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
+using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 using VisionaryCoder.Framework.Proxy.Interceptors.Resilience.Abstractions;
-namespace VisionaryCoder.Framework.Proxy.Interceptors;
+
+namespace VisionaryCoder.Framework.Proxy.Interceptors.Resilience;
 /// <summary>
 /// Interceptor that implements rate limiting to prevent abuse and ensure fair usage.
 /// </summary>
@@ -35,10 +37,10 @@ public sealed class RateLimitingInterceptor : IProxyInterceptor
     /// <returns>A task representing the asynchronous operation with the response.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
-        var operationName = context.OperationName ?? "Unknown";
-        var correlationId = context.CorrelationId ?? "None";
+        string operationName = context.OperationName ?? "Unknown";
+        string correlationId = context.CorrelationId ?? "None";
         // Generate rate limit key (could be based on operation, user, IP, etc.)
-        var rateLimitKey = GenerateRateLimitKey(context);
+        string rateLimitKey = GenerateRateLimitKey(context);
         // Check rate limit
         if (!IsRequestAllowed(rateLimitKey))
         {
@@ -65,11 +67,11 @@ public sealed class RateLimitingInterceptor : IProxyInterceptor
             context.OperationName ?? "Unknown"
         };
         // Include user identifier if available
-        if (context.Metadata.TryGetValue("UserId", out var userId))
+        if (context.Metadata.TryGetValue("UserId", out object? userId))
         {
             keyParts.Add($"User:{userId}");
         }
-        else if (context.Metadata.TryGetValue("ClientId", out var clientId))
+        else if (context.Metadata.TryGetValue("ClientId", out object? clientId))
         {
             keyParts.Add($"Client:{clientId}");
         }
@@ -82,9 +84,9 @@ public sealed class RateLimitingInterceptor : IProxyInterceptor
     }
     private bool IsRequestAllowed(string key)
     {
-        var now = DateTimeOffset.UtcNow;
-        var cutoffTime = now - config.TimeWindow;
-        var requestQueue = requestHistory.GetOrAdd(key, _ => new Queue<DateTimeOffset>());
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        DateTimeOffset cutoffTime = now - config.TimeWindow;
+        Queue<DateTimeOffset> requestQueue = requestHistory.GetOrAdd(key, _ => new Queue<DateTimeOffset>());
         lock (requestQueue)
         {
             // Remove old requests outside the time window
@@ -98,8 +100,8 @@ public sealed class RateLimitingInterceptor : IProxyInterceptor
     }
     private void RecordRequest(string key)
     {
-        var now = DateTimeOffset.UtcNow;
-        var requestQueue = requestHistory.GetOrAdd(key, _ => new Queue<DateTimeOffset>());
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        Queue<DateTimeOffset> requestQueue = requestHistory.GetOrAdd(key, _ => new Queue<DateTimeOffset>());
         lock (requestQueue)
         {
             requestQueue.Enqueue(now);
@@ -108,7 +110,7 @@ public sealed class RateLimitingInterceptor : IProxyInterceptor
     }
     private void PerformCleanupIfNeeded()
     {
-        var now = DateTimeOffset.UtcNow;
+        DateTimeOffset now = DateTimeOffset.UtcNow;
         // Perform cleanup every 5 minutes
         if (now - lastCleanup < TimeSpan.FromMinutes(5))
             return;
@@ -117,11 +119,11 @@ public sealed class RateLimitingInterceptor : IProxyInterceptor
             if (now - lastCleanup < TimeSpan.FromMinutes(5))
                 return; // Double-check locking
             lastCleanup = now;
-            var cutoffTime = now - config.TimeWindow.Multiply(2); // Keep some extra history
+            DateTimeOffset cutoffTime = now - config.TimeWindow.Multiply(2); // Keep some extra history
             var keysToRemove = new List<string>();
-            foreach (var kvp in requestHistory)
+            foreach (KeyValuePair<string, Queue<DateTimeOffset>> kvp in requestHistory)
             {
-                var requestQueue = kvp.Value;
+                Queue<DateTimeOffset> requestQueue = kvp.Value;
                 lock (requestQueue)
                 {
                     // Remove old requests
@@ -137,7 +139,7 @@ public sealed class RateLimitingInterceptor : IProxyInterceptor
                 }
             }
             // Remove empty queues
-            foreach (var key in keysToRemove)
+            foreach (string key in keysToRemove)
             {
                 requestHistory.TryRemove(key, out _);
             }

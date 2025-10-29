@@ -1,7 +1,8 @@
 using System.Collections.ObjectModel;
 using FluentAssertions;
+using VisionaryCoder.Framework.Extensions;
 
-namespace VisionaryCoder.Framework.Extensions.Tests;
+namespace VisionaryCoder.Framework.Tests.Extensions;
 
 [TestClass]
 public class EnumerableExtensionsTests
@@ -78,7 +79,7 @@ public class EnumerableExtensionsTests
     {
         // Arrange
         var collection = new List<string> { "Hello", "HELLO", "World" };
-        var comparer = StringComparer.OrdinalIgnoreCase;
+        StringComparer comparer = StringComparer.OrdinalIgnoreCase;
 
         // Act
         var result = collection.ContainsDuplicates(comparer);
@@ -92,7 +93,7 @@ public class EnumerableExtensionsTests
     {
         // Arrange
         var collection = new List<string> { "Hello", "World", "Test" };
-        var comparer = StringComparer.OrdinalIgnoreCase;
+        StringComparer comparer = StringComparer.OrdinalIgnoreCase;
 
         // Act
         var result = collection.ContainsDuplicates(comparer);
@@ -156,7 +157,7 @@ public class EnumerableExtensionsTests
         var action = new Action<int>(x => { });
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.ForEach(action));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.ForEach(action));
         exception.ParamName.Should().Be("source");
     }
 
@@ -168,7 +169,7 @@ public class EnumerableExtensionsTests
         Action<int>? action = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source.ForEach(action!));
+        ArgumentNullException exception = Assert.ThrowsExactly<ArgumentNullException>(() => source.ForEach(action!));
         exception.ParamName.Should().Be("action");
     }
 
@@ -195,7 +196,7 @@ public class EnumerableExtensionsTests
         var action = new Action<int, int>((x, i) => { });
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.ForEach(action));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.ForEach(action));
         exception.ParamName.Should().Be("source");
     }
 
@@ -207,7 +208,7 @@ public class EnumerableExtensionsTests
         Action<int, int>? action = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source.ForEach(action!));
+        ArgumentNullException exception = Assert.ThrowsExactly<ArgumentNullException>(() => source.ForEach(action!));
         exception.ParamName.Should().Be("action");
     }
 
@@ -238,7 +239,7 @@ public class EnumerableExtensionsTests
         var keySelector = new Func<int, int>(x => x);
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.DistinctBy(keySelector).ToList());
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableExtensions.DistinctBy(source!, keySelector).ToList());
         exception.ParamName.Should().Be("source");
     }
 
@@ -250,7 +251,7 @@ public class EnumerableExtensionsTests
         Func<int, int>? keySelector = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source.DistinctBy(keySelector!).ToList());
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableExtensions.DistinctBy(source, keySelector!).ToList());
         exception.ParamName.Should().Be("keySelector");
     }
 
@@ -267,7 +268,7 @@ public class EnumerableExtensionsTests
         };
 
         // Act
-        var result = source.DistinctBy(x => x.id).ToList();
+        var result = EnumerableExtensions.DistinctBy(source, x => x.id).ToList();
 
         // Assert
         result.Should().HaveCount(3);
@@ -281,7 +282,7 @@ public class EnumerableExtensionsTests
         var source = new List<int> { 1, 2, 3, 4, 5 };
 
         // Act
-        var result = source.DistinctBy(x => x).ToList();
+        var result = EnumerableExtensions.DistinctBy(source, x => x).ToList();
 
         // Assert
         result.Should().HaveCount(5);
@@ -299,7 +300,7 @@ public class EnumerableExtensionsTests
         IEnumerable<int>? source = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.Batch(2).ToList());
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.Batch(2).ToList());
         exception.ParamName.Should().Be("source");
     }
 
@@ -310,7 +311,7 @@ public class EnumerableExtensionsTests
         var source = new List<int> { 1, 2, 3 };
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => source.Batch(0).ToList());
+        ArgumentOutOfRangeException? exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => source.Batch(0).ToList());
         exception.ParamName.Should().Be("size");
     }
 
@@ -321,7 +322,7 @@ public class EnumerableExtensionsTests
         var source = new List<int> { 1, 2, 3 };
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => source.Batch(-1).ToList());
+        ArgumentOutOfRangeException? exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => source.Batch(-1).ToList());
         exception.ParamName.Should().Be("size");
     }
 
@@ -366,7 +367,7 @@ public class EnumerableExtensionsTests
         IEnumerable<int>? source = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.Shuffle().ToList());
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.Shuffle().ToList());
         exception.ParamName.Should().Be("source");
     }
 
@@ -393,7 +394,7 @@ public class EnumerableExtensionsTests
         var random = new Random(42);
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.Shuffle(random).ToList());
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.Shuffle(random).ToList());
         exception.ParamName.Should().Be("source");
     }
 
@@ -405,7 +406,7 @@ public class EnumerableExtensionsTests
         Random? random = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source.Shuffle(random!).ToList());
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => source.Shuffle(random!).ToList());
         exception.ParamName.Should().Be("random");
     }
 
@@ -521,7 +522,7 @@ public class EnumerableExtensionsTests
     public void TryLast_WithArray_ShouldReturnTrueAndLastElement()
     {
         // Arrange
-        var source = new int[] { 1, 2, 3 };
+        int[] source = new int[] { 1, 2, 3 };
 
         // Act
         var result = source.TryLast(out var value);
@@ -535,7 +536,7 @@ public class EnumerableExtensionsTests
     public void TryLast_WithEnumerable_ShouldReturnTrueAndLastElement()
     {
         // Arrange
-        var source = Enumerable.Range(1, 3);
+        IEnumerable<int> source = Enumerable.Range(1, 3);
 
         // Act
         var result = source.TryLast(out var value);
@@ -556,7 +557,7 @@ public class EnumerableExtensionsTests
         IEnumerable<int>? source = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.ToDelimitedString());
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.ToDelimitedString());
         exception.ParamName.Should().Be("source");
     }
 
@@ -610,7 +611,7 @@ public class EnumerableExtensionsTests
         IEnumerable<int>? source = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.ToReadOnlyCollection());
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.ToReadOnlyCollection());
         exception.ParamName.Should().Be("source");
     }
 
@@ -640,7 +641,7 @@ public class EnumerableExtensionsTests
         IEnumerable<string>? source = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.WithIndex().ToList());
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.WithIndex().ToList());
         exception.ParamName.Should().Be("source");
     }
 
@@ -671,7 +672,7 @@ public class EnumerableExtensionsTests
         IEnumerable<KeyValuePair<string, int>>? source = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.ToDictionary());
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableExtensions.ToDictionary(source!));
         exception.ParamName.Should().Be("source");
     }
 
@@ -687,7 +688,7 @@ public class EnumerableExtensionsTests
         };
 
         // Act
-        var result = ((IEnumerable<KeyValuePair<string, int>>)source).ToDictionary();
+        var result = EnumerableExtensions.ToDictionary(((IEnumerable<KeyValuePair<string, int>>)source));
 
         // Assert
         result.Should().BeOfType<Dictionary<string, int>>();
@@ -709,7 +710,7 @@ public class EnumerableExtensionsTests
         var predicate = new Func<int, bool>(x => x > 2);
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.IndexOf(predicate));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => source!.IndexOf(predicate));
         exception.ParamName.Should().Be("source");
     }
 
@@ -721,7 +722,7 @@ public class EnumerableExtensionsTests
         Func<int, bool>? predicate = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => source.IndexOf(predicate!));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => source.IndexOf(predicate!));
         exception.ParamName.Should().Be("predicate");
     }
 
@@ -733,7 +734,7 @@ public class EnumerableExtensionsTests
         var predicate = new Func<int, bool>(x => x > 3);
 
         // Act
-        var result = source.IndexOf(predicate);
+        int result = source.IndexOf(predicate);
 
         // Assert
         result.Should().Be(3); // Index of element 4
@@ -747,7 +748,7 @@ public class EnumerableExtensionsTests
         var predicate = new Func<int, bool>(x => x > 10);
 
         // Act
-        var result = source.IndexOf(predicate);
+        int result = source.IndexOf(predicate);
 
         // Assert
         result.Should().Be(-1);
@@ -761,7 +762,7 @@ public class EnumerableExtensionsTests
         var predicate = new Func<int, bool>(x => x > 0);
 
         // Act
-        var result = source.IndexOf(predicate);
+        int result = source.IndexOf(predicate);
 
         // Assert
         result.Should().Be(-1);
@@ -778,8 +779,7 @@ public class EnumerableExtensionsTests
         var source = new List<int> { 1, 2, 2, 3, 4, 4, 5 };
 
         // Act
-        var result = source
-            .DistinctBy(x => x)
+        var result = EnumerableExtensions.DistinctBy(source, x => x)
             .Batch(2)
             .Select(batch => batch.ToDelimitedString("-"))
             .ToReadOnlyCollection();
@@ -804,9 +804,8 @@ public class EnumerableExtensionsTests
         };
 
         // Act
-        var adultNames = source
-            .Where(p => p.age >= 30)
-            .DistinctBy(p => p.age)
+        var adultNames = EnumerableExtensions.DistinctBy(source
+                .Where(p => p.age >= 30), p => p.age)
             .WithIndex()
             .Select(item => $"{item.index}: {item.item.name}")
             .ToDelimitedString(" | ");

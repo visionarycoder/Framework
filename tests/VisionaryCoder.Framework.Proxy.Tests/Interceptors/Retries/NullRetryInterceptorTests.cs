@@ -1,6 +1,6 @@
 using FluentAssertions;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Proxy.Interceptors.Retry.Abstractions;
+using VisionaryCoder.Framework.Proxy.Interceptors.Retries.Abstractions;
 
 namespace VisionaryCoder.Framework.Proxy.Tests.Interceptors.Retries;
 
@@ -23,8 +23,8 @@ public class NullRetryInterceptorTests
         // Arrange
         var interceptor = new NullRetryInterceptor();
         var context = new ProxyContext { MethodName = "TestMethod" };
-        var expectedData = "test data";
-        var wasCalled = false;
+        string expectedData = "test data";
+        bool wasCalled = false;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {

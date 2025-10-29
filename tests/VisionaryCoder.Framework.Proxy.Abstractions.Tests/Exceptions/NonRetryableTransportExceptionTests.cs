@@ -3,6 +3,7 @@
 
 using FluentAssertions;
 using VisionaryCoder.Framework.Proxy.Abstractions;
+using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 
 namespace VisionaryCoder.Framework.Proxy.Abstractions.Tests.Exceptions;
 
@@ -13,7 +14,7 @@ public sealed class NonRetryableTransportExceptionTests
     public void Constructor_WithMessage_ShouldSetMessage()
     {
         // Arrange
-        var message = "Transport error cannot be retried";
+        string message = "Transport error cannot be retried";
 
         // Act
         var exception = new NonRetryableTransportException(message);
@@ -27,7 +28,7 @@ public sealed class NonRetryableTransportExceptionTests
     public void Constructor_WithMessageAndInnerException_ShouldSetBoth()
     {
         // Arrange
-        var message = "Non-retryable transport failure";
+        string message = "Non-retryable transport failure";
         var innerException = new HttpRequestException("Connection refused");
 
         // Act
@@ -62,7 +63,7 @@ public sealed class NonRetryableTransportExceptionTests
     public void NonRetryableTransportException_CanBeThrown()
     {
         // Arrange
-        var message = "Fatal transport error";
+        string message = "Fatal transport error";
 
         // Act
         Action act = () => throw new NonRetryableTransportException(message);
@@ -76,7 +77,7 @@ public sealed class NonRetryableTransportExceptionTests
     public void NonRetryableTransportException_CanBeCaughtAsProxyException()
     {
         // Arrange
-        var message = "Permanent transport failure";
+        string message = "Permanent transport failure";
 
         // Act
         Action act = () => throw new NonRetryableTransportException(message);
@@ -92,7 +93,7 @@ public sealed class NonRetryableTransportExceptionTests
     {
         // Arrange
         var innerException = new HttpRequestException("404 Not Found");
-        var message = "Resource not found and cannot be retried";
+        string message = "Resource not found and cannot be retried";
 
         // Act
         var exception = new NonRetryableTransportException(message, innerException);
@@ -116,7 +117,7 @@ public sealed class NonRetryableTransportExceptionTests
     public void NonRetryableTransportException_ShouldIndicateNoRetry()
     {
         // Arrange
-        var message = "Client authentication failed - do not retry";
+        string message = "Client authentication failed - do not retry";
 
         // Act
         var exception = new NonRetryableTransportException(message);

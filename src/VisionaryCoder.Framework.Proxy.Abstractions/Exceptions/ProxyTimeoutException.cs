@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Proxy.Abstractions;
+namespace VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 
 /// <summary>
 /// Exception thrown when a proxy operation times out.

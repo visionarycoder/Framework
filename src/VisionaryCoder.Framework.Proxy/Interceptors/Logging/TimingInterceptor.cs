@@ -1,10 +1,11 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-namespace VisionaryCoder.Framework.Proxy.Interceptors;
+
+namespace VisionaryCoder.Framework.Proxy.Interceptors.Logging;
 /// <summary>
 /// Interceptor that measures and logs the execution time of proxy operations.
 /// </summary>
@@ -21,14 +22,14 @@ public sealed class TimingInterceptor(ILogger<TimingInterceptor> logger) : IProx
     /// <returns>A task representing the asynchronous operation with the response.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
-        var operationName = context.OperationName ?? "Unknown";
-        var correlationId = context.CorrelationId ?? "None";
+        string operationName = context.OperationName ?? "Unknown";
+        string correlationId = context.CorrelationId ?? "None";
         var stopwatch = Stopwatch.StartNew();
         try
         {
-            var response = await next(context, cancellationToken);
+            Response<T> response = await next(context, cancellationToken);
             stopwatch.Stop();
-            var elapsedMs = stopwatch.ElapsedMilliseconds;
+            long elapsedMs = stopwatch.ElapsedMilliseconds;
             
             // Store timing in context metadata for other interceptors
             context.Metadata["ExecutionTimeMs"] = elapsedMs;

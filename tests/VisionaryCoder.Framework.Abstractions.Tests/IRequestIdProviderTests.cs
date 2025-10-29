@@ -1,6 +1,7 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
+using System.Reflection;
 using FluentAssertions;
 using Moq;
 using VisionaryCoder.Framework.Abstractions;
@@ -15,11 +16,11 @@ public sealed class IRequestIdProviderTests
     {
         // Arrange
         var mockProvider = new Mock<IRequestIdProvider>();
-        var expectedId = "request-67890";
+        string expectedId = "request-67890";
         mockProvider.Setup(p => p.RequestId).Returns(expectedId);
 
         // Act
-        var result = mockProvider.Object.RequestId;
+        string result = mockProvider.Object.RequestId;
 
         // Assert
         result.Should().Be(expectedId);
@@ -30,11 +31,11 @@ public sealed class IRequestIdProviderTests
     {
         // Arrange
         var mockProvider = new Mock<IRequestIdProvider>();
-        var newId = Guid.NewGuid().ToString();
+        string newId = Guid.NewGuid().ToString();
         mockProvider.Setup(p => p.GenerateNew()).Returns(newId);
 
         // Act
-        var result = mockProvider.Object.GenerateNew();
+        string result = mockProvider.Object.GenerateNew();
 
         // Assert
         result.Should().Be(newId);
@@ -46,13 +47,13 @@ public sealed class IRequestIdProviderTests
     {
         // Arrange
         var mockProvider = new Mock<IRequestIdProvider>();
-        var newId = "new-request-id";
+        string newId = "new-request-id";
         mockProvider.Setup(p => p.SetRequestId(newId));
         mockProvider.Setup(p => p.RequestId).Returns(newId);
 
         // Act
         mockProvider.Object.SetRequestId(newId);
-        var result = mockProvider.Object.RequestId;
+        string result = mockProvider.Object.RequestId;
 
         // Assert
         result.Should().Be(newId);
@@ -64,16 +65,16 @@ public sealed class IRequestIdProviderTests
     {
         // Arrange
         var mockProvider = new Mock<IRequestIdProvider>();
-        var id1 = Guid.NewGuid().ToString();
-        var id2 = Guid.NewGuid().ToString();
+        string id1 = Guid.NewGuid().ToString();
+        string id2 = Guid.NewGuid().ToString();
         
         mockProvider.SetupSequence(p => p.GenerateNew())
                     .Returns(id1)
                     .Returns(id2);
 
         // Act
-        var result1 = mockProvider.Object.GenerateNew();
-        var result2 = mockProvider.Object.GenerateNew();
+        string result1 = mockProvider.Object.GenerateNew();
+        string result2 = mockProvider.Object.GenerateNew();
 
         // Assert
         result1.Should().NotBe(result2);
@@ -115,8 +116,8 @@ public sealed class IRequestIdProviderTests
     {
         // Arrange
         var mockProvider = new Mock<IRequestIdProvider>();
-        var oldId = "old-request-id";
-        var newId = "new-request-id";
+        string oldId = "old-request-id";
+        string newId = "new-request-id";
         
         mockProvider.Setup(p => p.GenerateNew()).Returns(newId).Callback(() => 
         {
@@ -125,9 +126,9 @@ public sealed class IRequestIdProviderTests
         mockProvider.Setup(p => p.RequestId).Returns(oldId);
 
         // Act
-        var initialId = mockProvider.Object.RequestId;
+        string initialId = mockProvider.Object.RequestId;
         mockProvider.Object.GenerateNew();
-        var updatedId = mockProvider.Object.RequestId;
+        string updatedId = mockProvider.Object.RequestId;
 
         // Assert
         initialId.Should().Be(oldId);
@@ -138,9 +139,9 @@ public sealed class IRequestIdProviderTests
     public void Interface_ShouldHaveCorrectStructure()
     {
         // Arrange & Act
-        var interfaceType = typeof(IRequestIdProvider);
-        var properties = interfaceType.GetProperties();
-        var methods = interfaceType.GetMethods();
+        Type interfaceType = typeof(IRequestIdProvider);
+        PropertyInfo[] properties = interfaceType.GetProperties();
+        MethodInfo[] methods = interfaceType.GetMethods();
 
         // Assert
         properties.Should().HaveCount(1, "interface has RequestId property");
@@ -154,15 +155,15 @@ public sealed class IRequestIdProviderTests
         var mockRequestProvider = new Mock<IRequestIdProvider>();
         var mockCorrelationProvider = new Mock<ICorrelationIdProvider>();
         
-        var requestId = "request-123";
-        var correlationId = "correlation-456";
+        string requestId = "request-123";
+        string correlationId = "correlation-456";
         
         mockRequestProvider.Setup(p => p.RequestId).Returns(requestId);
         mockCorrelationProvider.Setup(p => p.CorrelationId).Returns(correlationId);
 
         // Act
-        var request = mockRequestProvider.Object.RequestId;
-        var correlation = mockCorrelationProvider.Object.CorrelationId;
+        string request = mockRequestProvider.Object.RequestId;
+        string correlation = mockCorrelationProvider.Object.CorrelationId;
 
         // Assert
         request.Should().Be(requestId);

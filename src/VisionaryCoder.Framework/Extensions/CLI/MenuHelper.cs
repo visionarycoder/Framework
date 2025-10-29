@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Extensions;
+namespace VisionaryCoder.Framework.Extensions.CLI;
 
 public static class MenuHelper
 {

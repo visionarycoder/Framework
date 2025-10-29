@@ -23,7 +23,7 @@ public static class TypeExtension
                 return (value) switch
                 {
                         bool boolValue => boolValue,
-                        string stringValue => bool.TryParse(stringValue, out var result) && result,
+                        string stringValue => bool.TryParse(stringValue, out bool result) && result,
                         int intValue => intValue != 0,
                         long longValue => longValue != 0,
                         double doubleValue => Math.Abs(doubleValue) > double.Epsilon,
@@ -44,7 +44,7 @@ public static class TypeExtension
                 {
                         int intValue => intValue,
                         bool boolValue => boolValue ? 1 : 0,
-                        string stringValue => int.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : defaultValue,
+                        string stringValue => int.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out int result) ? result : defaultValue,
                         double doubleValue => (int)doubleValue,
                         decimal decimalValue => (int)decimalValue,
                         long longValue => longValue > int.MaxValue || longValue < int.MinValue ? defaultValue : (int)longValue,
@@ -65,7 +65,7 @@ public static class TypeExtension
                 {
                         long longValue => longValue,
                         int intValue => intValue,
-                        string stringValue => long.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : defaultValue,
+                        string stringValue => long.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out long result) ? result : defaultValue,
                         double doubleValue => (long)doubleValue,
                         decimal decimalValue => (long)decimalValue,
                         float floatValue => (long)floatValue,
@@ -86,7 +86,7 @@ public static class TypeExtension
                         int intValue => intValue,
                         long longValue => longValue,
                         bool boolValue => boolValue ? 1.0 : 0.0,
-                        string stringValue => double.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : defaultValue,
+                        string stringValue => double.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out double result) ? result : defaultValue,
                         decimal decimalValue => (double)decimalValue,
                         float floatValue => floatValue,
                         ulong ulongValue => ulongValue,
@@ -103,7 +103,7 @@ public static class TypeExtension
                 {
                         decimal decimalValue => decimalValue,
                         bool boolValue => boolValue ? 1m : 0m,
-                        string stringValue => decimal.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : defaultValue,
+                        string stringValue => decimal.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal result) ? result : defaultValue,
                         double doubleValue => (decimal)doubleValue,
                         float floatValue => (decimal)floatValue,
                         _ => defaultValue
@@ -118,7 +118,7 @@ public static class TypeExtension
                 return value switch
                 {
                         bool boolValue => boolValue ? 1.0f : 0.0f,
-                        string stringValue => float.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : defaultValue,
+                        string stringValue => float.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out float result) ? result : defaultValue,
                         double doubleValue => (float)doubleValue,
                         decimal decimalValue => (float)decimalValue,
                         _ => defaultValue
@@ -139,7 +139,7 @@ public static class TypeExtension
                 return value switch
                 {
                         DateTime dateTimeValue => dateTimeValue,
-                        string stringValue => DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : defaultValue,
+                        string stringValue => DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result) ? result : defaultValue,
                         long longValue => DateTimeOffset.FromUnixTimeMilliseconds(longValue).DateTime,
                         int intValue => DateTimeOffset.FromUnixTimeSeconds(intValue).DateTime,
                         _ => defaultValue
@@ -155,7 +155,7 @@ public static class TypeExtension
                 {
                         DateTimeOffset dateTimeOffsetValue => dateTimeOffsetValue,
                         DateTime dateTimeValue => new DateTimeOffset(dateTimeValue),
-                        string stringValue => DateTimeOffset.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : defaultValue,
+                        string stringValue => DateTimeOffset.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset result) ? result : defaultValue,
                         long longValue => DateTimeOffset.FromUnixTimeMilliseconds(longValue),
                         int intValue => DateTimeOffset.FromUnixTimeSeconds(intValue),
                         _ => defaultValue
@@ -170,7 +170,7 @@ public static class TypeExtension
                 return value switch
                 {
                         Guid guidValue => guidValue,
-                        string stringValue => Guid.TryParse(stringValue, out var result) ? result : defaultValue,
+                        string stringValue => Guid.TryParse(stringValue, out Guid result) ? result : defaultValue,
                         byte[] byteArray => byteArray.Length == 16 ? new Guid(byteArray) : defaultValue,
                         _ => defaultValue
                 };
@@ -185,7 +185,7 @@ public static class TypeExtension
                 {
                         int intValue => intValue >= byte.MinValue && intValue <= byte.MaxValue ? (byte)intValue : defaultValue,
                         bool boolValue => boolValue ? (byte)1 : (byte)0,
-                        string stringValue => byte.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : defaultValue,
+                        string stringValue => byte.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out byte result) ? result : defaultValue,
                         double doubleValue => doubleValue >= byte.MinValue && doubleValue <= byte.MaxValue ? (byte)doubleValue : defaultValue,
                         decimal decimalValue => decimalValue >= byte.MinValue && decimalValue <= byte.MaxValue ? (byte)decimalValue : defaultValue,
                         _ => defaultValue
@@ -201,7 +201,7 @@ public static class TypeExtension
                 {
                         int intValue => intValue >= short.MinValue && intValue <= short.MaxValue ? (short)intValue : defaultValue,
                         bool boolValue => boolValue ? (short)1 : (short)0,
-                        string stringValue => short.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : defaultValue,
+                        string stringValue => short.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out short result) ? result : defaultValue,
                         double doubleValue => doubleValue >= short.MinValue && doubleValue <= short.MaxValue ? (short)doubleValue : defaultValue,
                         decimal decimalValue => decimalValue >= short.MinValue && decimalValue <= short.MaxValue ? (short)decimalValue : defaultValue,
                         _ => defaultValue
@@ -249,7 +249,7 @@ public static class TypeExtension
                 return (value) switch
                 {
                         TEnum enumValue => enumValue,
-                        string stringValue => Enum.TryParse<TEnum>(stringValue, true, out var result) ? result : defaultValue,
+                        string stringValue => Enum.TryParse<TEnum>(stringValue, true, out TEnum result) ? result : defaultValue,
                         int intValue => Enum.IsDefined(typeof(TEnum), intValue) ? (TEnum)Enum.ToObject(typeof(TEnum), intValue) : defaultValue,
                         byte byteValue => Enum.IsDefined(typeof(TEnum), byteValue) ? (TEnum)Enum.ToObject(typeof(TEnum), byteValue) : defaultValue,
                         short shortValue => Enum.IsDefined(typeof(TEnum), shortValue) ? (TEnum)Enum.ToObject(typeof(TEnum), shortValue) : defaultValue,
@@ -265,7 +265,7 @@ public static class TypeExtension
                 return (value) switch
                 {
                         TimeSpan timeSpanValue => timeSpanValue,
-                        string stringValue => TimeSpan.TryParse(stringValue, CultureInfo.InvariantCulture, out var result) ? result : defaultValue,
+                        string stringValue => TimeSpan.TryParse(stringValue, CultureInfo.InvariantCulture, out TimeSpan result) ? result : defaultValue,
                         long longValue => TimeSpan.FromTicks(longValue),
                         int intValue => TimeSpan.FromMilliseconds(intValue),
                         double doubleValue => TimeSpan.FromMilliseconds(doubleValue),
@@ -300,7 +300,7 @@ public static class TypeExtension
                 return (value) switch
                 {
                         bool boolValue => boolValue,
-                        string stringValue => bool.TryParse(stringValue, out var result) ? result : (bool?)null,
+                        string stringValue => bool.TryParse(stringValue, out bool result) ? result : (bool?)null,
                         int intValue => intValue != 0,
                         _ => null
                 };
@@ -314,7 +314,7 @@ public static class TypeExtension
                 return (value) switch
                 {
                         int intValue => intValue,
-                        string stringValue => int.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : (int?)null,
+                        string stringValue => int.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out int result) ? result : (int?)null,
                         double doubleValue => doubleValue >= int.MinValue && doubleValue <= int.MaxValue ? (int)doubleValue : (int?)null,
                         decimal decimalValue => decimalValue >= int.MinValue && decimalValue <= int.MaxValue ? (int)decimalValue : (int?)null,
                         long longValue => longValue >= int.MinValue && longValue <= int.MaxValue ? (int)longValue : (int?)null,
@@ -333,7 +333,7 @@ public static class TypeExtension
                 {
                         long longValue => longValue,
                         bool boolValue => boolValue ? 1L : 0L,
-                        string stringValue => long.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : (long?)null,
+                        string stringValue => long.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out long result) ? result : (long?)null,
                         double doubleValue => doubleValue >= long.MinValue && doubleValue <= long.MaxValue ? (long)doubleValue : (long?)null,
                         decimal decimalValue => decimalValue >= long.MinValue && decimalValue <= long.MaxValue ? (long)decimalValue : (long?)null,
                         float floatValue => floatValue >= long.MinValue && floatValue <= long.MaxValue ? (long)floatValue : (long?)null,
@@ -350,7 +350,7 @@ public static class TypeExtension
                 return (value) switch
                 {
                         double doubleValue => doubleValue,
-                        string stringValue => double.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : (double?)null,
+                        string stringValue => double.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out double result) ? result : (double?)null,
                         _ => null
                 };
         }
@@ -363,7 +363,7 @@ public static class TypeExtension
                 return (value) switch
                 {
                         decimal decimalValue => decimalValue,
-                        string stringValue => decimal.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : (decimal?)null,
+                        string stringValue => decimal.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal result) ? result : (decimal?)null,
                         _ => null
                 };
         }
@@ -376,7 +376,7 @@ public static class TypeExtension
                 return (value) switch
                 {
                         float floatValue => floatValue,
-                        string stringValue => float.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : (float?)null,
+                        string stringValue => float.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out float result) ? result : (float?)null,
                         double doubleValue => doubleValue >= float.MinValue && doubleValue <= float.MaxValue ? (float)doubleValue : (float?)null,
                         decimal decimalValue => (float)decimalValue,
                         _ => null
@@ -400,7 +400,7 @@ public static class TypeExtension
                 {
                         DateTime dateTimeValue => dateTimeValue,
                         DateTimeOffset dateTimeOffsetValue => dateTimeOffsetValue.DateTime,
-                        string stringValue => DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : (DateTime?)null,
+                        string stringValue => DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result) ? result : (DateTime?)null,
                         _ => null
                 };
         }
@@ -413,7 +413,7 @@ public static class TypeExtension
                 return (value) switch
                 {
                         DateTimeOffset dateTimeOffsetValue => dateTimeOffsetValue,
-                        string stringValue => DateTimeOffset.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : (DateTimeOffset?)null,
+                        string stringValue => DateTimeOffset.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset result) ? result : (DateTimeOffset?)null,
                         _ => null
                 };
         }
@@ -426,7 +426,7 @@ public static class TypeExtension
                 return (value) switch
                 {
                         Guid guidValue => guidValue,
-                        string stringValue => Guid.TryParse(stringValue, out var result) ? result : (Guid?)null,
+                        string stringValue => Guid.TryParse(stringValue, out Guid result) ? result : (Guid?)null,
                         byte[] byteArray => byteArray.Length == 16 ? new Guid(byteArray) : (Guid?)null,
                         _ => null
                 };
@@ -441,7 +441,7 @@ public static class TypeExtension
                 {
                         byte byteValue => byteValue,
                         int intValue => intValue >= byte.MinValue && intValue <= byte.MaxValue ? (byte)intValue : (byte?)null,
-                        string stringValue => byte.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : (byte?)null,
+                        string stringValue => byte.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out byte result) ? result : (byte?)null,
                         double doubleValue => doubleValue >= byte.MinValue && doubleValue <= byte.MaxValue ? (byte)doubleValue : (byte?)null,
                         decimal decimalValue => decimalValue >= byte.MinValue && decimalValue <= byte.MaxValue ? (byte)decimalValue : (byte?)null,
                         _ => null
@@ -457,7 +457,7 @@ public static class TypeExtension
                 {
                         short shortValue => shortValue,
                         int intValue => intValue >= short.MinValue && intValue <= short.MaxValue ? (short)intValue : (short?)null,
-                        string stringValue => short.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : (short?)null,
+                        string stringValue => short.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out short result) ? result : (short?)null,
                         double doubleValue => doubleValue >= short.MinValue && doubleValue <= short.MaxValue ? (short)doubleValue : (short?)null,
                         decimal decimalValue => decimalValue >= short.MinValue && decimalValue <= short.MaxValue ? (short)decimalValue : (short?)null,
                         _ => null
@@ -486,7 +486,7 @@ public static class TypeExtension
                 return (value) switch
                 {
                         TimeSpan timeSpanValue => timeSpanValue,
-                        string stringValue => TimeSpan.TryParse(stringValue, CultureInfo.InvariantCulture, out var result) ? result : (TimeSpan?)null,
+                        string stringValue => TimeSpan.TryParse(stringValue, CultureInfo.InvariantCulture, out TimeSpan result) ? result : (TimeSpan?)null,
                         _ => null
                 };
         }
@@ -499,7 +499,7 @@ public static class TypeExtension
                 return (value) switch
                 {
                         TEnum enumValue => enumValue,
-                        string stringValue => Enum.TryParse<TEnum>(stringValue, true, out var result) ? result : (TEnum?)null,
+                        string stringValue => Enum.TryParse<TEnum>(stringValue, true, out TEnum result) ? result : (TEnum?)null,
                         int intValue => Enum.IsDefined(typeof(TEnum), intValue) ? (TEnum)Enum.ToObject(typeof(TEnum), intValue) : (TEnum?)null,
                         byte byteValue => Enum.IsDefined(typeof(TEnum), byteValue) ? (TEnum)Enum.ToObject(typeof(TEnum), byteValue) : (TEnum?)null,
                         short shortValue => Enum.IsDefined(typeof(TEnum), shortValue) ? (TEnum)Enum.ToObject(typeof(TEnum), shortValue) : (TEnum?)null,
@@ -521,7 +521,7 @@ public static class TypeExtension
                                 return result;
                         }
                         // Try standard conversions for reference types
-                        var targetType = typeof(TResult);
+                        Type targetType = typeof(TResult);
                         if (targetType == typeof(string)) return value.AsStringOrNull() as TResult;
                         if (targetType == typeof(bool)) return (TResult?)(object?)value.AsBooleanOrNull();
                         if (targetType == typeof(int)) return (TResult?)(object?)value.AsIntegerOrNull();
@@ -552,7 +552,7 @@ public static class TypeExtension
         /// <param name="value">The value to convert.</param>
         public static TResult? AsValueTypeOrNull<T, TResult>(this T? value) where TResult : struct
         {
-                var targetType = typeof(TResult);
+                Type targetType = typeof(TResult);
                 if (targetType == typeof(bool)) return (TResult?)(object?)value.AsBooleanOrNull();
                 if (targetType == typeof(int)) return (TResult?)(object?)value.AsIntegerOrNull();
                 if (targetType == typeof(long)) return (TResult?)(object?)value.AsLongOrNull();

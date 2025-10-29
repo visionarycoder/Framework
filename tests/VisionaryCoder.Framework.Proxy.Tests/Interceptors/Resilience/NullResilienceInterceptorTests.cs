@@ -24,7 +24,7 @@ public class NullResilienceInterceptorTests
         var interceptor = new NullResilienceInterceptor();
         var context = new ProxyContext { MethodName = "ResilientMethod" };
         var expectedData = new { Value = 42 };
-        var wasCalled = false;
+        bool wasCalled = false;
 
         Task<Response<object>> next(ProxyContext ctx, CancellationToken ct)
         {

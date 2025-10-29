@@ -1,6 +1,6 @@
 using FluentAssertions;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Proxy.Interceptors.Caching.Abstractions;
+using VisionaryCoder.Framework.Proxy.Interceptors.Caching;
 
 namespace VisionaryCoder.Framework.Tests.Proxy.Interceptors.Caching;
 
@@ -36,7 +36,7 @@ public class NullCachingInterceptorTests
             Url = "https://api.example.com/users/1"
         };
         var expectedResponse = Response<string>.Success("Test Result");
-        var wasCalled = false;
+        bool wasCalled = false;
 
         ProxyDelegate<string> next = (ctx, ct) =>
         {
@@ -58,7 +58,7 @@ public class NullCachingInterceptorTests
     {
         // Arrange
         var context = new ProxyContext();
-        var callCount = 0;
+        int callCount = 0;
 
         ProxyDelegate<int> next = (ctx, ct) =>
         {
@@ -84,7 +84,7 @@ public class NullCachingInterceptorTests
             Method = "GET",
             Url = "https://api.example.com/data"
         };
-        var callCount = 0;
+        int callCount = 0;
 
         ProxyDelegate<int> next = (ctx, ct) =>
         {
@@ -155,7 +155,7 @@ public class NullCachingInterceptorTests
             Method = method,
             Url = url
         };
-        var wasCalled = false;
+        bool wasCalled = false;
 
         ProxyDelegate<object> next = (ctx, ct) =>
         {
@@ -235,7 +235,7 @@ public class NullCachingInterceptorTests
     {
         // Arrange
         var context = new ProxyContext();
-        var counter = 0;
+        int counter = 0;
 
         ProxyDelegate<int> next = (ctx, ct) =>
         {

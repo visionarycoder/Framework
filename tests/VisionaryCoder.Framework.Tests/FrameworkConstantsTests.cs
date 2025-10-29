@@ -88,7 +88,7 @@ public class FrameworkConstantsTests
     public void LoggingTemplate_ShouldHaveCorrectValue()
     {
         // Arrange
-        var expectedTemplate = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}";
+        string expectedTemplate = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}";
 
         // Assert
         Constants.Logging.DefaultTemplate.Should().Be(expectedTemplate);

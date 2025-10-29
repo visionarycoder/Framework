@@ -66,7 +66,7 @@ public class CachingInterceptorTests
     {
         // Arrange
         var context = new ProxyContext { OperationName = "TestOp" };
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -89,7 +89,7 @@ public class CachingInterceptorTests
         // Arrange
         var context1 = new ProxyContext { OperationName = "TestOp" };
         var context2 = new ProxyContext { OperationName = "TestOp" };
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<int>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -115,7 +115,7 @@ public class CachingInterceptorTests
         // Arrange
         var context = new ProxyContext { OperationName = "TestOp" };
         context.Metadata["DisableCache"] = true;
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -137,7 +137,7 @@ public class CachingInterceptorTests
         // Arrange
         var context1 = new ProxyContext { OperationName = "FailOp" };
         var context2 = new ProxyContext { OperationName = "FailOp" };
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -187,7 +187,7 @@ public class CachingInterceptorTests
         
         var context1 = new ProxyContext { OperationName = "TestOp" };
         var context2 = new ProxyContext { OperationName = "TestOp" };
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<string>> next(ProxyContext ctx, CancellationToken ct)
         {
@@ -210,7 +210,7 @@ public class CachingInterceptorTests
         // Arrange
         var context1 = new ProxyContext { OperationName = "Op1" };
         var context2 = new ProxyContext { OperationName = "Op2" };
-        var callCount = 0;
+        int callCount = 0;
 
         Task<Response<int>> next(ProxyContext ctx, CancellationToken ct)
         {

@@ -385,7 +385,7 @@ public class DefaultCacheKeyProviderTests
     public void GenerateKey_WithVeryLongUrl_ShouldGenerateConsistentKey()
     {
         // Arrange
-        var longUrl = "https://api.example.com/" + new string('a', 10000);
+        string longUrl = "https://api.example.com/" + new string('a', 10000);
         var context = new ProxyContext
         {
             OperationName = "GetUser",

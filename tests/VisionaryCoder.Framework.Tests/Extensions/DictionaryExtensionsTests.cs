@@ -1,8 +1,9 @@
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using FluentAssertions;
+using VisionaryCoder.Framework.Extensions;
 
-namespace VisionaryCoder.Framework.Extensions.Tests;
+namespace VisionaryCoder.Framework.Tests.Extensions;
 
 [TestClass]
 public class DictionaryExtensionsTests
@@ -16,7 +17,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["key1"] = 10, ["key2"] = 20 };
 
         // Act
-        var result = dictionary.GetValueOrDefault("key1");
+        var result = DictionaryExtensions.GetValueOrDefault(dictionary, "key1");
 
         // Assert
         result.Should().Be(10);
@@ -29,7 +30,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["key1"] = 10 };
 
         // Act
-        var result = dictionary.GetValueOrDefault("nonexistent");
+        var result = DictionaryExtensions.GetValueOrDefault(dictionary, "nonexistent");
 
         // Assert
         result.Should().Be(0); // default for int
@@ -42,7 +43,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["key1"] = 10 };
 
         // Act
-        var result = dictionary.GetValueOrDefault("nonexistent", 42);
+        var result = DictionaryExtensions.GetValueOrDefault(dictionary, "nonexistent", 42);
 
         // Assert
         result.Should().Be(42);
@@ -60,7 +61,7 @@ public class DictionaryExtensionsTests
         var valueFactory = new Func<string, int>(k => 1);
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.GetOrAdd("key", valueFactory));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.GetOrAdd("key", valueFactory));
         exception.ParamName.Should().Be("dictionary");
     }
 
@@ -72,7 +73,7 @@ public class DictionaryExtensionsTests
         Func<string, int>? valueFactory = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.GetOrAdd("key", valueFactory!));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.GetOrAdd("key", valueFactory!));
         exception.ParamName.Should().Be("valueFactory");
     }
 
@@ -120,7 +121,7 @@ public class DictionaryExtensionsTests
         var updateValueFactory = new Func<string, int, int>((k, v) => v + 1);
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => 
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => 
             dictionary!.AddOrUpdate("key", addValueFactory, updateValueFactory));
         exception.ParamName.Should().Be("dictionary");
     }
@@ -134,7 +135,7 @@ public class DictionaryExtensionsTests
         var updateValueFactory = new Func<string, int, int>((k, v) => v + 1);
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => 
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => 
             dictionary.AddOrUpdate("key", addValueFactory!, updateValueFactory));
         exception.ParamName.Should().Be("addValueFactory");
     }
@@ -148,7 +149,7 @@ public class DictionaryExtensionsTests
         Func<string, int, int>? updateValueFactory = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => 
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => 
             dictionary.AddOrUpdate("key", addValueFactory, updateValueFactory!));
         exception.ParamName.Should().Be("updateValueFactory");
     }
@@ -226,7 +227,7 @@ public class DictionaryExtensionsTests
         IDictionary<string, int>? dictionary = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.ToImmutableDictionary());
+        ArgumentNullException exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.ToImmutableDictionary());
         exception.ParamName.Should().Be("dictionary");
     }
 
@@ -257,7 +258,7 @@ public class DictionaryExtensionsTests
         IDictionary<string, int>? dictionary = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.ToReadOnlyDictionary());
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.ToReadOnlyDictionary());
         exception.ParamName.Should().Be("dictionary");
     }
 
@@ -289,7 +290,7 @@ public class DictionaryExtensionsTests
         var second = new Dictionary<string, int>();
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => first!.Merge(second));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => first!.Merge(second));
         exception.ParamName.Should().Be("first");
     }
 
@@ -301,7 +302,7 @@ public class DictionaryExtensionsTests
         IDictionary<string, int>? second = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => first.Merge(second!));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => first.Merge(second!));
         exception.ParamName.Should().Be("second");
     }
 
@@ -370,7 +371,7 @@ public class DictionaryExtensionsTests
         var valueSelector = new Func<int, string>(v => v.ToString());
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.TransformValues(valueSelector));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.TransformValues(valueSelector));
         exception.ParamName.Should().Be("dictionary");
     }
 
@@ -382,7 +383,7 @@ public class DictionaryExtensionsTests
         Func<int, string>? valueSelector = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.TransformValues(valueSelector!));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.TransformValues(valueSelector!));
         exception.ParamName.Should().Be("valueSelector");
     }
 
@@ -415,7 +416,7 @@ public class DictionaryExtensionsTests
         var predicate = new Func<string, int, bool>((k, v) => true);
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.Where(predicate));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.Where(predicate));
         exception.ParamName.Should().Be("dictionary");
     }
 
@@ -427,7 +428,7 @@ public class DictionaryExtensionsTests
         Func<string, int, bool>? predicate = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.Where(predicate!));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.Where(predicate!));
         exception.ParamName.Should().Be("predicate");
     }
 
@@ -439,7 +440,7 @@ public class DictionaryExtensionsTests
         var predicate = new Func<string, int, bool>((k, v) => k.Length > 2);
 
         // Act
-        var result = dictionary.Where(predicate);
+        IEnumerable<KeyValuePair<string, int>> result = dictionary.Where(predicate);
 
         // Assert
         result.Should().HaveCount(2);
@@ -460,7 +461,7 @@ public class DictionaryExtensionsTests
         object? obj = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => obj!.ToDictionary());
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => obj!.ToDictionary());
         exception.ParamName.Should().Be("obj");
     }
 
@@ -536,7 +537,7 @@ public class DictionaryExtensionsTests
         var keys = new List<string> { "key1" };
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.RemoveRange(keys));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.RemoveRange(keys));
         exception.ParamName.Should().Be("dictionary");
     }
 
@@ -548,7 +549,7 @@ public class DictionaryExtensionsTests
         IEnumerable<string>? keys = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.RemoveRange(keys!));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.RemoveRange(keys!));
         exception.ParamName.Should().Be("keys");
     }
 
@@ -581,7 +582,7 @@ public class DictionaryExtensionsTests
         IDictionary<string, int>? dictionary = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.TryRemove("key", out _));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.TryRemove("key", out _));
         exception.ParamName.Should().Be("dictionary");
     }
 
@@ -627,7 +628,7 @@ public class DictionaryExtensionsTests
         IDictionary<string, int>? dictionary = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.TryUpdate("key", 1));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.TryUpdate("key", 1));
         exception.ParamName.Should().Be("dictionary");
     }
 
@@ -672,7 +673,7 @@ public class DictionaryExtensionsTests
         var action = new Action<string, int>((k, v) => { });
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.ForEach(action));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.ForEach(action));
         exception.ParamName.Should().Be("dictionary");
     }
 
@@ -684,7 +685,7 @@ public class DictionaryExtensionsTests
         Action<string, int>? action = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.ForEach(action!));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.ForEach(action!));
         exception.ParamName.Should().Be("action");
     }
 
@@ -716,7 +717,7 @@ public class DictionaryExtensionsTests
         IDictionary<string, int>? dictionary = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.Invert());
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.Invert());
         exception.ParamName.Should().Be("dictionary");
     }
 
@@ -757,7 +758,7 @@ public class DictionaryExtensionsTests
         IDictionary<string, int>? dictionary = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.IncrementValue("key"));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.IncrementValue("key"));
         exception.ParamName.Should().Be("dictionary");
     }
 
@@ -800,7 +801,7 @@ public class DictionaryExtensionsTests
         IDictionary<string, List<int>>? dictionary = null;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.AddToList("key", 1));
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => dictionary!.AddToList("key", 1));
         exception.ParamName.Should().Be("dictionary");
     }
 

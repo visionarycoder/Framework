@@ -2,7 +2,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using VisionaryCoder.Framework.Extensions.Logging;
+using VisionaryCoder.Framework.Logging;
 
 namespace VisionaryCoder.Framework.Tests.Logging;
 

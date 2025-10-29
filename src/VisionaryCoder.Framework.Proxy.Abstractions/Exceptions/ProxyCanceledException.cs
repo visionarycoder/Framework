@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Proxy.Abstractions;
+namespace VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 
 /// <summary>
 /// Represents an exception that occurs when a proxy operation is canceled.
@@ -10,6 +10,8 @@ public class ProxyCanceledException : ProxyException
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
     public ProxyCanceledException(string message) : base(message) { }
+
+    /// <param name="message"></param>
     /// <param name="innerException">The exception that is the cause of the current exception.</param>
     public ProxyCanceledException(string message, Exception innerException) : base(message, innerException) { }
 }

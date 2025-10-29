@@ -23,7 +23,7 @@ public class EntityIdJsonConverterFactoryTests
     {
         // Arrange
         var factory = new EntityIdJsonConverterFactory();
-        var type = typeof(EntityId<TestUser, int>);
+        Type type = typeof(EntityId<TestUser, int>);
 
         // Act
         var result = factory.CanConvert(type);
@@ -66,7 +66,7 @@ public class EntityIdJsonConverterFactoryTests
         var id = new EntityId<TestUser, int>(value);
 
         // Act
-        var json = JsonSerializer.Serialize(id, options);
+        string json = JsonSerializer.Serialize(id, options);
 
         // Assert
         json.Should().Be(value.ToString());
@@ -78,7 +78,7 @@ public class EntityIdJsonConverterFactoryTests
     public void Deserialize_WithIntNumber_ShouldCreateEntityId(int value)
     {
         // Arrange
-        var json = value.ToString();
+        string json = value.ToString();
 
         // Act
         var id = JsonSerializer.Deserialize<EntityId<TestUser, int>>(json, options);
@@ -94,7 +94,7 @@ public class EntityIdJsonConverterFactoryTests
         var original = new EntityId<TestUser, int>(42);
 
         // Act
-        var json = JsonSerializer.Serialize(original, options);
+        string json = JsonSerializer.Serialize(original, options);
         var deserialized = JsonSerializer.Deserialize<EntityId<TestUser, int>>(json, options);
 
         // Assert
@@ -116,7 +116,7 @@ public class EntityIdJsonConverterFactoryTests
         var id = new EntityId<TestUser, string>(value);
 
         // Act
-        var json = JsonSerializer.Serialize(id, options);
+        string json = JsonSerializer.Serialize(id, options);
 
         // Assert
         json.Should().Be($"\"{value}\"");
@@ -128,7 +128,7 @@ public class EntityIdJsonConverterFactoryTests
     public void Deserialize_WithString_ShouldCreateEntityId(string value)
     {
         // Arrange
-        var json = $"\"{value}\"";
+        string json = $"\"{value}\"";
 
         // Act
         var id = JsonSerializer.Deserialize<EntityId<TestUser, string>>(json, options);
@@ -144,7 +144,7 @@ public class EntityIdJsonConverterFactoryTests
         var original = new EntityId<TestUser, string>("test-user-id-123");
 
         // Act
-        var json = JsonSerializer.Serialize(original, options);
+        string json = JsonSerializer.Serialize(original, options);
         var deserialized = JsonSerializer.Deserialize<EntityId<TestUser, string>>(json, options);
 
         // Assert
@@ -158,7 +158,7 @@ public class EntityIdJsonConverterFactoryTests
         var id = new EntityId<TestUser, string>("id\"with\\special/chars");
 
         // Act
-        var json = JsonSerializer.Serialize(id, options);
+        string json = JsonSerializer.Serialize(id, options);
         var deserialized = JsonSerializer.Deserialize<EntityId<TestUser, string>>(json, options);
 
         // Assert
@@ -177,7 +177,7 @@ public class EntityIdJsonConverterFactoryTests
         var id = new EntityId<TestProduct, Guid>(guid);
 
         // Act
-        var json = JsonSerializer.Serialize(id, options);
+        string json = JsonSerializer.Serialize(id, options);
 
         // Assert
         json.Should().Be("\"12345678-1234-1234-1234-123456789012\"");
@@ -188,7 +188,7 @@ public class EntityIdJsonConverterFactoryTests
     {
         // Arrange
         var guid = Guid.Parse("12345678-1234-1234-1234-123456789012");
-        var json = "\"12345678-1234-1234-1234-123456789012\"";
+        string json = "\"12345678-1234-1234-1234-123456789012\"";
 
         // Act
         var id = JsonSerializer.Deserialize<EntityId<TestProduct, Guid>>(json, options);
@@ -204,7 +204,7 @@ public class EntityIdJsonConverterFactoryTests
         var original = new EntityId<TestProduct, Guid>(Guid.NewGuid());
 
         // Act
-        var json = JsonSerializer.Serialize(original, options);
+        string json = JsonSerializer.Serialize(original, options);
         var deserialized = JsonSerializer.Deserialize<EntityId<TestProduct, Guid>>(json, options);
 
         // Assert
@@ -226,7 +226,7 @@ public class EntityIdJsonConverterFactoryTests
         var id = new EntityId<TestOrder, long>(value);
 
         // Act
-        var json = JsonSerializer.Serialize(id, options);
+        string json = JsonSerializer.Serialize(id, options);
 
         // Assert
         json.Should().Be(value.ToString());
@@ -238,7 +238,7 @@ public class EntityIdJsonConverterFactoryTests
     public void Deserialize_WithLongNumber_ShouldCreateEntityId(long value)
     {
         // Arrange
-        var json = value.ToString();
+        string json = value.ToString();
 
         // Act
         var id = JsonSerializer.Deserialize<EntityId<TestOrder, long>>(json, options);
@@ -254,7 +254,7 @@ public class EntityIdJsonConverterFactoryTests
         var original = new EntityId<TestOrder, long>(9999999999L);
 
         // Act
-        var json = JsonSerializer.Serialize(original, options);
+        string json = JsonSerializer.Serialize(original, options);
         var deserialized = JsonSerializer.Deserialize<EntityId<TestOrder, long>>(json, options);
 
         // Assert
@@ -276,7 +276,7 @@ public class EntityIdJsonConverterFactoryTests
         var id = new EntityId<TestOrder, short>(value);
 
         // Act
-        var json = JsonSerializer.Serialize(id, options);
+        string json = JsonSerializer.Serialize(id, options);
 
         // Assert
         json.Should().Be(value.ToString());
@@ -288,7 +288,7 @@ public class EntityIdJsonConverterFactoryTests
     public void Deserialize_WithShortNumber_ShouldCreateEntityId(short value)
     {
         // Arrange
-        var json = value.ToString();
+        string json = value.ToString();
 
         // Act
         var id = JsonSerializer.Deserialize<EntityId<TestOrder, short>>(json, options);
@@ -304,7 +304,7 @@ public class EntityIdJsonConverterFactoryTests
         var original = new EntityId<TestOrder, short>(12345);
 
         // Act
-        var json = JsonSerializer.Serialize(original, options);
+        string json = JsonSerializer.Serialize(original, options);
         var deserialized = JsonSerializer.Deserialize<EntityId<TestOrder, short>>(json, options);
 
         // Assert
@@ -322,7 +322,7 @@ public class EntityIdJsonConverterFactoryTests
         var obj = new { UserId = new EntityId<TestUser, int>(42), Name = "Test" };
 
         // Act
-        var json = JsonSerializer.Serialize(obj, options);
+        string json = JsonSerializer.Serialize(obj, options);
 
         // Assert
         json.Should().Contain("\"UserId\":42");
@@ -341,7 +341,7 @@ public class EntityIdJsonConverterFactoryTests
         };
 
         // Act
-        var json = JsonSerializer.Serialize(ids, options);
+        string json = JsonSerializer.Serialize(ids, options);
 
         // Assert
         json.Should().Be("[1,2,3]");
@@ -351,7 +351,7 @@ public class EntityIdJsonConverterFactoryTests
     public void Deserialize_ArrayOfEntityIds_ShouldDeserializeCorrectly()
     {
         // Arrange
-        var json = "[1,2,3]";
+        string json = "[1,2,3]";
 
         // Act
         var ids = JsonSerializer.Deserialize<EntityId<TestUser, int>[]>(json, options);
@@ -372,7 +372,7 @@ public class EntityIdJsonConverterFactoryTests
     public void Deserialize_WithNullForString_ShouldCreateEntityIdWithEmptyString()
     {
         // Arrange
-        var json = "null";
+        string json = "null";
 
         // Act
         var id = JsonSerializer.Deserialize<EntityId<TestUser, string>>(json, options);
@@ -385,7 +385,7 @@ public class EntityIdJsonConverterFactoryTests
     public void Deserialize_WithInvalidJsonForInt_ShouldThrowJsonException()
     {
         // Arrange
-        var json = "\"not-a-number\"";
+        string json = "\"not-a-number\"";
 
         // Act
         Action act = () => JsonSerializer.Deserialize<EntityId<TestUser, int>>(json, options);
@@ -398,7 +398,7 @@ public class EntityIdJsonConverterFactoryTests
     public void Deserialize_WithInvalidJsonForGuid_ShouldThrowJsonException()
     {
         // Arrange
-        var json = "\"not-a-guid\"";
+        string json = "\"not-a-guid\"";
 
         // Act
         Action act = () => JsonSerializer.Deserialize<EntityId<TestProduct, Guid>>(json, options);
@@ -418,7 +418,7 @@ public class EntityIdJsonConverterFactoryTests
         var id = new EntityId<TestUser, string>("用户-émile-123");
 
         // Act
-        var json = JsonSerializer.Serialize(id, options);
+        string json = JsonSerializer.Serialize(id, options);
         var deserialized = JsonSerializer.Deserialize<EntityId<TestUser, string>>(json, options);
 
         // Assert
@@ -432,7 +432,7 @@ public class EntityIdJsonConverterFactoryTests
         var id = new EntityId<TestUser, int>(int.MaxValue);
 
         // Act
-        var json = JsonSerializer.Serialize(id, options);
+        string json = JsonSerializer.Serialize(id, options);
 
         // Assert
         json.Should().Be("2147483647");
@@ -445,7 +445,7 @@ public class EntityIdJsonConverterFactoryTests
         var id = new EntityId<TestUser, int>(int.MinValue);
 
         // Act
-        var json = JsonSerializer.Serialize(id, options);
+        string json = JsonSerializer.Serialize(id, options);
 
         // Assert
         json.Should().Be("-2147483648");
@@ -458,7 +458,7 @@ public class EntityIdJsonConverterFactoryTests
         var id = new EntityId<TestProduct, Guid>(Guid.Empty);
 
         // Act
-        var json = JsonSerializer.Serialize(id, options);
+        string json = JsonSerializer.Serialize(id, options);
 
         // Assert
         json.Should().Be("\"00000000-0000-0000-0000-000000000000\"");
@@ -473,7 +473,7 @@ public class EntityIdJsonConverterFactoryTests
     {
         // Arrange
         var factory = new EntityIdJsonConverterFactory();
-        var type = typeof(EntityId<TestUser, int>);
+        Type type = typeof(EntityId<TestUser, int>);
 
         // Act
         var converter = factory.CreateConverter(type, options);
@@ -487,8 +487,8 @@ public class EntityIdJsonConverterFactoryTests
     {
         // Arrange
         var factory = new EntityIdJsonConverterFactory();
-        var type1 = typeof(EntityId<TestUser, int>);
-        var type2 = typeof(EntityId<TestProduct, Guid>);
+        Type type1 = typeof(EntityId<TestUser, int>);
+        Type type2 = typeof(EntityId<TestProduct, Guid>);
 
         // Act
         var converter1 = factory.CreateConverter(type1, options);

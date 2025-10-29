@@ -38,11 +38,11 @@ public sealed class CachingInterceptor : IOrderedProxyInterceptor
     /// <returns>A task representing the asynchronous operation with the response.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
-        var operationName = context.OperationName ?? "Unknown";
-        var correlationId = context.CorrelationId ?? "None";
+        string operationName = context.OperationName ?? "Unknown";
+        string correlationId = context.CorrelationId ?? "None";
 
         // Check if caching is disabled for this operation
-        if (context.Metadata.TryGetValue("DisableCache", out var disableCache) &&
+        if (context.Metadata.TryGetValue("DisableCache", out object? disableCache) &&
             disableCache is bool disabled && disabled)
         {
             logger.LogDebug("Caching disabled for operation '{OperationName}'. Correlation ID: '{CorrelationId}'",
@@ -51,10 +51,10 @@ public sealed class CachingInterceptor : IOrderedProxyInterceptor
         }
 
         // Generate cache key
-        var cacheKey = GenerateCacheKey(context);
+        string cacheKey = GenerateCacheKey(context);
 
         // Try to get from cache first
-        if (cache.TryGetValue(cacheKey, out var cachedResponse) && cachedResponse is Response<T> cached)
+        if (cache.TryGetValue(cacheKey, out object? cachedResponse) && cachedResponse is Response<T> cached)
         {
             logger.LogDebug("Cache hit for operation '{OperationName}' with key '{CacheKey}'. Correlation ID: '{CorrelationId}'",
                 operationName, cacheKey, correlationId);
@@ -67,12 +67,12 @@ public sealed class CachingInterceptor : IOrderedProxyInterceptor
             operationName, cacheKey, correlationId);
 
         // If cache miss, call next delegate to get the result
-        var response = await next(context, cancellationToken);
+        Response<T> response = await next(context, cancellationToken);
 
         // Cache successful responses only
         if (response.IsSuccess)
         {
-            var cacheDuration = GetCacheDuration(context);
+            TimeSpan cacheDuration = GetCacheDuration(context);
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = cacheDuration,
@@ -101,7 +101,7 @@ public sealed class CachingInterceptor : IOrderedProxyInterceptor
         };
 
         // Include relevant metadata in the key
-        foreach (var kvp in context.Metadata.Where(m => IsRelevantForCaching(m.Key)))
+        foreach (KeyValuePair<string, object?> kvp in context.Metadata.Where(m => IsRelevantForCaching(m.Key)))
         {
             keyParts.Add($"{kvp.Key}:{kvp.Value}");
         }
@@ -111,7 +111,7 @@ public sealed class CachingInterceptor : IOrderedProxyInterceptor
 
     private TimeSpan GetCacheDuration(ProxyContext context)
     {
-        if (context.Metadata.TryGetValue("CacheDurationSeconds", out var durationObj) &&
+        if (context.Metadata.TryGetValue("CacheDurationSeconds", out object? durationObj) &&
             durationObj is int seconds && seconds > 0)
         {
             return TimeSpan.FromSeconds(seconds);
@@ -123,7 +123,7 @@ public sealed class CachingInterceptor : IOrderedProxyInterceptor
     private static bool IsRelevantForCaching(string metadataKey)
     {
         // Exclude non-relevant keys from cache key generation
-        var excludeKeys = new[]
+        string[] excludeKeys = new[]
         {
             "CorrelationId",
             "ExecutionTimeMs",

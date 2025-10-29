@@ -1,3 +1,4 @@
+using System.Reflection;
 using FluentAssertions;
 
 namespace VisionaryCoder.Framework.Tests;
@@ -19,7 +20,7 @@ public class FrameworkResultTests
         public void Success_WithValue_ShouldCreateSuccessfulResult()
         {
             // Arrange
-            var value = "test value";
+            string value = "test value";
 
             // Act
             var result = ServiceResult<string>.Success(value);
@@ -68,7 +69,7 @@ public class FrameworkResultTests
         public void Failure_WithErrorMessage_ShouldCreateFailedResult()
         {
             // Arrange
-            var errorMessage = "Something went wrong";
+            string errorMessage = "Something went wrong";
 
             // Act
             var result = ServiceResult<string>.Failure(errorMessage);
@@ -102,7 +103,7 @@ public class FrameworkResultTests
         public void Failure_WithErrorMessageAndException_ShouldCreateFailedResult()
         {
             // Arrange
-            var errorMessage = "Custom error message";
+            string errorMessage = "Custom error message";
             var exception = new ArgumentException("Argument exception");
 
             // Act
@@ -124,10 +125,10 @@ public class FrameworkResultTests
         public void Match_WithSuccessfulResult_ShouldExecuteSuccessAction()
         {
             // Arrange
-            var value = "test value";
+            string value = "test value";
             var result = ServiceResult<string>.Success(value);
-            var successCalled = false;
-            var failureCalled = false;
+            bool successCalled = false;
+            bool failureCalled = false;
             string? capturedValue = null;
 
             // Act
@@ -146,11 +147,11 @@ public class FrameworkResultTests
         public void Match_WithFailedResult_ShouldExecuteFailureAction()
         {
             // Arrange
-            var errorMessage = "Test error";
+            string errorMessage = "Test error";
             var exception = new InvalidOperationException("Test exception");
             var result = ServiceResult<string>.Failure(errorMessage, exception);
-            var successCalled = false;
-            var failureCalled = false;
+            bool successCalled = false;
+            bool failureCalled = false;
             string? capturedError = null;
             Exception? capturedException = null;
 
@@ -172,8 +173,8 @@ public class FrameworkResultTests
         {
             // Arrange
             var result = ServiceResult<string?>.Success(null);
-            var successCalled = false;
-            var failureCalled = false;
+            bool successCalled = false;
+            bool failureCalled = false;
 
             // Act
             result.Match(
@@ -190,7 +191,7 @@ public class FrameworkResultTests
         public void Match_WithFailedResultWithoutException_ShouldPassNullException()
         {
             // Arrange
-            var errorMessage = "Test error";
+            string errorMessage = "Test error";
             var result = ServiceResult<string>.Failure(errorMessage);
             Exception? capturedException = new Exception("should be null");
 
@@ -212,7 +213,7 @@ public class FrameworkResultTests
         public void Map_WithSuccessfulResult_ShouldMapValue()
         {
             // Arrange
-            var originalValue = 42;
+            int originalValue = 42;
             var result = ServiceResult<int>.Success(originalValue);
 
             // Act
@@ -229,7 +230,7 @@ public class FrameworkResultTests
         public void Map_WithFailedResult_ShouldReturnFailedResultWithSameError()
         {
             // Arrange
-            var errorMessage = "Original error";
+            string errorMessage = "Original error";
             var exception = new InvalidOperationException("Original exception");
             var result = ServiceResult<int>.Failure(errorMessage, exception);
 
@@ -247,7 +248,7 @@ public class FrameworkResultTests
         public void Map_WithFailedResultWithoutException_ShouldReturnFailedResultWithoutException()
         {
             // Arrange
-            var errorMessage = "Original error";
+            string errorMessage = "Original error";
             var result = ServiceResult<int>.Failure(errorMessage);
 
             // Act
@@ -264,7 +265,7 @@ public class FrameworkResultTests
         public void Map_WithSuccessfulResultButMapperThrows_ShouldReturnFailedResult()
         {
             // Arrange
-            var originalValue = 42;
+            int originalValue = 42;
             var result = ServiceResult<int>.Success(originalValue);
             var mapperException = new InvalidOperationException("Mapper failed");
 
@@ -340,7 +341,7 @@ public class FrameworkResultTests
         public void Failure_WithErrorMessage_ShouldCreateFailedResult()
         {
             // Arrange
-            var errorMessage = "Something went wrong";
+            string errorMessage = "Something went wrong";
 
             // Act
             var result = ServiceResult.Failure(errorMessage);
@@ -372,7 +373,7 @@ public class FrameworkResultTests
         public void Failure_WithErrorMessageAndException_ShouldCreateFailedResult()
         {
             // Arrange
-            var errorMessage = "Custom error message";
+            string errorMessage = "Custom error message";
             var exception = new ArgumentException("Argument exception");
 
             // Act
@@ -394,8 +395,8 @@ public class FrameworkResultTests
         {
             // Arrange
             var result = ServiceResult.Success();
-            var successCalled = false;
-            var failureCalled = false;
+            bool successCalled = false;
+            bool failureCalled = false;
 
             // Act
             result.Match(
@@ -412,11 +413,11 @@ public class FrameworkResultTests
         public void Match_WithFailedResult_ShouldExecuteFailureAction()
         {
             // Arrange
-            var errorMessage = "Test error";
+            string errorMessage = "Test error";
             var exception = new InvalidOperationException("Test exception");
             var result = ServiceResult.Failure(errorMessage, exception);
-            var successCalled = false;
-            var failureCalled = false;
+            bool successCalled = false;
+            bool failureCalled = false;
             string? capturedError = null;
             Exception? capturedException = null;
 
@@ -437,7 +438,7 @@ public class FrameworkResultTests
         public void Match_WithFailedResultWithoutException_ShouldPassNullException()
         {
             // Arrange
-            var errorMessage = "Test error";
+            string errorMessage = "Test error";
             var result = ServiceResult.Failure(errorMessage);
             Exception? capturedException = new Exception("should be null");
 
@@ -456,8 +457,8 @@ public class FrameworkResultTests
         {
             // This tests the "Unknown error" fallback in Match method
             // We need to create a result through reflection to test this edge case
-            var resultType = typeof(ServiceResult);
-            var constructor = resultType.GetConstructors(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)[0];
+            Type resultType = typeof(ServiceResult);
+            ConstructorInfo constructor = resultType.GetConstructors(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)[0];
             var result = (ServiceResult)constructor.Invoke(new object?[] { false, null, null });
             
             string? capturedError = null;

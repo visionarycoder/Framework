@@ -2,6 +2,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using VisionaryCoder.Framework.Proxy.Abstractions;
+using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 using VisionaryCoder.Framework.Proxy.Interceptors.Logging;
 
 namespace VisionaryCoder.Framework.Proxy.Tests.Interceptors.Logging;
@@ -67,7 +68,7 @@ public class LoggingInterceptorTests
     {
         // Arrange
         var context = new ProxyContext { OperationName = "FailOp", CorrelationId = "corr-456" };
-        var errorMessage = "Operation failed";
+        string errorMessage = "Operation failed";
 
         Task<Response<int>> next(ProxyContext ctx, CancellationToken ct) =>
             Task.FromResult(Response<int>.Failure(errorMessage));

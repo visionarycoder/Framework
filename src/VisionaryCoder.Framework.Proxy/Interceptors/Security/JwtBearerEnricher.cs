@@ -18,7 +18,7 @@ public class JwtBearerEnricher(ILogger<JwtBearerEnricher> logger, Func<Task<stri
     {
         try
         {
-            var token = await tokenProvider();
+            string? token = await tokenProvider();
             if (!string.IsNullOrWhiteSpace(token))
             {
                 context.Headers["Authorization"] = $"Bearer {token}";

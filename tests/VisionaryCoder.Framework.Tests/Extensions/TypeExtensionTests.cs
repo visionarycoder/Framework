@@ -1,6 +1,7 @@
 using FluentAssertions;
+using VisionaryCoder.Framework.Extensions;
 
-namespace VisionaryCoder.Framework.Extensions.Tests;
+namespace VisionaryCoder.Framework.Tests.Extensions;
 
 [TestClass]
 public class TypeExtensionTests
@@ -24,7 +25,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithBooleanTrue_ShouldReturnTrue()
     {
         // Arrange
-        var value = true;
+        bool value = true;
 
         // Act
         var result = value.AsBoolean();
@@ -37,7 +38,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithBooleanFalse_ShouldReturnFalse()
     {
         // Arrange
-        var value = false;
+        bool value = false;
 
         // Act
         var result = value.AsBoolean();
@@ -50,7 +51,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithStringTrue_ShouldReturnTrue()
     {
         // Arrange
-        var value = "true";
+        string value = "true";
 
         // Act
         var result = value.AsBoolean();
@@ -63,7 +64,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithStringFalse_ShouldReturnFalse()
     {
         // Arrange
-        var value = "false";
+        string value = "false";
 
         // Act
         var result = value.AsBoolean();
@@ -76,7 +77,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithInvalidString_ShouldReturnFalse()
     {
         // Arrange
-        var value = "invalid";
+        string value = "invalid";
 
         // Act
         var result = value.AsBoolean();
@@ -89,7 +90,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithNonZeroInt_ShouldReturnTrue()
     {
         // Arrange
-        var value = 5;
+        int value = 5;
 
         // Act
         var result = value.AsBoolean();
@@ -102,7 +103,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithZeroInt_ShouldReturnFalse()
     {
         // Arrange
-        var value = 0;
+        int value = 0;
 
         // Act
         var result = value.AsBoolean();
@@ -115,7 +116,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithNonZeroLong_ShouldReturnTrue()
     {
         // Arrange
-        var value = 100L;
+        long value = 100L;
 
         // Act
         var result = value.AsBoolean();
@@ -128,7 +129,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithZeroLong_ShouldReturnFalse()
     {
         // Arrange
-        var value = 0L;
+        long value = 0L;
 
         // Act
         var result = value.AsBoolean();
@@ -141,7 +142,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithNonZeroDouble_ShouldReturnTrue()
     {
         // Arrange
-        var value = 0.1;
+        double value = 0.1;
 
         // Act
         var result = value.AsBoolean();
@@ -154,7 +155,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithZeroDouble_ShouldReturnFalse()
     {
         // Arrange
-        var value = 0.0;
+        double value = 0.0;
 
         // Act
         var result = value.AsBoolean();
@@ -167,7 +168,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithNonZeroDecimal_ShouldReturnTrue()
     {
         // Arrange
-        var value = 1.5m;
+        decimal value = 1.5m;
 
         // Act
         var result = value.AsBoolean();
@@ -180,7 +181,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithZeroDecimal_ShouldReturnFalse()
     {
         // Arrange
-        var value = 0m;
+        decimal value = 0m;
 
         // Act
         var result = value.AsBoolean();
@@ -193,7 +194,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithUnsupportedType_ShouldReturnFalse()
     {
         // Arrange
-        var value = new object();
+        object value = new object();
 
         // Act
         var result = value.AsBoolean();
@@ -236,7 +237,7 @@ public class TypeExtensionTests
     public void AsInteger_WithValidInt_ShouldReturnValue()
     {
         // Arrange
-        var value = 123;
+        int value = 123;
 
         // Act
         var result = value.AsInteger();
@@ -249,7 +250,7 @@ public class TypeExtensionTests
     public void AsInteger_WithValidString_ShouldReturnParsedValue()
     {
         // Arrange
-        var value = "456";
+        string value = "456";
 
         // Act
         var result = value.AsInteger();
@@ -262,7 +263,7 @@ public class TypeExtensionTests
     public void AsInteger_WithInvalidString_ShouldReturnDefaultValue()
     {
         // Arrange
-        var value = "invalid";
+        string value = "invalid";
 
         // Act
         var result = value.AsInteger(99);
@@ -275,7 +276,7 @@ public class TypeExtensionTests
     public void AsInteger_WithDouble_ShouldReturnTruncatedValue()
     {
         // Arrange
-        var value = 123.7;
+        double value = 123.7;
 
         // Act
         var result = value.AsInteger();
@@ -288,7 +289,7 @@ public class TypeExtensionTests
     public void AsInteger_WithDecimal_ShouldReturnTruncatedValue()
     {
         // Arrange
-        var value = 456.9m;
+        decimal value = 456.9m;
 
         // Act
         var result = value.AsInteger();
@@ -301,7 +302,7 @@ public class TypeExtensionTests
     public void AsInteger_WithFloat_ShouldReturnTruncatedValue()
     {
         // Arrange
-        var value = 789.3f;
+        float value = 789.3f;
 
         // Act
         var result = value.AsInteger();
@@ -314,7 +315,7 @@ public class TypeExtensionTests
     public void AsInteger_WithBooleanTrue_ShouldReturnOne()
     {
         // Arrange
-        var value = true;
+        bool value = true;
 
         // Act
         var result = value.AsInteger();
@@ -327,7 +328,7 @@ public class TypeExtensionTests
     public void AsInteger_WithBooleanFalse_ShouldReturnZero()
     {
         // Arrange
-        var value = false;
+        bool value = false;
 
         // Act
         var result = value.AsInteger();
@@ -340,7 +341,7 @@ public class TypeExtensionTests
     public void AsInteger_WithUnsupportedType_ShouldReturnDefaultValue()
     {
         // Arrange
-        var value = new object();
+        object value = new object();
 
         // Act
         var result = value.AsInteger(77);
@@ -383,7 +384,7 @@ public class TypeExtensionTests
     public void AsString_WithString_ShouldReturnSameString()
     {
         // Arrange
-        var value = "test string";
+        string value = "test string";
 
         // Act
         var result = value.AsString();
@@ -396,7 +397,7 @@ public class TypeExtensionTests
     public void AsString_WithInteger_ShouldReturnStringRepresentation()
     {
         // Arrange
-        var value = 123;
+        int value = 123;
 
         // Act
         var result = value.AsString();
@@ -409,7 +410,7 @@ public class TypeExtensionTests
     public void AsString_WithBoolean_ShouldReturnStringRepresentation()
     {
         // Arrange
-        var value = true;
+        bool value = true;
 
         // Act
         var result = value.AsString();
@@ -453,7 +454,7 @@ public class TypeExtensionTests
     public void AsLong_WithValidLong_ShouldReturnValue()
     {
         // Arrange
-        var value = 9876543210L;
+        long value = 9876543210L;
 
         // Act
         var result = value.AsLong();
@@ -466,7 +467,7 @@ public class TypeExtensionTests
     public void AsLong_WithInteger_ShouldReturnLongValue()
     {
         // Arrange
-        var value = 123;
+        int value = 123;
 
         // Act
         var result = value.AsLong();
@@ -479,7 +480,7 @@ public class TypeExtensionTests
     public void AsLong_WithValidString_ShouldReturnParsedValue()
     {
         // Arrange
-        var value = "987654321";
+        string value = "987654321";
 
         // Act
         var result = value.AsLong();
@@ -492,7 +493,7 @@ public class TypeExtensionTests
     public void AsLong_WithInvalidString_ShouldReturnDefaultValue()
     {
         // Arrange
-        var value = "invalid";
+        string value = "invalid";
 
         // Act
         var result = value.AsLong(555L);
@@ -522,7 +523,7 @@ public class TypeExtensionTests
     public void AsDouble_WithValidDouble_ShouldReturnValue()
     {
         // Arrange
-        var value = 123.456;
+        double value = 123.456;
 
         // Act
         var result = value.AsDouble();
@@ -535,7 +536,7 @@ public class TypeExtensionTests
     public void AsDouble_WithInteger_ShouldReturnDoubleValue()
     {
         // Arrange
-        var value = 42;
+        int value = 42;
 
         // Act
         var result = value.AsDouble();
@@ -548,7 +549,7 @@ public class TypeExtensionTests
     public void AsDouble_WithValidString_ShouldReturnParsedValue()
     {
         // Arrange
-        var value = "987.654";
+        string value = "987.654";
 
         // Act
         var result = value.AsDouble();
@@ -561,7 +562,7 @@ public class TypeExtensionTests
     public void AsDouble_WithInvalidString_ShouldReturnDefaultValue()
     {
         // Arrange
-        var value = "invalid";
+        string value = "invalid";
 
         // Act
         var result = value.AsDouble(2.5);
@@ -605,7 +606,7 @@ public class TypeExtensionTests
     public void AsDateTime_WithValidString_ShouldReturnParsedValue()
     {
         // Arrange
-        var value = "2024-01-01";
+        string value = "2024-01-01";
 
         // Act
         var result = value.AsDateTime();
@@ -620,7 +621,7 @@ public class TypeExtensionTests
     public void AsDateTime_WithInvalidString_ShouldReturnDefaultValue()
     {
         // Arrange
-        var value = "invalid date";
+        string value = "invalid date";
         var defaultValue = new DateTime(2023, 12, 31);
 
         // Act
@@ -653,7 +654,7 @@ public class TypeExtensionTests
     {
         // Arrange
         var guid = Guid.NewGuid();
-        var value = guid;
+        Guid value = guid;
 
         // Act
         var result = value.AsGuid();
@@ -667,7 +668,7 @@ public class TypeExtensionTests
     {
         // Arrange
         var guid = Guid.NewGuid();
-        var value = guid.ToString();
+        string value = guid.ToString();
 
         // Act
         var result = value.AsGuid();
@@ -680,7 +681,7 @@ public class TypeExtensionTests
     public void AsGuid_WithInvalidString_ShouldReturnDefaultValue()
     {
         // Arrange
-        var value = "invalid-guid";
+        string value = "invalid-guid";
         var defaultValue = Guid.NewGuid();
 
         // Act
@@ -698,7 +699,7 @@ public class TypeExtensionTests
     public void TypeExtensions_ChainedConversions_ShouldWorkCorrectly()
     {
         // Arrange
-        var stringValue = "123";
+        string stringValue = "123";
 
         // Act
         var asInt = stringValue.AsInteger();

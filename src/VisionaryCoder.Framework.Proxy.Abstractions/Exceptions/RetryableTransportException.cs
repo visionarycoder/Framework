@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Proxy.Abstractions;
+namespace VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 
 /// <summary>
 /// Represents a transport exception that can be retried.
@@ -10,6 +10,8 @@ public class RetryableTransportException : ProxyException
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
     public RetryableTransportException(string message) : base(message) { }
+
+    /// <param name="message"></param>
     /// <param name="innerException">The exception that is the cause of the current exception.</param>
     public RetryableTransportException(string message, Exception innerException) : base(message, innerException) { }
 }

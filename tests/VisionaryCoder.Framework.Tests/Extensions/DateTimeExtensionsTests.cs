@@ -1,7 +1,7 @@
 using FluentAssertions;
 using VisionaryCoder.Framework.Extensions;
 
-namespace VisionaryCoder.Framework.Extensions.Tests;
+namespace VisionaryCoder.Framework.Tests.Extensions;
 
 /// <summary>
 /// Unit tests for DateTimeExtensions to ensure 100% code coverage.
@@ -174,7 +174,7 @@ public class DateTimeExtensionsTests
     {
         // Arrange
         var dateTime = new DateTime(2024, 1, 10, 15, 30, 45);
-        var offset = TimeSpan.Zero;
+        TimeSpan offset = TimeSpan.Zero;
 
         // Act
         var result = dateTime.GetDateOnly(offset);

@@ -26,7 +26,7 @@ public class ExceptionTests
     public void ProxyException_WithMessage_ShouldStoreMessage()
     {
         // Arrange
-        var message = "Test error message";
+        string message = "Test error message";
 
         // Act
         var exception = new VisionaryCoder.Framework.Proxy.Abstractions.Exceptions.ProxyException(message);
@@ -40,7 +40,7 @@ public class ExceptionTests
     public void ProxyException_WithMessageAndInnerException_ShouldStoreBoth()
     {
         // Arrange
-        var message = "Outer error";
+        string message = "Outer error";
         var inner = new InvalidOperationException("Inner error");
 
         // Act
@@ -59,7 +59,7 @@ public class ExceptionTests
     public void RetryException_WithAttemptCount_ShouldCreateDefaultMessage()
     {
         // Arrange
-        var attemptCount = 3;
+        int attemptCount = 3;
 
         // Act
         var exception = new VisionaryCoder.Framework.Proxy.Abstractions.Exceptions.RetryException(attemptCount);
@@ -74,8 +74,8 @@ public class ExceptionTests
     public void RetryException_WithMessageAndAttemptCount_ShouldStoreCustomMessage()
     {
         // Arrange
-        var message = "Custom retry failure";
-        var attemptCount = 5;
+        string message = "Custom retry failure";
+        int attemptCount = 5;
 
         // Act
         var exception = new VisionaryCoder.Framework.Proxy.Abstractions.Exceptions.RetryException(message, attemptCount);
@@ -89,8 +89,8 @@ public class ExceptionTests
     public void RetryException_WithAllParameters_ShouldStoreAll()
     {
         // Arrange
-        var message = "Retry failed";
-        var attemptCount = 10;
+        string message = "Retry failed";
+        int attemptCount = 10;
         var inner = new TimeoutException("Inner timeout");
 
         // Act
@@ -134,7 +134,7 @@ public class ExceptionTests
     public void TransientProxyException_WithMessage_ShouldStoreMessage()
     {
         // Arrange
-        var message = "Temporary network issue";
+        string message = "Temporary network issue";
 
         // Act
         var exception = new TransientProxyException(message);
@@ -147,7 +147,7 @@ public class ExceptionTests
     public void TransientProxyException_WithMessageAndInnerException_ShouldStoreBoth()
     {
         // Arrange
-        var message = "Transient error";
+        string message = "Transient error";
         var inner = new IOException("Network timeout");
 
         // Act
@@ -166,7 +166,7 @@ public class ExceptionTests
     public void BusinessException_WithMessage_ShouldStoreMessage()
     {
         // Arrange
-        var message = "Business rule violation";
+        string message = "Business rule violation";
 
         // Act
         var exception = new BusinessException(message);
@@ -180,7 +180,7 @@ public class ExceptionTests
     public void BusinessException_WithMessageAndInnerException_ShouldStoreBoth()
     {
         // Arrange
-        var message = "Invalid customer state";
+        string message = "Invalid customer state";
         var inner = new ArgumentException("Invalid argument");
 
         // Act
@@ -199,7 +199,7 @@ public class ExceptionTests
     public void ProxyCanceledException_WithMessage_ShouldStoreMessage()
     {
         // Arrange
-        var message = "Operation was canceled";
+        string message = "Operation was canceled";
 
         // Act
         var exception = new ProxyCanceledException(message);
@@ -213,7 +213,7 @@ public class ExceptionTests
     public void ProxyCanceledException_WithMessageAndInnerException_ShouldStoreBoth()
     {
         // Arrange
-        var message = "Request canceled by user";
+        string message = "Request canceled by user";
         var inner = new OperationCanceledException();
 
         // Act
@@ -255,7 +255,7 @@ public class ExceptionTests
     public void ProxyTimeoutException_WithMessage_ShouldStoreMessage()
     {
         // Arrange
-        var message = "Custom timeout message";
+        string message = "Custom timeout message";
 
         // Act
         var exception = new ProxyTimeoutException(message);
@@ -268,7 +268,7 @@ public class ExceptionTests
     public void ProxyTimeoutException_WithMessageAndInnerException_ShouldStoreBoth()
     {
         // Arrange
-        var message = "Request timeout";
+        string message = "Request timeout";
         var inner = new TimeoutException("Inner timeout");
 
         // Act
@@ -287,7 +287,7 @@ public class ExceptionTests
     public void RetryableTransportException_WithMessage_ShouldStoreMessage()
     {
         // Arrange
-        var message = "Network error - retryable";
+        string message = "Network error - retryable";
 
         // Act
         var exception = new RetryableTransportException(message);
@@ -301,7 +301,7 @@ public class ExceptionTests
     public void RetryableTransportException_WithMessageAndInnerException_ShouldStoreBoth()
     {
         // Arrange
-        var message = "Connection reset";
+        string message = "Connection reset";
         var inner = new SocketException();
 
         // Act
@@ -320,7 +320,7 @@ public class ExceptionTests
     public void NonRetryableTransportException_WithMessage_ShouldStoreMessage()
     {
         // Arrange
-        var message = "Authentication failed";
+        string message = "Authentication failed";
 
         // Act
         var exception = new NonRetryableTransportException(message);
@@ -334,7 +334,7 @@ public class ExceptionTests
     public void NonRetryableTransportException_WithMessageAndInnerException_ShouldStoreBoth()
     {
         // Arrange
-        var message = "Certificate validation failed";
+        string message = "Certificate validation failed";
         var inner = new UnauthorizedAccessException();
 
         // Act
@@ -389,7 +389,7 @@ public class ExceptionTests
     public void ProxyException_WithUnicodeMessage_ShouldPreserve()
     {
         // Arrange
-        var unicodeMessage = "エラーが発生しました: 操作に失敗";
+        string unicodeMessage = "エラーが発生しました: 操作に失敗";
 
         // Act
         var exception = new VisionaryCoder.Framework.Proxy.Abstractions.Exceptions.ProxyException(unicodeMessage);
@@ -402,7 +402,7 @@ public class ExceptionTests
     public void RetryException_WithLargeAttemptCount_ShouldStore()
     {
         // Arrange
-        var largeCount = int.MaxValue;
+        int largeCount = int.MaxValue;
 
         // Act
         var exception = new VisionaryCoder.Framework.Proxy.Abstractions.Exceptions.RetryException(largeCount);
@@ -415,7 +415,7 @@ public class ExceptionTests
     public void ProxyTimeoutException_WithMaxTimeSpan_ShouldIncludeInMessage()
     {
         // Arrange
-        var maxTimeout = TimeSpan.MaxValue;
+        TimeSpan maxTimeout = TimeSpan.MaxValue;
 
         // Act
         var exception = new ProxyTimeoutException(maxTimeout);

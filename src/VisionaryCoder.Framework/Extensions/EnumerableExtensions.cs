@@ -21,7 +21,7 @@ public static class EnumerableExtensions
         {
             return false;
         }
-        var set = comparer == null ? new HashSet<T>() : new HashSet<T>(comparer);
+        HashSet<T> set = comparer == null ? new HashSet<T>() : new HashSet<T>(comparer);
         return instance.Any(item => !set.Add(item));
     }
     /// Determines whether the sequence is null or empty.
@@ -42,7 +42,7 @@ public static class EnumerableExtensions
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(action);
-        foreach (var item in source)
+        foreach (T item in source)
         {
             action(item);
         }
@@ -57,8 +57,8 @@ public static class EnumerableExtensions
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(action);
-        var index = 0;
-        foreach (var item in source)
+        int index = 0;
+        foreach (T item in source)
         {
             action(item, index++);
         }
@@ -77,7 +77,7 @@ public static class EnumerableExtensions
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(keySelector);
         var seenKeys = new HashSet<TKey>();
-        foreach (var element in source)
+        foreach (TSource element in source)
         {
             if (seenKeys.Add(keySelector(element)))
             {
@@ -96,7 +96,7 @@ public static class EnumerableExtensions
     public static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> source, int size)
     {
         if (size <= 0) throw new ArgumentOutOfRangeException(nameof(size), "Batch size must be greater than 0.");
-        using var enumerator = source.GetEnumerator();
+        using IEnumerator<T> enumerator = source.GetEnumerator();
         while (enumerator.MoveNext())
         {
             yield return GetBatch(enumerator, size);
@@ -105,7 +105,7 @@ public static class EnumerableExtensions
         static IEnumerable<T> GetBatch(IEnumerator<T> enumerator, int size)
         {
             yield return enumerator.Current;
-            for (var i = 1; i < size && enumerator.MoveNext(); i++)
+            for (int i = 1; i < size && enumerator.MoveNext(); i++)
             {
                 yield return enumerator.Current;
             }
@@ -147,7 +147,7 @@ public static class EnumerableExtensions
     {
         if (source != null)
         {
-            foreach (var item in source)
+            foreach (T item in source)
             {
                 value = item;
                 return true;
@@ -180,10 +180,10 @@ public static class EnumerableExtensions
         }
         if (source != null)
         {
-            using var enumerator = source.GetEnumerator();
+            using IEnumerator<T> enumerator = source.GetEnumerator();
             if (enumerator.MoveNext())
             {
-                var last = enumerator.Current;
+                T last = enumerator.Current;
                 while (enumerator.MoveNext())
                 {
                     last = enumerator.Current;
@@ -253,8 +253,8 @@ public static class EnumerableExtensions
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(predicate);
-        var index = 0;
-        foreach (var item in source)
+        int index = 0;
+        foreach (T item in source)
         {
             if (predicate(item))
             {

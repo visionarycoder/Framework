@@ -58,7 +58,7 @@ public sealed class RequestIdProviderTests
     {
         // Arrange
         var provider = new RequestIdProvider();
-        var newId = "test-request-id-123";
+        string newId = "test-request-id-123";
 
         // Act
         provider.SetRequestId(newId);
@@ -118,10 +118,10 @@ public sealed class RequestIdProviderTests
     {
         // Arrange
         var provider = new RequestIdProvider();
-        var ids = new[] { "id-1", "id-2", "id-3" };
+        string[] ids = new[] { "id-1", "id-2", "id-3" };
 
         // Act & Assert
-        foreach (var id in ids)
+        foreach (string id in ids)
         {
             provider.SetRequestId(id);
             provider.RequestId.Should().Be(id);

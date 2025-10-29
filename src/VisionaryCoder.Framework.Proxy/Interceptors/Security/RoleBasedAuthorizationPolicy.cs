@@ -17,12 +17,12 @@ public class RoleBasedAuthorizationPolicy(ICollection<string> requiredRoles) : I
     /// <returns>The authorization result.</returns>
     public Task<AuthorizationResult> EvaluateAsync(ProxyContext context)
     {
-        if (!context.Metadata.TryGetValue("Roles", out var rolesObj) || 
+        if (!context.Metadata.TryGetValue("Roles", out object? rolesObj) || 
             rolesObj is not ICollection<string> userRoles)
         {
             return Task.FromResult(AuthorizationResult.Failure("No roles found in context"));
         }
-        var hasRequiredRole = requiredRoles.Any(requiredRole => 
+        bool hasRequiredRole = requiredRoles.Any(requiredRole => 
             userRoles.Contains(requiredRole, StringComparer.OrdinalIgnoreCase));
         return Task.FromResult(hasRequiredRole 
             ? AuthorizationResult.Success() 

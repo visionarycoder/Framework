@@ -105,10 +105,10 @@ public sealed class CorrelationIdProviderTests
     {
         // Arrange
         var provider = new CorrelationIdProvider();
-        var ids = new[] { "corr-1", "corr-2", "corr-3", "corr-4" };
+        string[] ids = new[] { "corr-1", "corr-2", "corr-3", "corr-4" };
 
         // Act & Assert
-        foreach (var id in ids)
+        foreach (string id in ids)
         {
             provider.SetCorrelationId(id);
             provider.CorrelationId.Should().Be(id);
@@ -167,7 +167,7 @@ public sealed class CorrelationIdProviderTests
     {
         // Arrange
         var provider = new CorrelationIdProvider();
-        var customId = "custom-correlation-id";
+        string customId = "custom-correlation-id";
 
         // Act
         provider.SetCorrelationId(customId);

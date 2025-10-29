@@ -48,7 +48,7 @@ public class RequestIdProviderTests
     public void RequestId_WhenSetExplicitly_ShouldReturnSetValue()
     {
         // Arrange
-        var expectedId = "TEST1234";
+        string expectedId = "TEST1234";
         provider.SetRequestId(expectedId);
 
         // Act
@@ -129,7 +129,7 @@ public class RequestIdProviderTests
     public void SetRequestId_WithValidId_ShouldSetValue()
     {
         // Arrange
-        var expectedId = "CUSTOM12";
+        string expectedId = "CUSTOM12";
 
         // Act
         provider.SetRequestId(expectedId);
@@ -169,7 +169,7 @@ public class RequestIdProviderTests
     public void SetRequestId_ShouldAcceptAnyNonEmptyString()
     {
         // Arrange
-        var testIds = new[]
+        string[] testIds = new[]
         {
             "A",
             "123",
@@ -180,7 +180,7 @@ public class RequestIdProviderTests
             "Very-Long-Request-Id-With-Many-Characters"
         };
 
-        foreach (var testId in testIds)
+        foreach (string testId in testIds)
         {
             // Act
             provider.SetRequestId(testId);
@@ -202,12 +202,12 @@ public class RequestIdProviderTests
 
         for (int i = 0; i < 10; i++)
         {
-            var taskId = i;
+            int taskId = i;
             tasks.Add(Task.Run(async () =>
             {
                 await Task.Delay(10); // Small delay to ensure async context switching
                 var localProvider = new RequestIdProvider();
-                var requestId = $"REQ{taskId:D2}ID";
+                string requestId = $"REQ{taskId:D2}ID";
                 localProvider.SetRequestId(requestId);
                 await Task.Delay(10); // Another delay
                 return localProvider.RequestId;
@@ -219,7 +219,7 @@ public class RequestIdProviderTests
         
         for (int i = 0; i < tasks.Count; i++)
         {
-            var expectedId = $"REQ{i:D2}ID";
+            string expectedId = $"REQ{i:D2}ID";
             tasks[i].Result.Should().Be(expectedId);
         }
     }

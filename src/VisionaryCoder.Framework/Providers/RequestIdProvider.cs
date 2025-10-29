@@ -11,7 +11,7 @@ public sealed class RequestIdProvider : IRequestIdProvider
     public string RequestId => currentRequestId.Value ?? GenerateNew();
     public string GenerateNew()
     {
-        var newId = Guid.NewGuid().ToString("N")[..8].ToUpperInvariant();
+        string newId = Guid.NewGuid().ToString("N")[..8].ToUpperInvariant();
         currentRequestId.Value = newId;
         return newId;
     }

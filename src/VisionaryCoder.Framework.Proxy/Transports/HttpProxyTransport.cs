@@ -1,7 +1,7 @@
 using System.Text.Json;
 using VisionaryCoder.Framework.Proxy.Abstractions;
 
-namespace VisionaryCoder.Framework.Proxy;
+namespace VisionaryCoder.Framework.Proxy.Transports;
 /// <summary>
 /// Example HTTP transport implementation.
 /// </summary>
@@ -23,15 +23,15 @@ internal sealed class HttpProxyTransport(HttpClient httpClient) : IProxyTranspor
             var request = new HttpRequestMessage(new HttpMethod(context.Method ?? "GET"), context.Url);
             
             // Add headers from context
-            foreach (var header in context.Headers)
+            foreach (KeyValuePair<string, string> header in context.Headers)
             {
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
-            var response = await httpClient.SendAsync(request, cancellationToken);
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken);
+            string content = await response.Content.ReadAsStringAsync(cancellationToken);
             if (response.IsSuccessStatusCode)
             {
-                var data = JsonSerializer.Deserialize<T>(content);
+                T? data = JsonSerializer.Deserialize<T>(content);
                 return Response<T>.Success(data!, (int)response.StatusCode);
             }
             else

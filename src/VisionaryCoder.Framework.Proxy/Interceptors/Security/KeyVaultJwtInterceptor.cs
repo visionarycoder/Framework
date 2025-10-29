@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
+using VisionaryCoder.Framework.Abstractions;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Abstractions.Services;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
 /// <summary>
@@ -47,8 +47,8 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
             if (!string.IsNullOrEmpty(jwtToken))
             {
                 // Ensure the token has the Bearer prefix if it's for Authorization header
-                var tokenValue = headerName.Equals("Authorization", StringComparison.OrdinalIgnoreCase) && 
-                                !jwtToken.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
+                string? tokenValue = headerName.Equals("Authorization", StringComparison.OrdinalIgnoreCase) && 
+                                     !jwtToken.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
                     ? $"Bearer {jwtToken}"
                     : jwtToken;
                 context.Headers[headerName] = tokenValue;

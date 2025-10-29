@@ -1,6 +1,7 @@
 using FluentAssertions;
+using VisionaryCoder.Framework.Extensions;
 
-namespace VisionaryCoder.Framework.Extensions.Tests;
+namespace VisionaryCoder.Framework.Tests.Extensions;
 
 [TestClass]
 public class DivideByZeroExtensionsTests
@@ -11,10 +12,10 @@ public class DivideByZeroExtensionsTests
     public void ThrowIfZero_WithZeroInt_ShouldThrowDivideByZeroException()
     {
         // Arrange
-        var value = 0;
+        int value = 0;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<DivideByZeroException>(() => DivideByZeroExtensions.ThrowIfZero(value));
+        DivideByZeroException? exception = Assert.ThrowsExactly<DivideByZeroException>(() => DivideByZeroExtensions.ThrowIfZero(value));
         exception.Message.Should().Contain("Division by zero would occur");
     }
 
@@ -22,11 +23,11 @@ public class DivideByZeroExtensionsTests
     public void ThrowIfZero_WithZeroIntAndParamName_ShouldThrowWithParamName()
     {
         // Arrange
-        var value = 0;
-        var paramName = "divisor";
+        int value = 0;
+        string paramName = "divisor";
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<DivideByZeroException>(() => DivideByZeroExtensions.ThrowIfZero(value, paramName));
+        DivideByZeroException? exception = Assert.ThrowsExactly<DivideByZeroException>(() => DivideByZeroExtensions.ThrowIfZero(value, paramName));
         exception.Message.Should().Contain("Division by zero would occur with parameter 'divisor'");
     }
 
@@ -34,7 +35,7 @@ public class DivideByZeroExtensionsTests
     public void ThrowIfZero_WithNonZeroInt_ShouldNotThrow()
     {
         // Arrange
-        var value = 5;
+        int value = 5;
 
         // Act & Assert
         var action = () => DivideByZeroExtensions.ThrowIfZero(value);
@@ -45,10 +46,10 @@ public class DivideByZeroExtensionsTests
     public void ThrowIfZero_WithZeroDouble_ShouldThrowDivideByZeroException()
     {
         // Arrange
-        var value = 0.0;
+        double value = 0.0;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<DivideByZeroException>(() => DivideByZeroExtensions.ThrowIfZero(value));
+        DivideByZeroException? exception = Assert.ThrowsExactly<DivideByZeroException>(() => DivideByZeroExtensions.ThrowIfZero(value));
         exception.Message.Should().Contain("Division by zero would occur");
     }
 
@@ -56,7 +57,7 @@ public class DivideByZeroExtensionsTests
     public void ThrowIfZero_WithNonZeroDouble_ShouldNotThrow()
     {
         // Arrange
-        var value = 3.14;
+        double value = 3.14;
 
         // Act & Assert
         var action = () => DivideByZeroExtensions.ThrowIfZero(value);
@@ -67,10 +68,10 @@ public class DivideByZeroExtensionsTests
     public void ThrowIfZero_WithZeroDecimal_ShouldThrowDivideByZeroException()
     {
         // Arrange
-        var value = 0m;
+        decimal value = 0m;
 
         // Act & Assert
-        var exception = Assert.ThrowsExactly<DivideByZeroException>(() => DivideByZeroExtensions.ThrowIfZero(value));
+        DivideByZeroException? exception = Assert.ThrowsExactly<DivideByZeroException>(() => DivideByZeroExtensions.ThrowIfZero(value));
         exception.Message.Should().Contain("Division by zero would occur");
     }
 
@@ -78,7 +79,7 @@ public class DivideByZeroExtensionsTests
     public void ThrowIfZero_WithNonZeroDecimal_ShouldNotThrow()
     {
         // Arrange
-        var value = 1.5m;
+        decimal value = 1.5m;
 
         // Act & Assert
         var action = () => DivideByZeroExtensions.ThrowIfZero(value);
@@ -93,10 +94,10 @@ public class DivideByZeroExtensionsTests
     public void IsZero_WithZeroInt_ShouldReturnTrue()
     {
         // Arrange
-        var value = 0;
+        int value = 0;
 
         // Act
-        var result = value.IsZero();
+        bool result = value.IsZero();
 
         // Assert
         result.Should().BeTrue();
@@ -106,10 +107,10 @@ public class DivideByZeroExtensionsTests
     public void IsZero_WithNonZeroInt_ShouldReturnFalse()
     {
         // Arrange
-        var value = 42;
+        int value = 42;
 
         // Act
-        var result = value.IsZero();
+        bool result = value.IsZero();
 
         // Assert
         result.Should().BeFalse();
@@ -119,10 +120,10 @@ public class DivideByZeroExtensionsTests
     public void IsZero_WithZeroDouble_ShouldReturnTrue()
     {
         // Arrange
-        var value = 0.0;
+        double value = 0.0;
 
         // Act
-        var result = value.IsZero();
+        bool result = value.IsZero();
 
         // Assert
         result.Should().BeTrue();
@@ -132,10 +133,10 @@ public class DivideByZeroExtensionsTests
     public void IsZero_WithNonZeroDouble_ShouldReturnFalse()
     {
         // Arrange
-        var value = 1.23;
+        double value = 1.23;
 
         // Act
-        var result = value.IsZero();
+        bool result = value.IsZero();
 
         // Assert
         result.Should().BeFalse();
@@ -145,10 +146,10 @@ public class DivideByZeroExtensionsTests
     public void IsZero_WithZeroDecimal_ShouldReturnTrue()
     {
         // Arrange
-        var value = 0m;
+        decimal value = 0m;
 
         // Act
-        var result = value.IsZero();
+        bool result = value.IsZero();
 
         // Assert
         result.Should().BeTrue();
@@ -158,10 +159,10 @@ public class DivideByZeroExtensionsTests
     public void IsZero_WithNonZeroDecimal_ShouldReturnFalse()
     {
         // Arrange
-        var value = 5.67m;
+        decimal value = 5.67m;
 
         // Act
-        var result = value.IsZero();
+        bool result = value.IsZero();
 
         // Assert
         result.Should().BeFalse();
@@ -171,10 +172,10 @@ public class DivideByZeroExtensionsTests
     public void IsZero_WithZeroFloat_ShouldReturnTrue()
     {
         // Arrange
-        var value = 0.0f;
+        float value = 0.0f;
 
         // Act
-        var result = value.IsZero();
+        bool result = value.IsZero();
 
         // Assert
         result.Should().BeTrue();
@@ -184,10 +185,10 @@ public class DivideByZeroExtensionsTests
     public void IsZero_WithNonZeroFloat_ShouldReturnFalse()
     {
         // Arrange
-        var value = 2.5f;
+        float value = 2.5f;
 
         // Act
-        var result = value.IsZero();
+        bool result = value.IsZero();
 
         // Assert
         result.Should().BeFalse();
@@ -201,9 +202,9 @@ public class DivideByZeroExtensionsTests
     public void SafeDivide_WithNonZeroDenominator_ShouldReturnQuotient()
     {
         // Arrange
-        var numerator = 10;
-        var denominator = 2;
-        var defaultValue = 999;
+        int numerator = 10;
+        int denominator = 2;
+        int defaultValue = 999;
 
         // Act
         var result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
@@ -216,9 +217,9 @@ public class DivideByZeroExtensionsTests
     public void SafeDivide_WithZeroDenominator_ShouldReturnDefaultValue()
     {
         // Arrange
-        var numerator = 10;
-        var denominator = 0;
-        var defaultValue = 999;
+        int numerator = 10;
+        int denominator = 0;
+        int defaultValue = 999;
 
         // Act
         var result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
@@ -231,9 +232,9 @@ public class DivideByZeroExtensionsTests
     public void SafeDivide_WithDoubles_ShouldWorkCorrectly()
     {
         // Arrange
-        var numerator = 15.0;
-        var denominator = 3.0;
-        var defaultValue = -1.0;
+        double numerator = 15.0;
+        double denominator = 3.0;
+        double defaultValue = -1.0;
 
         // Act
         var result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
@@ -246,9 +247,9 @@ public class DivideByZeroExtensionsTests
     public void SafeDivide_WithZeroDoublesDenominator_ShouldReturnDefaultValue()
     {
         // Arrange
-        var numerator = 15.0;
-        var denominator = 0.0;
-        var defaultValue = -1.0;
+        double numerator = 15.0;
+        double denominator = 0.0;
+        double defaultValue = -1.0;
 
         // Act
         var result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
@@ -261,9 +262,9 @@ public class DivideByZeroExtensionsTests
     public void SafeDivide_WithDecimals_ShouldWorkCorrectly()
     {
         // Arrange
-        var numerator = 20.5m;
-        var denominator = 4.1m;
-        var defaultValue = 0m;
+        decimal numerator = 20.5m;
+        decimal denominator = 4.1m;
+        decimal defaultValue = 0m;
 
         // Act
         var result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
@@ -280,8 +281,8 @@ public class DivideByZeroExtensionsTests
     public void SafeDivide_WithoutDefault_WithNonZeroDenominator_ShouldReturnQuotient()
     {
         // Arrange
-        var numerator = 20;
-        var denominator = 4;
+        int numerator = 20;
+        int denominator = 4;
 
         // Act
         var result = DivideByZeroExtensions.SafeDivide(numerator, denominator);
@@ -294,8 +295,8 @@ public class DivideByZeroExtensionsTests
     public void SafeDivide_WithoutDefault_WithZeroDenominator_ShouldReturnZero()
     {
         // Arrange
-        var numerator = 10;
-        var denominator = 0;
+        int numerator = 10;
+        int denominator = 0;
 
         // Act
         var result = DivideByZeroExtensions.SafeDivide(numerator, denominator);
@@ -308,8 +309,8 @@ public class DivideByZeroExtensionsTests
     public void SafeDivide_WithoutDefault_WithDoubles_ShouldWorkCorrectly()
     {
         // Arrange
-        var numerator = 12.0;
-        var denominator = 0.0;
+        double numerator = 12.0;
+        double denominator = 0.0;
 
         // Act
         var result = DivideByZeroExtensions.SafeDivide(numerator, denominator);
@@ -326,8 +327,8 @@ public class DivideByZeroExtensionsTests
     public void TryDivide_WithNonZeroDenominator_ShouldReturnTrueAndCorrectResult()
     {
         // Arrange
-        var numerator = 15;
-        var denominator = 3;
+        int numerator = 15;
+        int denominator = 3;
 
         // Act
         var success = DivideByZeroExtensions.TryDivide(numerator, denominator, out var result);
@@ -341,8 +342,8 @@ public class DivideByZeroExtensionsTests
     public void TryDivide_WithZeroDenominator_ShouldReturnFalseAndDefaultResult()
     {
         // Arrange
-        var numerator = 10;
-        var denominator = 0;
+        int numerator = 10;
+        int denominator = 0;
 
         // Act
         var success = DivideByZeroExtensions.TryDivide(numerator, denominator, out var result);
@@ -356,8 +357,8 @@ public class DivideByZeroExtensionsTests
     public void TryDivide_WithDoubles_ShouldWorkCorrectly()
     {
         // Arrange
-        var numerator = 21.0;
-        var denominator = 7.0;
+        double numerator = 21.0;
+        double denominator = 7.0;
 
         // Act
         var success = DivideByZeroExtensions.TryDivide(numerator, denominator, out var result);
@@ -371,8 +372,8 @@ public class DivideByZeroExtensionsTests
     public void TryDivide_WithZeroDoubleDenominator_ShouldReturnFalse()
     {
         // Arrange
-        var numerator = 10.5;
-        var denominator = 0.0;
+        double numerator = 10.5;
+        double denominator = 0.0;
 
         // Act
         var success = DivideByZeroExtensions.TryDivide(numerator, denominator, out var result);
@@ -386,8 +387,8 @@ public class DivideByZeroExtensionsTests
     public void TryDivide_WithDecimals_ShouldWorkCorrectly()
     {
         // Arrange
-        var numerator = 24.6m;
-        var denominator = 6.15m;
+        decimal numerator = 24.6m;
+        decimal denominator = 6.15m;
 
         // Act
         var success = DivideByZeroExtensions.TryDivide(numerator, denominator, out var result);
@@ -405,8 +406,8 @@ public class DivideByZeroExtensionsTests
     public void DefaultIfZero_WithZeroValue_ShouldReturnDefault()
     {
         // Arrange
-        var value = 0;
-        var defaultValue = 42;
+        int value = 0;
+        int defaultValue = 42;
 
         // Act
         var result = value.DefaultIfZero(defaultValue);
@@ -419,8 +420,8 @@ public class DivideByZeroExtensionsTests
     public void DefaultIfZero_WithNonZeroValue_ShouldReturnOriginalValue()
     {
         // Arrange
-        var value = 15;
-        var defaultValue = 42;
+        int value = 15;
+        int defaultValue = 42;
 
         // Act
         var result = value.DefaultIfZero(defaultValue);
@@ -433,8 +434,8 @@ public class DivideByZeroExtensionsTests
     public void DefaultIfZero_WithZeroDouble_ShouldReturnDefault()
     {
         // Arrange
-        var value = 0.0;
-        var defaultValue = 3.14;
+        double value = 0.0;
+        double defaultValue = 3.14;
 
         // Act
         var result = value.DefaultIfZero(defaultValue);
@@ -447,8 +448,8 @@ public class DivideByZeroExtensionsTests
     public void DefaultIfZero_WithNonZeroDouble_ShouldReturnOriginalValue()
     {
         // Arrange
-        var value = 2.5;
-        var defaultValue = 3.14;
+        double value = 2.5;
+        double defaultValue = 3.14;
 
         // Act
         var result = value.DefaultIfZero(defaultValue);
@@ -461,8 +462,8 @@ public class DivideByZeroExtensionsTests
     public void DefaultIfZero_WithZeroDecimal_ShouldReturnDefault()
     {
         // Arrange
-        var value = 0m;
-        var defaultValue = 9.99m;
+        decimal value = 0m;
+        decimal defaultValue = 9.99m;
 
         // Act
         var result = value.DefaultIfZero(defaultValue);
@@ -475,8 +476,8 @@ public class DivideByZeroExtensionsTests
     public void DefaultIfZero_WithNonZeroDecimal_ShouldReturnOriginalValue()
     {
         // Arrange
-        var value = 7.77m;
-        var defaultValue = 9.99m;
+        decimal value = 7.77m;
+        decimal defaultValue = 9.99m;
 
         // Act
         var result = value.DefaultIfZero(defaultValue);
@@ -493,12 +494,12 @@ public class DivideByZeroExtensionsTests
     public void DivideByZeroExtensions_ComplexScenario_ShouldWorkCorrectly()
     {
         // Arrange
-        var values = new[] { 10, 0, 5, 20 };
-        var divisor = 2;
+        int[] values = new[] { 10, 0, 5, 20 };
+        int divisor = 2;
         var results = new List<int>();
 
         // Act
-        foreach (var value in values)
+        foreach (int value in values)
         {
             if (!value.IsZero())
             {

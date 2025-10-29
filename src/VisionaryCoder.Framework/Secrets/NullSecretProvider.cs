@@ -1,6 +1,6 @@
-using VisionaryCoder.Framework.Abstractions.Services;
+using VisionaryCoder.Framework.Abstractions;
 
-namespace VisionaryCoder.Framework.Configuration.Secrets;
+namespace VisionaryCoder.Framework.Secrets;
 
 /// <summary>
 /// A null implementation of ISecretProvider that returns null for all requests.

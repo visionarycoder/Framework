@@ -14,8 +14,10 @@ public interface IProxyCache
     /// <param name="key">The cache key.</param>
     /// <returns>The cached value if found; otherwise, the default value.</returns>
     Task<T?> GetAsync<T>(string key);
+
     /// Sets a cached value.
     /// <typeparam name="T">The type of the value to cache.</typeparam>
+    /// <param name="key"></param>
     /// <param name="value">The value to cache.</param>
     /// <param name="expiration">The expiration time.</param>
     /// <returns>A task representing the asynchronous operation.</returns>

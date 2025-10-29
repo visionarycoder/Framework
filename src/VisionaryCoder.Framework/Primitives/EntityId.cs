@@ -1,4 +1,5 @@
 using System.Globalization;
+using VisionaryCoder.Framework.Abstractions;
 
 namespace VisionaryCoder.Framework.Primitives;
 public readonly record struct EntityId<TEntity, TKey>(TKey Value) : IEntityId
@@ -28,7 +29,7 @@ public readonly record struct EntityId<TEntity, TKey>(TKey Value) : IEntityId
     public static implicit operator EntityId<TEntity, TKey>(TKey value) => Create(value);
     public static explicit operator TKey(EntityId<TEntity, TKey> id) => id.Value;
 
-    public static EntityId<TEntity, TKey> Parse(string text) => TryParse(text, out var id) 
+    public static EntityId<TEntity, TKey> Parse(string text) => TryParse(text, out EntityId<TEntity, TKey> id) 
         ? id 
         : throw new FormatException($"Invalid {typeof(TKey).Name}.");
 
@@ -36,7 +37,7 @@ public readonly record struct EntityId<TEntity, TKey>(TKey Value) : IEntityId
     {
 
         id = default;
-        if (typeof(TKey) == typeof(Guid) && Guid.TryParse(text, out var g))
+        if (typeof(TKey) == typeof(Guid) && Guid.TryParse(text, out Guid g))
         {
             id = new((TKey)(object)g);
             return true;

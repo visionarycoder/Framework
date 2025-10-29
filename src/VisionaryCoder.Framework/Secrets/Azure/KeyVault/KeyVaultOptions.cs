@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Configuration.Azure;
+namespace VisionaryCoder.Framework.Secrets.Azure.KeyVault;
 
 /// <summary>
 /// Configuration options for Azure Key Vault secret management.

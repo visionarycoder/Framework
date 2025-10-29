@@ -1,5 +1,6 @@
 using FluentAssertions;
 using VisionaryCoder.Framework;
+using VisionaryCoder.Framework.Providers;
 
 namespace VisionaryCoder.Framework.Tests.Providers;
 
@@ -109,7 +110,7 @@ public class FrameworkInfoProviderTests
     {
         // Arrange
         var provider = new FrameworkInfoProvider();
-        var now = DateTimeOffset.UtcNow;
+        DateTimeOffset now = DateTimeOffset.UtcNow;
 
         // Act
         var compiledAt = provider.CompiledAt;
@@ -123,7 +124,7 @@ public class FrameworkInfoProviderTests
     {
         // Arrange
         var provider = new FrameworkInfoProvider();
-        var oneYearAgo = DateTimeOffset.UtcNow.AddYears(-1);
+        DateTimeOffset oneYearAgo = DateTimeOffset.UtcNow.AddYears(-1);
 
         // Act
         var compiledAt = provider.CompiledAt;
@@ -185,7 +186,7 @@ public class FrameworkInfoProviderTests
     {
         // Arrange
         var provider = new FrameworkInfoProvider();
-        var reasonableYears = new[] { 2024, 2025, 2026, 2027 };
+        int[] reasonableYears = new[] { 2024, 2025, 2026, 2027 };
 
         // Act
         var compiledAt = provider.CompiledAt;

@@ -81,7 +81,7 @@ public class TenantContextTests
     public void TenantId_WithGuid_ShouldStore()
     {
         // Arrange
-        var guid = Guid.NewGuid().ToString();
+        string guid = Guid.NewGuid().ToString();
         var context = new TenantContext();
 
         // Act
@@ -95,7 +95,7 @@ public class TenantContextTests
     public void TenantName_WithVeryLongName_ShouldStoreCompletely()
     {
         // Arrange
-        var longName = new string('A', 10000);
+        string longName = new string('A', 10000);
         var context = new TenantContext();
 
         // Act
@@ -110,7 +110,7 @@ public class TenantContextTests
     public void TenantName_WithUnicode_ShouldPreserveCharacters()
     {
         // Arrange
-        var unicodeName = "テスト会社 🏢 Test Company";
+        string unicodeName = "テスト会社 🏢 Test Company";
         var context = new TenantContext();
 
         // Act
@@ -124,7 +124,7 @@ public class TenantContextTests
     public void TenantId_WithSpecialCharacters_ShouldStore()
     {
         // Arrange
-        var specialId = "tenant-123!@#$%^&*()";
+        string specialId = "tenant-123!@#$%^&*()";
         var context = new TenantContext();
 
         // Act

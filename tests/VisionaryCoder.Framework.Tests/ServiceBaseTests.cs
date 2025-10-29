@@ -52,7 +52,7 @@ public class ServiceBaseTests
     public void Constructor_WithNullLogger_ShouldThrowArgumentNullException()
     {
         // Arrange & Act
-        var action = () => new TestService(null!);
+        Func<TestService> action = () => new TestService(null!);
 
         // Assert
         action.Should().Throw<ArgumentNullException>()
@@ -72,7 +72,7 @@ public class ServiceBaseTests
         var service = new TestService(mockLogger.Object);
 
         // Act
-        var logger = service.ExposedLogger;
+        ILogger<TestService> logger = service.ExposedLogger;
 
         // Assert
         logger.Should().NotBeNull();
@@ -87,7 +87,7 @@ public class ServiceBaseTests
         var service = new TestService(mockLogger.Object);
 
         // Act
-        var logger = service.ExposedLogger;
+        ILogger<TestService> logger = service.ExposedLogger;
         logger.LogInformation("Test message");
 
         // Assert
@@ -109,7 +109,7 @@ public class ServiceBaseTests
     public void ServiceBase_ShouldBeAbstract()
     {
         // Arrange & Act
-        var type = typeof(ServiceBase<>);
+        Type type = typeof(ServiceBase<>);
 
         // Assert
         type.IsAbstract.Should().BeTrue();
@@ -119,8 +119,8 @@ public class ServiceBaseTests
     public void ServiceBase_ShouldHaveGenericTypeConstraint()
     {
         // Arrange & Act
-        var type = typeof(ServiceBase<>);
-        var genericParameter = type.GetGenericArguments()[0];
+        Type type = typeof(ServiceBase<>);
+        Type genericParameter = type.GetGenericArguments()[0];
 
         // Assert - ServiceBase<T> has 'where T : class' constraint
         genericParameter.GenericParameterAttributes.Should().HaveFlag(
@@ -132,8 +132,8 @@ public class ServiceBaseTests
     public void DerivedService_ShouldInheritFromServiceBase()
     {
         // Arrange & Act
-        var testServiceType = typeof(TestService);
-        var baseType = testServiceType.BaseType;
+        Type testServiceType = typeof(TestService);
+        Type? baseType = testServiceType.BaseType;
 
         // Assert
         baseType.Should().NotBeNull();
@@ -207,7 +207,7 @@ public class ServiceBaseTests
         var service = new TestService(mockLogger.Object);
 
         // Act
-        var canAccessLogger = service.ExposedLogger != null;
+        bool canAccessLogger = service.ExposedLogger != null;
 
         // Assert
         canAccessLogger.Should().BeTrue();

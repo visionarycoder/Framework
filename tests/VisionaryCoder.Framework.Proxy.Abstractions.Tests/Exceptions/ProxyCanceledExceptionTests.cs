@@ -3,6 +3,7 @@
 
 using FluentAssertions;
 using VisionaryCoder.Framework.Proxy.Abstractions;
+using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
 
 namespace VisionaryCoder.Framework.Proxy.Abstractions.Tests.Exceptions;
 
@@ -13,7 +14,7 @@ public sealed class ProxyCanceledExceptionTests
     public void Constructor_WithMessage_ShouldSetMessage()
     {
         // Arrange
-        var message = "Operation was canceled";
+        string message = "Operation was canceled";
 
         // Act
         var exception = new ProxyCanceledException(message);
@@ -27,7 +28,7 @@ public sealed class ProxyCanceledExceptionTests
     public void Constructor_WithMessageAndInnerException_ShouldSetBoth()
     {
         // Arrange
-        var message = "Proxy operation canceled";
+        string message = "Proxy operation canceled";
         var innerException = new OperationCanceledException("Inner cancellation");
 
         // Act
@@ -62,7 +63,7 @@ public sealed class ProxyCanceledExceptionTests
     public void ProxyCanceledException_CanBeThrown()
     {
         // Arrange
-        var message = "Request was canceled by user";
+        string message = "Request was canceled by user";
 
         // Act
         Action act = () => throw new ProxyCanceledException(message);
@@ -76,7 +77,7 @@ public sealed class ProxyCanceledExceptionTests
     public void ProxyCanceledException_CanBeCaughtAsProxyException()
     {
         // Arrange
-        var message = "Cancellation occurred";
+        string message = "Cancellation occurred";
 
         // Act
         Action act = () => throw new ProxyCanceledException(message);
@@ -93,7 +94,7 @@ public sealed class ProxyCanceledExceptionTests
         // Arrange
         var cancellationToken = new CancellationToken(true);
         var innerException = new OperationCanceledException(cancellationToken);
-        var message = "Proxy canceled via token";
+        string message = "Proxy canceled via token";
 
         // Act
         var exception = new ProxyCanceledException(message, innerException);

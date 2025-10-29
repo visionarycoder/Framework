@@ -13,7 +13,7 @@ public class OrderedProxyInterceptorTests
     {
         // Arrange
         var mockInner = new Mock<IProxyInterceptor>();
-        var order = 100;
+        int order = 100;
 
         // Act
         var interceptor = new OrderedProxyInterceptor<IProxyInterceptor>(mockInner.Object, order);

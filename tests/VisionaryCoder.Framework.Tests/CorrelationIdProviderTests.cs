@@ -49,7 +49,7 @@ public class CorrelationIdProviderTests
     public void CorrelationId_WhenSetExplicitly_ShouldReturnSetValue()
     {
         // Arrange
-        var expectedId = "TEST123456AB";
+        string expectedId = "TEST123456AB";
         provider.SetCorrelationId(expectedId);
 
         // Act
@@ -130,7 +130,7 @@ public class CorrelationIdProviderTests
     public void SetCorrelationId_WithValidId_ShouldSetValue()
     {
         // Arrange
-        var expectedId = "CUSTOM12345";
+        string expectedId = "CUSTOM12345";
 
         // Act
         provider.SetCorrelationId(expectedId);
@@ -170,7 +170,7 @@ public class CorrelationIdProviderTests
     public void SetCorrelationId_ShouldAcceptAnyNonEmptyString()
     {
         // Arrange
-        var testIds = new[]
+        string[] testIds = new[]
         {
             "A",
             "123",
@@ -181,7 +181,7 @@ public class CorrelationIdProviderTests
             "Very-Long-Correlation-Id-With-Many-Characters"
         };
 
-        foreach (var testId in testIds)
+        foreach (string testId in testIds)
         {
             // Act
             provider.SetCorrelationId(testId);
@@ -203,12 +203,12 @@ public class CorrelationIdProviderTests
 
         for (int i = 0; i < 10; i++)
         {
-            var taskId = i;
+            int taskId = i;
             tasks.Add(Task.Run(async () =>
             {
                 await Task.Delay(10); // Small delay to ensure async context switching
                 var localProvider = new CorrelationIdProvider();
-                var correlationId = $"TASK{taskId:D2}ID12";
+                string correlationId = $"TASK{taskId:D2}ID12";
                 localProvider.SetCorrelationId(correlationId);
                 await Task.Delay(10); // Another delay
                 return localProvider.CorrelationId;
@@ -220,7 +220,7 @@ public class CorrelationIdProviderTests
         
         for (int i = 0; i < tasks.Count; i++)
         {
-            var expectedId = $"TASK{i:D2}ID12";
+            string expectedId = $"TASK{i:D2}ID12";
             tasks[i].Result.Should().Be(expectedId);
         }
     }

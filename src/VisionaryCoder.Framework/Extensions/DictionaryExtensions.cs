@@ -17,7 +17,7 @@ public static class DictionaryExtensions
     /// <returns>The value associated with the key or the default value.</returns>
     public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue = default!)
     {
-        return dictionary.TryGetValue(key, out var value) ? value : defaultValue;
+        return dictionary.TryGetValue(key, out TValue? value) ? value : defaultValue;
     }
     /// <summary>
     /// Gets a value from a dictionary or computes it if the key doesn't exist.
@@ -32,7 +32,7 @@ public static class DictionaryExtensions
     {
         ArgumentNullException.ThrowIfNull(dictionary, nameof(dictionary));
         ArgumentNullException.ThrowIfNull(valueFactory, nameof(valueFactory));
-        if (dictionary.TryGetValue(key, out var value))
+        if (dictionary.TryGetValue(key, out TValue? value))
         {
             return value;
         }
@@ -53,9 +53,9 @@ public static class DictionaryExtensions
     public static TValue AddOrUpdate<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue addValue, Func<TKey, TValue, TValue> updateValueFactory)
     {
         ArgumentNullException.ThrowIfNull(updateValueFactory, nameof(updateValueFactory));
-        if (dictionary.TryGetValue(key, out var existingValue))
+        if (dictionary.TryGetValue(key, out TValue? existingValue))
         {
-            var newValue = updateValueFactory(key, existingValue);
+            TValue newValue = updateValueFactory(key, existingValue);
             dictionary[key] = newValue;
             return newValue;
         }
@@ -75,7 +75,7 @@ public static class DictionaryExtensions
     public static TValue AddOrUpdate<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> addValueFactory, Func<TKey, TValue, TValue> updateValueFactory)
     {
         ArgumentNullException.ThrowIfNull(addValueFactory, nameof(addValueFactory));
-        var addValue = addValueFactory(key);
+        TValue addValue = addValueFactory(key);
         return AddOrUpdate(dictionary, key, addValue, updateValueFactory);
     }
     /// Converts a dictionary to an immutable dictionary.
@@ -103,9 +103,9 @@ public static class DictionaryExtensions
         ArgumentNullException.ThrowIfNull(first, nameof(first));
         ArgumentNullException.ThrowIfNull(second, nameof(second));
         var result = new Dictionary<TKey, TValue>(first);
-        foreach (var kvp in second)
+        foreach (KeyValuePair<TKey, TValue> kvp in second)
         {
-            if (result.TryGetValue(kvp.Key, out var existingValue))
+            if (result.TryGetValue(kvp.Key, out TValue? existingValue))
             {
                 if (conflictResolver != null)
                 {
@@ -136,7 +136,7 @@ public static class DictionaryExtensions
     {
         ArgumentNullException.ThrowIfNull(valueSelector, nameof(valueSelector));
         var result = new Dictionary<TKey, TResult>(dictionary.Count);
-        foreach (var kvp in dictionary)
+        foreach (KeyValuePair<TKey, TValue> kvp in dictionary)
         {
             result.Add(kvp.Key, valueSelector(kvp.Value));
         }
@@ -161,8 +161,8 @@ public static class DictionaryExtensions
     {
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         var dictionary = new Dictionary<string, object?>();
-        var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        foreach (var property in properties)
+        PropertyInfo[] properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        foreach (PropertyInfo property in properties)
         {
             dictionary[property.Name] = property.GetValue(obj);
         }
@@ -187,8 +187,8 @@ public static class DictionaryExtensions
     public static int RemoveRange<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, IEnumerable<TKey> keys)
     {
         ArgumentNullException.ThrowIfNull(keys, nameof(keys));
-        var count = 0;
-        foreach (var key in keys)
+        int count = 0;
+        foreach (TKey key in keys)
         {
             if (dictionary.Remove(key))
             {
@@ -239,7 +239,7 @@ public static class DictionaryExtensions
     public static void ForEach<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, Action<TKey, TValue> action)
     {
         ArgumentNullException.ThrowIfNull(action, nameof(action));
-        foreach (var kvp in dictionary)
+        foreach (KeyValuePair<TKey, TValue> kvp in dictionary)
         {
             action(kvp.Key, kvp.Value);
         }
@@ -255,7 +255,7 @@ public static class DictionaryExtensions
         where TValue : notnull
     {
         var result = new Dictionary<TValue, TKey>(dictionary.Count);
-        foreach (var kvp in dictionary)
+        foreach (KeyValuePair<TKey, TValue> kvp in dictionary)
         {
             if (result.ContainsKey(kvp.Value))
             {
@@ -275,9 +275,9 @@ public static class DictionaryExtensions
     /// <returns>The new value after incrementing.</returns>
     public static int IncrementValue<TKey>(this IDictionary<TKey, int> dictionary, TKey key, int increment = 1)
     {
-        if (dictionary.TryGetValue(key, out var currentValue))
+        if (dictionary.TryGetValue(key, out int currentValue))
         {
-            var newValue = currentValue + increment;
+            int newValue = currentValue + increment;
             dictionary[key] = newValue;
             return newValue;
         }
@@ -294,7 +294,7 @@ public static class DictionaryExtensions
     /// <param name="item">The item to add to the list.</param>
     public static void AddToList<TKey, TListItem>(this IDictionary<TKey, List<TListItem>> dictionary, TKey key, TListItem item)
     {
-        if (!dictionary.TryGetValue(key, out var list))
+        if (!dictionary.TryGetValue(key, out List<TListItem>? list))
         {
             list = new List<TListItem>();
             dictionary[key] = list;

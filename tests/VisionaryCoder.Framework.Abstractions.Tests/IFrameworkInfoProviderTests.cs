@@ -1,6 +1,7 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
+using System.Reflection;
 using FluentAssertions;
 using Moq;
 using VisionaryCoder.Framework.Abstractions;
@@ -15,11 +16,11 @@ public sealed class IFrameworkInfoProviderTests
     {
         // Arrange
         var mockProvider = new Mock<IFrameworkInfoProvider>();
-        var version = "1.0.0";
+        string version = "1.0.0";
         mockProvider.Setup(p => p.Version).Returns(version);
 
         // Act
-        var result = mockProvider.Object.Version;
+        string result = mockProvider.Object.Version;
 
         // Assert
         result.Should().Be(version);
@@ -30,11 +31,11 @@ public sealed class IFrameworkInfoProviderTests
     {
         // Arrange
         var mockProvider = new Mock<IFrameworkInfoProvider>();
-        var name = "VisionaryCoder.Framework";
+        string name = "VisionaryCoder.Framework";
         mockProvider.Setup(p => p.Name).Returns(name);
 
         // Act
-        var result = mockProvider.Object.Name;
+        string result = mockProvider.Object.Name;
 
         // Assert
         result.Should().Be(name);
@@ -45,11 +46,11 @@ public sealed class IFrameworkInfoProviderTests
     {
         // Arrange
         var mockProvider = new Mock<IFrameworkInfoProvider>();
-        var description = "Enterprise framework for .NET applications";
+        string description = "Enterprise framework for .NET applications";
         mockProvider.Setup(p => p.Description).Returns(description);
 
         // Act
-        var result = mockProvider.Object.Description;
+        string result = mockProvider.Object.Description;
 
         // Assert
         result.Should().Be(description);
@@ -60,11 +61,11 @@ public sealed class IFrameworkInfoProviderTests
     {
         // Arrange
         var mockProvider = new Mock<IFrameworkInfoProvider>();
-        var compiledAt = DateTimeOffset.UtcNow;
+        DateTimeOffset compiledAt = DateTimeOffset.UtcNow;
         mockProvider.Setup(p => p.CompiledAt).Returns(compiledAt);
 
         // Act
-        var result = mockProvider.Object.CompiledAt;
+        DateTimeOffset result = mockProvider.Object.CompiledAt;
 
         // Assert
         result.Should().Be(compiledAt);
@@ -75,11 +76,11 @@ public sealed class IFrameworkInfoProviderTests
     {
         // Arrange
         var mockProvider = new Mock<IFrameworkInfoProvider>();
-        var pastDate = DateTimeOffset.UtcNow.AddDays(-1);
+        DateTimeOffset pastDate = DateTimeOffset.UtcNow.AddDays(-1);
         mockProvider.Setup(p => p.CompiledAt).Returns(pastDate);
 
         // Act
-        var result = mockProvider.Object.CompiledAt;
+        DateTimeOffset result = mockProvider.Object.CompiledAt;
 
         // Assert
         result.Should().BeBefore(DateTimeOffset.UtcNow);
@@ -96,10 +97,10 @@ public sealed class IFrameworkInfoProviderTests
         mockProvider.Setup(p => p.CompiledAt).Returns(DateTimeOffset.UtcNow);
 
         // Act
-        var version = mockProvider.Object.Version;
-        var name = mockProvider.Object.Name;
-        var description = mockProvider.Object.Description;
-        var compiledAt = mockProvider.Object.CompiledAt;
+        string version = mockProvider.Object.Version;
+        string name = mockProvider.Object.Name;
+        string description = mockProvider.Object.Description;
+        DateTimeOffset compiledAt = mockProvider.Object.CompiledAt;
 
         // Assert
         version.Should().NotBeNullOrWhiteSpace();
@@ -112,8 +113,8 @@ public sealed class IFrameworkInfoProviderTests
     public void Interface_ShouldHaveFourProperties()
     {
         // Arrange & Act
-        var interfaceType = typeof(IFrameworkInfoProvider);
-        var properties = interfaceType.GetProperties();
+        Type interfaceType = typeof(IFrameworkInfoProvider);
+        PropertyInfo[] properties = interfaceType.GetProperties();
 
         // Assert
         properties.Should().HaveCount(4, "interface has Version, Name, Description, and CompiledAt properties");
@@ -124,11 +125,11 @@ public sealed class IFrameworkInfoProviderTests
     {
         // Arrange
         var mockProvider = new Mock<IFrameworkInfoProvider>();
-        var version = "1.2.3";
+        string version = "1.2.3";
         mockProvider.Setup(p => p.Version).Returns(version);
 
         // Act
-        var result = mockProvider.Object.Version;
+        string result = mockProvider.Object.Version;
 
         // Assert
         result.Should().MatchRegex(@"^\d+\.\d+\.\d+", "version should follow semantic versioning pattern");
@@ -143,7 +144,7 @@ public sealed class IFrameworkInfoProviderTests
         mockProvider.Setup(p => p.CompiledAt).Returns(utcTime);
 
         // Act
-        var result = mockProvider.Object.CompiledAt;
+        DateTimeOffset result = mockProvider.Object.CompiledAt;
 
         // Assert
         result.Offset.Should().Be(TimeSpan.Zero);
@@ -154,11 +155,11 @@ public sealed class IFrameworkInfoProviderTests
     {
         // Arrange
         var mockProvider = new Mock<IFrameworkInfoProvider>();
-        var name = "VisionaryCoder.Framework";
+        string name = "VisionaryCoder.Framework";
         mockProvider.Setup(p => p.Name).Returns(name);
 
         // Act
-        var result = mockProvider.Object.Name;
+        string result = mockProvider.Object.Name;
 
         // Assert
         result.Should().Contain("VisionaryCoder");

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Reflection;
 
 namespace VisionaryCoder.Framework.Extensions;
 /// <summary>
@@ -14,10 +15,10 @@ public static class ReflectionExtensions
     {
         string fullName;
         Type? declaringType;
-        var skipFrames = 2;
+        int skipFrames = 2;
         do
         {
-            var method = new StackFrame(skipFrames, false).GetMethod();
+            MethodBase? method = new StackFrame(skipFrames, false).GetMethod();
             declaringType = method?.DeclaringType;
             if (declaringType == null)
             {
@@ -63,7 +64,7 @@ public static class ReflectionExtensions
     {
         ArgumentNullException.ThrowIfNull(obj);
         ArgumentNullException.ThrowIfNull(methodName);
-        var method = obj.GetType().GetMethod(methodName);
+        MethodInfo? method = obj.GetType().GetMethod(methodName);
         if (method is null)
         {
             throw new MissingMethodException(methodName);

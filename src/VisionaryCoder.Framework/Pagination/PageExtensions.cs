@@ -21,7 +21,7 @@ public static class PageExtensions
     
     static async Task<Page<T>> ExecuteAsync<T>(IQueryable<T> source, PageRequest request, Func<IQueryable<T>, string?, int, CancellationToken, Task<(IReadOnlyList<T>, string?)>> fn, CancellationToken cancellationToken)
     {
-        var (items, next) = await fn(source, request.ContinuationToken, request.PageSize, cancellationToken);
+        (IReadOnlyList<T> items, string? next) = await fn(source, request.ContinuationToken, request.PageSize, cancellationToken);
         return new Page<T>(items, count: 0, pageNumber: 0, pageSize: request.PageSize, nextToken: next);
     }
 }

@@ -32,12 +32,12 @@ public sealed class ResilienceInterceptor : IOrderedProxyInterceptor
     /// <returns>A task representing the asynchronous operation with the response.</returns>
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
-        var operationName = context.OperationName ?? "Unknown";
-        var correlationId = context.CorrelationId ?? "Undefined";
+        string operationName = context.OperationName ?? "Unknown";
+        string correlationId = context.CorrelationId ?? "Undefined";
         try
         {
             logger.LogDebug("Applying resilience pipeline for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", operationName, correlationId);
-            var response = await resiliencePipeline.ExecuteAsync(async (ct) => await next(context, ct), cancellationToken);
+            Response<T> response = await resiliencePipeline.ExecuteAsync(async (ct) => await next(context, ct), cancellationToken);
             context.Metadata["ResilienceApplied"] = "true";
             logger.LogDebug("Resilience pipeline completed successfully for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", operationName, correlationId);
             return response;

@@ -4,7 +4,9 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VisionaryCoder.Framework.Proxy.Abstractions;
-namespace VisionaryCoder.Framework.Proxy.Interceptors.Retry;
+using VisionaryCoder.Framework.Proxy.Abstractions.Exceptions;
+
+namespace VisionaryCoder.Framework.Proxy.Interceptors.Retries;
 /// <summary>
 /// Retry interceptor that implements exponential backoff retry logic.
 /// Order: 200 (executes very late in the pipeline).
@@ -28,14 +30,14 @@ public sealed class RetryInterceptor : IOrderedProxyInterceptor
     }
     public async Task<Response<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
-        var attempt = 0;
-        var maxRetries = options.MaxRetryAttempts;
-        var baseDelay = options.RetryDelay;
+        int attempt = 0;
+        int maxRetries = options.MaxRetryAttempts;
+        TimeSpan baseDelay = options.RetryDelay;
         while (true)
         {
             try
             {
-                var result = await next(context, cancellationToken);
+                Response<T> result = await next(context, cancellationToken);
                 if (attempt > 0)
                 {
                     logger.LogInformation("Operation succeeded after {Attempt} retries", attempt);
@@ -45,14 +47,14 @@ public sealed class RetryInterceptor : IOrderedProxyInterceptor
             catch (RetryableTransportException ex) when (attempt < maxRetries)
             {
                 attempt++;
-                var delay = CalculateDelay(baseDelay, attempt);
-                logger.LogWarning(ex, "Retryable exception on attempt {Attempt}/{MaxAttempts}, retrying in {Delay}ms",
+                TimeSpan delay = CalculateDelay(baseDelay, attempt);
+                LoggerExtensions.LogWarning((ILogger)logger, (Exception?)ex, "Retryable exception on attempt {Attempt}/{MaxAttempts}, retrying in {Delay}ms",
                     attempt, maxRetries + 1, delay.TotalMilliseconds);
                 await Task.Delay(delay, context.CancellationToken);
             }
             catch (RetryableTransportException ex) when (attempt >= maxRetries)
             {
-                logger.LogError(ex, "Operation failed after {MaxAttempts} attempts, giving up", maxRetries + 1);
+                LoggerExtensions.LogError((ILogger)logger, (Exception?)ex, "Operation failed after {MaxAttempts} attempts, giving up", maxRetries + 1);
                 throw;
             }
             catch (BusinessException ex)
@@ -80,7 +82,7 @@ public sealed class RetryInterceptor : IOrderedProxyInterceptor
         var exponentialDelay = TimeSpan.FromMilliseconds(
             baseDelay.TotalMilliseconds * Math.Pow(2, attempt - 1));
         // Add jitter (±25% random variation)
-        var jitter = Random.Shared.NextDouble() * 0.5 - 0.25; // -0.25 to +0.25
+        double jitter = Random.Shared.NextDouble() * 0.5 - 0.25; // -0.25 to +0.25
         var jitteredDelay = TimeSpan.FromMilliseconds(
             exponentialDelay.TotalMilliseconds * (1 + jitter));
         // Cap at maximum reasonable delay (e.g., 30 seconds)
