@@ -1,4 +1,4 @@
-using Json.Schema;
+using System.Linq.Expressions;
 using System.Text.Json;
 
 namespace VisionaryCoder.Framework.Querying.Serialization;
@@ -19,17 +19,17 @@ public sealed record CompositeFilter(
 
 public static class QueryFilterSerializer
 {
-    private static readonly JsonSerializerOptions Options = new()
+    private static readonly JsonSerializerOptions options = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         WriteIndented = true
     };
 
     public static string Serialize(FilterNode node)
-        => JsonSerializer.Serialize(node, Options);
+        => JsonSerializer.Serialize(node, options);
 
     public static FilterNode? Deserialize(string json)
-        => JsonSerializer.Deserialize<FilterNode>(json, Options);
+        => JsonSerializer.Deserialize<FilterNode>(json, options);
 }
 
 public static class QueryFilterRehydrator
@@ -90,25 +90,19 @@ public static class QueryFilterRehydrator
 
 public static class QueryFilterValidator
 {
-    private static readonly JsonSchema Schema;
-
-    static QueryFilterValidator()
-    {
-        string schemaJson = File.ReadAllText("queryfilter.schema.json");
-        Schema = JsonSchema.FromText(schemaJson);
-    }
-
     public static void ValidateOrThrow(string json)
     {
-        var result = Schema.Evaluate(JsonDocument.Parse(json).RootElement, new EvaluationOptions
-        {
-            OutputFormat = OutputFormat.Detailed
-        });
+        if (string.IsNullOrWhiteSpace(json))
+            throw new ArgumentException("JSON cannot be null or whitespace.", nameof(json));
 
-        if (!result.IsValid)
+        try
         {
-            var errors = string.Join("; ", result.Details.Where(d => !d.IsValid).Select(d => d.InstanceLocation + ": " + d.Message));
-            throw new InvalidOperationException($"Invalid QueryFilter payload: {errors}");
+            using var document = JsonDocument.Parse(json);
+            // Basic validation - structure exists
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidOperationException($"Invalid JSON payload: {ex.Message}", ex);
         }
     }
 }

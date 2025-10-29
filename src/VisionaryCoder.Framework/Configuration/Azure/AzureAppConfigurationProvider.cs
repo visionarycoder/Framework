@@ -22,7 +22,7 @@ public sealed class AzureAppConfigurationProvider : ServiceBase<AzureAppConfigur
     private bool isDisposed;
 
     public AzureAppConfigurationProvider(
-        AzureAppConfigurationProviderOptions options, 
+        AzureAppConfigurationProviderOptions options,
         ILogger<AzureAppConfigurationProvider> logger)
         : base(logger)
     {

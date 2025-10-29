@@ -21,6 +21,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Include="C:\Dev\GitHub\VisionaryCoder\vc\docs\diagrams\query-filtering\query-filter-class-diagram.mmd" Link="query-filter-class-diagram.mmd" />
+		<None Include="C:\Dev\GitHub\VisionaryCoder\vc\docs\diagrams\query-filtering\query-filter-sequence-diagram.mmd" Link="query-filter-sequence-diagram.mmd" />
 		<None Include="README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 

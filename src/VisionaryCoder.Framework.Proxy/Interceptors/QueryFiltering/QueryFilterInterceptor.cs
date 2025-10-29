@@ -1,18 +1,52 @@
-using VisionaryCoder.Framework.Proxy.Abstractions;
-using VisionaryCoder.Framework.Querying.Serialization;
+using VisionaryCoder.Framework.Proxy.Abstractions;using VisionaryCoder.Framework.Proxy.Abstractions;using VisionaryCoder.Framework.Proxy.Abstractions;
 
-public sealed class QueryFilterInterceptor : IProxyInterceptor
+
+
+namespace VisionaryCoder.Framework.Proxy.Interceptors.QueryFiltering;using VisionaryCoder.Framework.Querying.Serialization;
+
+
+
+public sealed class QueryFilterInterceptor : IProxyInterceptornamespace VisionaryCoder.Framework.Proxy.Interceptors.QueryFiltering;
+
 {
-    public async Task<Response<T>> InvokeAsync<T>(
+
+    public async Task<Response<T>> InvokeAsync<T>(namespace VisionaryCoder.Framework.Proxy.Interceptors.QueryFiltering;
+
         ProxyContext context,
-        ProxyDelegate<T> next,
+
+        ProxyDelegate<T> next,public sealed class QueryFilterInterceptor : IProxyInterceptor
+
         CancellationToken cancellationToken = default)
-    {
-        // Example: assume filters are passed in context.Body as JSON
-        if (context.Body is string json)
-        {
-            // Validate against schema
-            QueryFilterValidator.ValidateOrThrow(json);
+
+    {{public sealed class QueryFilterInterceptor : IProxyInterceptor
+
+        // Placeholder for query filter processing
+
+        // TODO: Implement query filter validation and transformation    public async Task<Response<T>> InvokeAsync<T>({
+
+        
+
+        return await next(cancellationToken);        ProxyContext context,    public async Task<Response<T>> InvokeAsync<T>(
+
+    }
+
+}        ProxyDelegate<T> next,        ProxyContext context,
+
+        CancellationToken cancellationToken = default)        ProxyDelegate<T> next,
+
+    {        CancellationToken cancellationToken = default)
+
+        // Placeholder for query filter processing    {
+
+        // TODO: Implement query filter validation and transformation        // Example: assume filters are passed in context.Body as JSON
+
+                if (context.Body is string json)
+
+        return await next(cancellationToken);        {
+
+    }            // Validate against schema
+
+}            QueryFilterValidator.ValidateOrThrow(json);
 
             // Deserialize and rehydrate
             FilterNode? node = QueryFilterSerializer.Deserialize(json);
