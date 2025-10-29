@@ -1,0 +1,16 @@
+using VisionaryCoder.Framework.Proxy.Abstractions;
+
+namespace VisionaryCoder.Framework.Proxy.Interceptors.Security.Abstractions;
+/// <summary>
+/// Defines a contract for enriching security context in proxy operations.
+/// </summary>
+public interface IProxySecurityEnricher
+{
+    /// <summary>
+    /// Enriches the proxy context with security information.
+    /// </summary>
+    /// <param name="context">The proxy context to enrich.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task EnrichAsync(ProxyContext context, CancellationToken cancellationToken = default);
+}

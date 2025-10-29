@@ -1,0 +1,24 @@
+sequenceDiagram
+    participant Dev as Developer
+    participant Client as Client Service
+    participant Proxy as Proxy Transport
+    participant Validator as Schema Validator
+    participant Rehydrator as QueryFilterRehydrator
+    participant Server as Server IQueryable
+
+    Dev->>Client: Build QueryFilter<T> with LINQ-style extensions
+    Client->>Client: Serialize QueryFilter<T> → JSON (bounded DTO)
+    Client->>Proxy: Send JSON payload in request body
+
+    Proxy->>Validator: Validate JSON against queryfilter.schema.json
+    Validator-->>Proxy: Valid / Invalid result
+
+    alt Valid
+        Proxy->>Rehydrator: Deserialize JSON → Expression<Func<T,bool>>
+        Rehydrator-->>Proxy: QueryFilter<T> rehydrated
+        Proxy->>Server: Apply QueryFilter<T> to IQueryable<T>
+        Server-->>Proxy: Filtered results
+        Proxy-->>Client: Response<T>
+    else Invalid
+        Proxy-->>Client: Reject request (400 Bad Request + validation errors)
+    end

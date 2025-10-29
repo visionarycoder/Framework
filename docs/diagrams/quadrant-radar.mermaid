@@ -1,0 +1,67 @@
+flowchart LR
+    %% Layout trick: create invisible anchors to form a 2x2 grid
+    A1[ ] --- A2[ ]
+    B1[ ] --- B2[ ]
+
+    subgraph Q1 [ADOPT]
+      direction TB
+      QA1[Software Architecture:\n- DDD\n- Clean/Hexagonal\n- ADRs]
+      QA2[Security:\n- Zero Trust\n- OWASP Top 10\n- Secrets mgmt]
+      QA3[Cloud:\n- Managed services\n- IaC (Terraform/Bicep)]
+      QA4[DevOps:\n- GitOps\n- CI/CD\n- Immutable infra]
+      QA5[Data:\n- Lakehouse\n- ELT with dbt\n- Event streaming]
+      QA6[Integration:\n- API-first\n- OpenAPI/AsyncAPI\n- Versioning]
+      QA7[Observability:\n- OpenTelemetry\n- SRE golden signals]
+    end
+
+    subgraph Q2 [TRIAL]
+      direction TB
+      QT1[Software Architecture:\n- Event Sourcing\n- CQRS]
+      QT2[Security:\n- Confidential computing\n- Threat modeling automation]
+      QT3[Cloud:\n- Serverless-first\n- Multi-cloud portability]
+      QT4[DevOps:\n- IDPs\n- Policy-as-code]
+      QT5[Data:\n- Data mesh\n- Real-time analytics]
+      QT6[Integration:\n- GraphQL\n- gRPC]
+      QT7[Observability:\n- Observability-as-code\n- Continuous profiling]
+    end
+
+    subgraph Q3 [ASSESS]
+      direction TB
+      QS1[Software Architecture:\n- AI-assisted validation\n- WASM backends]
+      QS2[Security:\n- Post-quantum crypto\n- AI anomaly detection]
+      QS3[Cloud:\n- Sustainability-aware placement]
+      QS4[DevOps:\n- AI-driven pipeline optimization]
+      QS5[Data:\n- Data contracts\n- AI-native governance]
+      QS6[Integration:\n- Event mesh\n- API monetization]
+      QS7[Observability:\n- AIOps remediation\n- Business KPI obs]
+    end
+
+    subgraph Q4 [HOLD]
+      direction TB
+      QH1[Software Architecture:\n- Big Ball of Mud\n- God classes]
+      QH2[Security:\n- Hardcoded secrets\n- Perimeter-only]
+      QH3[Cloud:\n- Lift-and-shift w/o modernization]
+      QH4[DevOps:\n- Manual deployments\n- Snowflake servers]
+      QH5[Data:\n- ETL sprawl\n- Unmanaged silos]
+      QH6[Integration:\n- Point-to-point spaghetti\n- Breaking changes]
+      QH7[Observability:\n- Infra-only metrics\n- Unstructured logs]
+    end
+
+    %% Positioning (approximate): place subgraphs into a 2x2 grid
+    A1 --- Q1
+    Q1 --- Q2
+    A2 --- Q2
+    B1 --- Q3
+    Q3 --- Q4
+    B2 --- Q4
+
+    %% Styling
+    classDef adopt fill=#b7f5c7,stroke=#2f7,stroke-width=1px,color=#000;
+    classDef trial fill=#cbe8ff,stroke=#39f,stroke-width=1px,color=#000;
+    classDef assess fill=#fff1a8,stroke=#fc3,stroke-width=1px,color=#000;
+    classDef hold fill=#ffc2c2,stroke=#f55,stroke-width=1px,color=#000;
+
+    class Q1 adopt;
+    class Q2 trial;
+    class Q3 assess;
+    class Q4 hold;

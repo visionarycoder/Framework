@@ -1,0 +1,21 @@
+flowchart TD
+    A[ADR: Architecture Decision Record] 
+        --> B[Best Practice Capsule]
+
+    B --> C[Solution Architect Radar]
+
+    %% Examples
+    A1[ADR-0002: Adopt GitOps] --> B1[DevOps Capsule]
+    B1 --> C1[DevOps Quadrant: GitOps → Adopt]
+
+    A2[ADR-0001: Establish Radar + Capsules] --> B2[All Capsules]
+    B2 --> C2[Radar Overview]
+
+    %% Styling
+    classDef adr fill=#f9f,stroke=#333,stroke-width=1px,color=#000;
+    classDef capsule fill=#bbf,stroke=#333,stroke-width=1px,color=#000;
+    classDef radar fill=#bfb,stroke=#333,stroke-width=1px,color=#000;
+
+    class A,A1,A2 adr;
+    class B,B1,B2 capsule;
+    class C,C1,C2 radar;
