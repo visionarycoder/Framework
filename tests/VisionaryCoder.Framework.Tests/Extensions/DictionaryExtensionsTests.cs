@@ -17,7 +17,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["key1"] = 10, ["key2"] = 20 };
 
         // Act
-        var result = DictionaryExtensions.GetValueOrDefault(dictionary, "key1");
+        int result = DictionaryExtensions.GetValueOrDefault(dictionary, "key1");
 
         // Assert
         result.Should().Be(10);
@@ -30,7 +30,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["key1"] = 10 };
 
         // Act
-        var result = DictionaryExtensions.GetValueOrDefault(dictionary, "nonexistent");
+        int result = DictionaryExtensions.GetValueOrDefault(dictionary, "nonexistent");
 
         // Assert
         result.Should().Be(0); // default for int
@@ -43,7 +43,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["key1"] = 10 };
 
         // Act
-        var result = DictionaryExtensions.GetValueOrDefault(dictionary, "nonexistent", 42);
+        int result = DictionaryExtensions.GetValueOrDefault(dictionary, "nonexistent", 42);
 
         // Assert
         result.Should().Be(42);
@@ -85,7 +85,7 @@ public class DictionaryExtensionsTests
         var valueFactory = new Func<string, int>(k => 99);
 
         // Act
-        var result = dictionary.GetOrAdd("key1", valueFactory);
+        int result = dictionary.GetOrAdd("key1", valueFactory);
 
         // Assert
         result.Should().Be(10);
@@ -100,7 +100,7 @@ public class DictionaryExtensionsTests
         var valueFactory = new Func<string, int>(k => k.Length);
 
         // Act
-        var result = dictionary.GetOrAdd("test", valueFactory);
+        int result = dictionary.GetOrAdd("test", valueFactory);
 
         // Assert
         result.Should().Be(4); // "test".Length
@@ -163,7 +163,7 @@ public class DictionaryExtensionsTests
         var updateValueFactory = new Func<string, int, int>((k, v) => v + 1);
 
         // Act
-        var result = dictionary.AddOrUpdate("test", addValueFactory, updateValueFactory);
+        int result = dictionary.AddOrUpdate("test", addValueFactory, updateValueFactory);
 
         // Assert
         result.Should().Be(4); // "test".Length
@@ -179,7 +179,7 @@ public class DictionaryExtensionsTests
         var updateValueFactory = new Func<string, int, int>((k, v) => v * 2);
 
         // Act
-        var result = dictionary.AddOrUpdate("test", addValueFactory, updateValueFactory);
+        int result = dictionary.AddOrUpdate("test", addValueFactory, updateValueFactory);
 
         // Assert
         result.Should().Be(20); // 10 * 2
@@ -194,7 +194,7 @@ public class DictionaryExtensionsTests
         var updateValueFactory = new Func<string, int, int>((k, v) => v + 1);
 
         // Act
-        var result = dictionary.AddOrUpdate("test", 5, updateValueFactory);
+        int result = dictionary.AddOrUpdate("test", 5, updateValueFactory);
 
         // Assert
         result.Should().Be(5);
@@ -209,7 +209,7 @@ public class DictionaryExtensionsTests
         var updateValueFactory = new Func<string, int, int>((k, v) => v + 5);
 
         // Act
-        var result = dictionary.AddOrUpdate("test", 99, updateValueFactory);
+        int result = dictionary.AddOrUpdate("test", 99, updateValueFactory);
 
         // Assert
         result.Should().Be(15); // 10 + 5
@@ -238,7 +238,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["key1"] = 1, ["key2"] = 2 };
 
         // Act
-        var result = dictionary.ToImmutableDictionary();
+        IImmutableDictionary<string, int> result = dictionary.ToImmutableDictionary();
 
         // Assert
         result.Should().BeOfType<ImmutableDictionary<string, int>>();
@@ -314,7 +314,7 @@ public class DictionaryExtensionsTests
         var second = new Dictionary<string, int> { ["key3"] = 3, ["key4"] = 4 };
 
         // Act
-        var result = first.Merge(second);
+        Dictionary<string, int> result = first.Merge(second);
 
         // Assert
         result.Should().HaveCount(4);
@@ -332,7 +332,7 @@ public class DictionaryExtensionsTests
         var second = new Dictionary<string, int> { ["key2"] = 20, ["key3"] = 3 };
 
         // Act
-        var result = first.Merge(second);
+        Dictionary<string, int> result = first.Merge(second);
 
         // Assert
         result.Should().HaveCount(3);
@@ -350,7 +350,7 @@ public class DictionaryExtensionsTests
         var resolver = new Func<string, int, int, int>((k, v1, v2) => v1 + v2);
 
         // Act
-        var result = first.Merge(second, resolver);
+        Dictionary<string, int> result = first.Merge(second, resolver);
 
         // Assert
         result.Should().HaveCount(3);
@@ -395,7 +395,7 @@ public class DictionaryExtensionsTests
         var valueSelector = new Func<int, string>(v => $"Value: {v}");
 
         // Act
-        var result = dictionary.TransformValues(valueSelector);
+        Dictionary<string, string> result = dictionary.TransformValues(valueSelector);
 
         // Assert
         result.Should().HaveCount(3);
@@ -440,7 +440,7 @@ public class DictionaryExtensionsTests
         var predicate = new Func<string, int, bool>((k, v) => k.Length > 2);
 
         // Act
-        IEnumerable<KeyValuePair<string, int>> result = dictionary.Where(predicate);
+        var result = dictionary.Where(predicate).ToDictionary(kv => kv.Key, kv => kv.Value);
 
         // Assert
         result.Should().HaveCount(2);
@@ -493,7 +493,7 @@ public class DictionaryExtensionsTests
         IDictionary<string, int>? dictionary = null;
 
         // Act
-        var result = dictionary.IsNullOrEmpty();
+        bool result = dictionary.IsNullOrEmpty();
 
         // Assert
         result.Should().BeTrue();
@@ -506,7 +506,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int>();
 
         // Act
-        var result = dictionary.IsNullOrEmpty();
+        bool result = dictionary.IsNullOrEmpty();
 
         // Assert
         result.Should().BeTrue();
@@ -519,7 +519,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["key1"] = 1 };
 
         // Act
-        var result = dictionary.IsNullOrEmpty();
+        bool result = dictionary.IsNullOrEmpty();
 
         // Assert
         result.Should().BeFalse();
@@ -561,7 +561,7 @@ public class DictionaryExtensionsTests
         var keysToRemove = new List<string> { "key1", "key3", "nonexistent" };
 
         // Act
-        var result = dictionary.RemoveRange(keysToRemove);
+        int result = dictionary.RemoveRange(keysToRemove);
 
         // Assert
         result.Should().Be(2); // Only key1 and key3 were removed
@@ -593,7 +593,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["key1"] = 1, ["key2"] = 2 };
 
         // Act
-        var result = dictionary.TryRemove("key1", out var value);
+        bool result = dictionary.TryRemove("key1", out int value);
 
         // Assert
         result.Should().BeTrue();
@@ -609,7 +609,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["key1"] = 1 };
 
         // Act
-        var result = dictionary.TryRemove("nonexistent", out var value);
+        bool result = dictionary.TryRemove("nonexistent", out int value);
 
         // Assert
         result.Should().BeFalse();
@@ -639,7 +639,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["key1"] = 1 };
 
         // Act
-        var result = dictionary.TryUpdate("key1", 10);
+        bool result = dictionary.TryUpdate("key1", 10);
 
         // Assert
         result.Should().BeTrue();
@@ -653,7 +653,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["key1"] = 1 };
 
         // Act
-        var result = dictionary.TryUpdate("nonexistent", 10);
+        bool result = dictionary.TryUpdate("nonexistent", 10);
 
         // Assert
         result.Should().BeFalse();
@@ -728,7 +728,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["a"] = 1, ["b"] = 2, ["c"] = 3 };
 
         // Act
-        var result = dictionary.Invert();
+        Dictionary<int, string> result = dictionary.Invert();
 
         // Assert
         result.Should().HaveCount(3);
@@ -769,7 +769,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int>();
 
         // Act
-        var result = dictionary.IncrementValue("counter");
+        int result = dictionary.IncrementValue("counter");
 
         // Assert
         result.Should().Be(1); // Default increment
@@ -783,7 +783,7 @@ public class DictionaryExtensionsTests
         var dictionary = new Dictionary<string, int> { ["counter"] = 5 };
 
         // Act
-        var result = dictionary.IncrementValue("counter", 3);
+        int result = dictionary.IncrementValue("counter", 3);
 
         // Assert
         result.Should().Be(8); // 5 + 3
@@ -864,7 +864,7 @@ public class DictionaryExtensionsTests
         var resolver = new Func<string, int, int, int>((k, existing, incoming) => existing + incoming);
 
         // Act
-        var result = inventory.Merge(newStock, resolver);
+        Dictionary<string, int> result = inventory.Merge(newStock, resolver);
 
         // Assert
         result.Should().HaveCount(3);

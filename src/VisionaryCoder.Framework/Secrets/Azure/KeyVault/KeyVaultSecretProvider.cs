@@ -1,8 +1,9 @@
+using Azure;
 using Azure.Security.KeyVault.Secrets;
+
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using VisionaryCoder.Framework.Abstractions;
 
 namespace VisionaryCoder.Framework.Secrets.Azure.KeyVault;
     /// <summary>
@@ -46,8 +47,8 @@ namespace VisionaryCoder.Framework.Secrets.Azure.KeyVault;
             try
             {
                 logger.LogDebug("Retrieving secret '{SecretName}' from Key Vault", name);
-                var response = await client.GetSecretAsync(name, cancellationToken: cancellationToken);
-                var value = response.Value?.Value;
+                Response<KeyVaultSecret>? response = await client.GetSecretAsync(name, cancellationToken: cancellationToken);
+                string? value = response.Value?.Value;
                 if (!string.IsNullOrEmpty(value))
                 {
                     // Cache the secret with configured TTL

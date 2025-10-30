@@ -23,7 +23,7 @@ public class RequestIdProviderTests
     public void RequestId_WhenNoIdSet_ShouldGenerateNew()
     {
         // Act
-        var requestId = provider.RequestId;
+        string requestId = provider.RequestId;
 
         // Assert
         requestId.Should().NotBeNullOrWhiteSpace();
@@ -35,10 +35,10 @@ public class RequestIdProviderTests
     public void RequestId_WhenIdAlreadySet_ShouldReturnSameId()
     {
         // Arrange
-        var firstCall = provider.RequestId;
+        string firstCall = provider.RequestId;
 
         // Act
-        var secondCall = provider.RequestId;
+        string secondCall = provider.RequestId;
 
         // Assert
         secondCall.Should().Be(firstCall);
@@ -52,7 +52,7 @@ public class RequestIdProviderTests
         provider.SetRequestId(expectedId);
 
         // Act
-        var result = provider.RequestId;
+        string result = provider.RequestId;
 
         // Assert
         result.Should().Be(expectedId);
@@ -66,7 +66,7 @@ public class RequestIdProviderTests
     public void GenerateNew_ShouldReturnValidFormat()
     {
         // Act
-        var result = provider.GenerateNew();
+        string result = provider.GenerateNew();
 
         // Assert
         result.Should().NotBeNullOrWhiteSpace();
@@ -78,7 +78,7 @@ public class RequestIdProviderTests
     public void GenerateNew_ShouldReturnUpperCaseOnly()
     {
         // Act
-        var result = provider.GenerateNew();
+        string result = provider.GenerateNew();
 
         // Assert
         result.Should().Be(result.ToUpperInvariant());
@@ -88,8 +88,8 @@ public class RequestIdProviderTests
     public void GenerateNew_WhenCalledMultipleTimes_ShouldReturnDifferentValues()
     {
         // Act
-        var first = provider.GenerateNew();
-        var second = provider.GenerateNew();
+        string first = provider.GenerateNew();
+        string second = provider.GenerateNew();
 
         // Assert
         first.Should().NotBe(second);
@@ -99,8 +99,8 @@ public class RequestIdProviderTests
     public void GenerateNew_ShouldSetCurrentRequestId()
     {
         // Act
-        var generated = provider.GenerateNew();
-        var current = provider.RequestId;
+        string generated = provider.GenerateNew();
+        string current = provider.RequestId;
 
         // Assert
         current.Should().Be(generated);
@@ -113,8 +113,8 @@ public class RequestIdProviderTests
         provider.SetRequestId("ORIGINAL");
 
         // Act
-        var newId = provider.GenerateNew();
-        var currentId = provider.RequestId;
+        string newId = provider.GenerateNew();
+        string currentId = provider.RequestId;
 
         // Assert
         currentId.Should().Be(newId);
@@ -142,7 +142,7 @@ public class RequestIdProviderTests
     public void SetRequestId_WithNullValue_ShouldThrowArgumentException()
     {
         // Arrange & Act & Assert
-        var action = () => provider.SetRequestId(null!);
+        Action action = () => provider.SetRequestId(null!);
         action.Should().Throw<ArgumentException>()
             .WithParameterName("requestId");
     }
@@ -151,7 +151,7 @@ public class RequestIdProviderTests
     public void SetRequestId_WithEmptyString_ShouldThrowArgumentException()
     {
         // Arrange & Act & Assert
-        var action = () => provider.SetRequestId("");
+        Action action = () => provider.SetRequestId("");
         action.Should().Throw<ArgumentException>()
             .WithParameterName("requestId");
     }
@@ -160,7 +160,7 @@ public class RequestIdProviderTests
     public void SetRequestId_WithWhitespace_ShouldThrowArgumentException()
     {
         // Arrange & Act & Assert
-        var action = () => provider.SetRequestId("   ");
+        Action action = () => provider.SetRequestId("   ");
         action.Should().Throw<ArgumentException>()
             .WithParameterName("requestId");
     }
@@ -236,8 +236,8 @@ public class RequestIdProviderTests
         var requestProvider = new RequestIdProvider();
 
         // Act
-        var correlationId = correlationProvider.CorrelationId;
-        var requestId = requestProvider.RequestId;
+        string correlationId = correlationProvider.CorrelationId;
+        string requestId = requestProvider.RequestId;
 
         // Assert
         correlationId.Should().HaveLength(12);
@@ -256,7 +256,7 @@ public class RequestIdProviderTests
         var provider = new RequestIdProvider();
 
         // Act & Assert - Initial state
-        var initialId = provider.RequestId;
+        string initialId = provider.RequestId;
         initialId.Should().NotBeNullOrWhiteSpace();
 
         // Act & Assert - Set custom ID
@@ -264,7 +264,7 @@ public class RequestIdProviderTests
         provider.RequestId.Should().Be("CUSTOM123");
 
         // Act & Assert - Generate new ID
-        var newId = provider.GenerateNew();
+        string newId = provider.GenerateNew();
         provider.RequestId.Should().Be(newId);
         newId.Should().NotBe("CUSTOM123");
         newId.Should().NotBe(initialId);

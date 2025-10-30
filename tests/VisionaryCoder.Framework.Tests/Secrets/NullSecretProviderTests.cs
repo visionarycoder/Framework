@@ -1,5 +1,5 @@
 using FluentAssertions;
-using VisionaryCoder.Framework.Abstractions;
+
 using VisionaryCoder.Framework.Secrets;
 
 namespace VisionaryCoder.Framework.Tests.Secrets;
@@ -11,9 +11,9 @@ public class NullSecretProviderTests
     public void Instance_ShouldReturnSameInstanceEveryTime()
     {
         // Act
-        var instance1 = NullSecretProvider.Instance;
-        var instance2 = NullSecretProvider.Instance;
-        var instance3 = NullSecretProvider.Instance;
+        NullSecretProvider instance1 = NullSecretProvider.Instance;
+        NullSecretProvider instance2 = NullSecretProvider.Instance;
+        NullSecretProvider instance3 = NullSecretProvider.Instance;
 
         // Assert
         instance1.Should().BeSameAs(instance2, "Instance should be a singleton");
@@ -24,7 +24,7 @@ public class NullSecretProviderTests
     public void Instance_ShouldNotBeNull()
     {
         // Act
-        var instance = NullSecretProvider.Instance;
+        NullSecretProvider instance = NullSecretProvider.Instance;
 
         // Assert
         instance.Should().NotBeNull("singleton instance should always be available");
@@ -34,10 +34,10 @@ public class NullSecretProviderTests
     public async Task GetAsync_WithAnyName_ShouldReturnNull()
     {
         // Arrange
-        var provider = NullSecretProvider.Instance;
+        NullSecretProvider provider = NullSecretProvider.Instance;
 
         // Act
-        var result = await provider.GetAsync("any-secret-name");
+        string? result = await provider.GetAsync("any-secret-name");
 
         // Assert
         result.Should().BeNull("NullSecretProvider always returns null");
@@ -52,10 +52,10 @@ public class NullSecretProviderTests
     public async Task GetAsync_WithVariousNames_ShouldAlwaysReturnNull(string secretName)
     {
         // Arrange
-        var provider = NullSecretProvider.Instance;
+        NullSecretProvider provider = NullSecretProvider.Instance;
 
         // Act
-        var result = await provider.GetAsync(secretName);
+        string? result = await provider.GetAsync(secretName);
 
         // Assert
         result.Should().BeNull($"NullSecretProvider should return null for '{secretName}'");
@@ -65,11 +65,11 @@ public class NullSecretProviderTests
     public async Task GetAsync_WithCancellationToken_ShouldStillReturnNull()
     {
         // Arrange
-        var provider = NullSecretProvider.Instance;
+        NullSecretProvider provider = NullSecretProvider.Instance;
         using var cts = new CancellationTokenSource();
 
         // Act
-        var result = await provider.GetAsync("secret-name", cts.Token);
+        string? result = await provider.GetAsync("secret-name", cts.Token);
 
         // Assert
         result.Should().BeNull("NullSecretProvider returns null regardless of cancellation token");
@@ -79,7 +79,7 @@ public class NullSecretProviderTests
     public async Task GetAsync_WithCanceledToken_ShouldNotThrow()
     {
         // Arrange
-        var provider = NullSecretProvider.Instance;
+        NullSecretProvider provider = NullSecretProvider.Instance;
         using var cts = new CancellationTokenSource();
         cts.Cancel();
 
@@ -94,13 +94,13 @@ public class NullSecretProviderTests
     public async Task GetAsync_CalledMultipleTimes_ShouldAlwaysReturnNull()
     {
         // Arrange
-        var provider = NullSecretProvider.Instance;
+        NullSecretProvider provider = NullSecretProvider.Instance;
         string secretName = "test-secret";
 
         // Act
-        var result1 = await provider.GetAsync(secretName);
-        var result2 = await provider.GetAsync(secretName);
-        var result3 = await provider.GetAsync(secretName);
+        string? result1 = await provider.GetAsync(secretName);
+        string? result2 = await provider.GetAsync(secretName);
+        string? result3 = await provider.GetAsync(secretName);
 
         // Assert
         result1.Should().BeNull();
@@ -112,7 +112,7 @@ public class NullSecretProviderTests
     public async Task GetAsync_MultipleConcurrentCalls_ShouldAllReturnNull()
     {
         // Arrange
-        var provider = NullSecretProvider.Instance;
+        NullSecretProvider provider = NullSecretProvider.Instance;
         var tasks = new List<Task<string?>>();
 
         // Act
@@ -130,10 +130,10 @@ public class NullSecretProviderTests
     public async Task GetAsync_WithNullName_ShouldReturnNull()
     {
         // Arrange
-        var provider = NullSecretProvider.Instance;
+        NullSecretProvider provider = NullSecretProvider.Instance;
 
         // Act
-        var result = await provider.GetAsync(null!);
+        string? result = await provider.GetAsync(null!);
 
         // Assert
         result.Should().BeNull("NullSecretProvider doesn't validate input");
@@ -143,7 +143,7 @@ public class NullSecretProviderTests
     public void NullSecretProvider_ShouldImplementISecretProvider()
     {
         // Arrange
-        var provider = NullSecretProvider.Instance;
+        NullSecretProvider provider = NullSecretProvider.Instance;
 
         // Assert
         provider.Should().BeAssignableTo<ISecretProvider>();

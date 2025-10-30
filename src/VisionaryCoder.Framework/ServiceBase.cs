@@ -8,12 +8,14 @@ namespace VisionaryCoder.Framework;
 /// <typeparam name="T">The concrete service type for typed logging.</typeparam>
 public abstract class ServiceBase<T>(ILogger<T> logger) : IDisposable where T : class
 {
+    
     private bool disposed = false;
 
     /// <summary>
     /// Gets the logger instance for this service.
     /// </summary>
     protected ILogger<T> Logger { get; } = logger ?? throw new ArgumentNullException(nameof(logger));
+
 
     /// <summary>
     /// Finalizer for ServiceBase.

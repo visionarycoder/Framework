@@ -1,5 +1,4 @@
 using System.Globalization;
-using VisionaryCoder.Framework.Abstractions;
 
 namespace VisionaryCoder.Framework.Primitives;
 public readonly record struct EntityId<TEntity, TKey>(TKey Value) : IEntityId

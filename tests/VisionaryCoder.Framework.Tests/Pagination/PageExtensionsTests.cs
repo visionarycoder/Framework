@@ -23,7 +23,7 @@ public class PageExtensionsTests
         var request = new PageRequest(pageNumber: 1, pageSize: 5);
 
         // Act
-        var result = await context.TestEntities.ToPageAsync(request);
+        Page<TestEntity> result = await context.TestEntities.ToPageAsync(request);
 
         // Assert
         result.Items.Should().HaveCount(5);
@@ -43,7 +43,7 @@ public class PageExtensionsTests
         var request = new PageRequest(pageNumber: 2, pageSize: 5);
 
         // Act
-        var result = await context.TestEntities.ToPageAsync(request);
+        Page<TestEntity> result = await context.TestEntities.ToPageAsync(request);
 
         // Assert
         result.Items.Should().HaveCount(5);
@@ -63,7 +63,7 @@ public class PageExtensionsTests
         var request = new PageRequest(pageNumber: 3, pageSize: 5);
 
         // Act
-        var result = await context.TestEntities.ToPageAsync(request);
+        Page<TestEntity> result = await context.TestEntities.ToPageAsync(request);
 
         // Assert
         result.Items.Should().HaveCount(5);
@@ -83,7 +83,7 @@ public class PageExtensionsTests
         var request = new PageRequest(pageNumber: 10, pageSize: 5);
 
         // Act
-        var result = await context.TestEntities.ToPageAsync(request);
+        Page<TestEntity> result = await context.TestEntities.ToPageAsync(request);
 
         // Assert
         result.Items.Should().BeEmpty();
@@ -101,7 +101,7 @@ public class PageExtensionsTests
         var request = new PageRequest(pageNumber: 1, pageSize: 100);
 
         // Act
-        var result = await context.TestEntities.ToPageAsync(request);
+        Page<TestEntity> result = await context.TestEntities.ToPageAsync(request);
 
         // Assert
         result.Items.Should().HaveCount(15);
@@ -118,7 +118,7 @@ public class PageExtensionsTests
         var request = new PageRequest(pageNumber: 1, pageSize: 5);
 
         // Act
-        var result = await context.TestEntities.ToPageAsync(request);
+        Page<TestEntity> result = await context.TestEntities.ToPageAsync(request);
 
         // Assert
         result.Items.Should().BeEmpty();
@@ -136,7 +136,7 @@ public class PageExtensionsTests
         var request = new PageRequest(pageNumber: 1, pageSize: 5);
 
         // Act
-        var result = await context.TestEntities
+        Page<TestEntity> result = await context.TestEntities
             .Where(e => e.Id > 5)
             .ToPageAsync(request);
 
@@ -156,7 +156,7 @@ public class PageExtensionsTests
         var request = new PageRequest(pageNumber: 1, pageSize: 5);
 
         // Act
-        var result = await context.TestEntities
+        Page<TestEntity> result = await context.TestEntities
             .OrderByDescending(e => e.Id)
             .ToPageAsync(request);
 
@@ -175,7 +175,7 @@ public class PageExtensionsTests
         var request = new PageRequest(pageNumber: 5, pageSize: 1);
 
         // Act
-        var result = await context.TestEntities.ToPageAsync(request);
+        Page<TestEntity> result = await context.TestEntities.ToPageAsync(request);
 
         // Assert
         result.Items.Should().HaveCount(1);
@@ -212,11 +212,11 @@ public class PageExtensionsTests
         var request = new PageRequest(pageSize: 5);
 
         // Act
-        var result = await context.TestEntities.ToPageWithTokenAsync(
+        Page<TestEntity> result = await context.TestEntities.ToPageWithTokenAsync(
             request,
             async (query, token, pageSize, ct) =>
             {
-                var items = await query.Take(pageSize).ToListAsync(ct);
+                List<TestEntity> items = await query.Take(pageSize).ToListAsync(ct);
                 string? nextToken = items.Count == pageSize ? "next-page-token" : null;
                 return (items, nextToken);
             });
@@ -238,11 +238,11 @@ public class PageExtensionsTests
         var request = new PageRequest(pageSize: 100);
 
         // Act
-        var result = await context.TestEntities.ToPageWithTokenAsync(
+        Page<TestEntity> result = await context.TestEntities.ToPageWithTokenAsync(
             request,
             async (query, token, pageSize, ct) =>
             {
-                var items = await query.Take(pageSize).ToListAsync(ct);
+                List<TestEntity> items = await query.Take(pageSize).ToListAsync(ct);
                 string? nextToken = items.Count == pageSize ? "next-token" : null;
                 return (items, nextToken);
             });
@@ -262,12 +262,12 @@ public class PageExtensionsTests
         string? receivedToken = null;
 
         // Act
-        var result = await context.TestEntities.ToPageWithTokenAsync(
+        Page<TestEntity> result = await context.TestEntities.ToPageWithTokenAsync(
             request,
             async (query, token, pageSize, ct) =>
             {
                 receivedToken = token;
-                var items = await query.Skip(5).Take(pageSize).ToListAsync(ct);
+                List<TestEntity> items = await query.Skip(5).Take(pageSize).ToListAsync(ct);
                 return (items, "page-3");
             });
 
@@ -285,11 +285,11 @@ public class PageExtensionsTests
         var request = new PageRequest(pageSize: 5);
 
         // Act
-        var result = await context.TestEntities.ToPageWithTokenAsync(
+        Page<TestEntity> result = await context.TestEntities.ToPageWithTokenAsync(
             request,
             async (query, token, pageSize, ct) =>
             {
-                var items = await query.Take(pageSize).ToListAsync(ct);
+                List<TestEntity> items = await query.Take(pageSize).ToListAsync(ct);
                 return (items, (string?)null);
             });
 
@@ -314,7 +314,7 @@ public class PageExtensionsTests
                 request,
                 async (query, token, pageSize, ct) =>
                 {
-                    var items = await query.Take(pageSize).ToListAsync(ct);
+                    List<TestEntity> items = await query.Take(pageSize).ToListAsync(ct);
                     return (items, "next");
                 },
                 cts.Token))
@@ -334,7 +334,7 @@ public class PageExtensionsTests
         var request = new PageRequest(pageNumber: 1, pageSize: 3);
 
         // Act
-        var result = await context.TestEntities
+        Page<TestEntity> result = await context.TestEntities
             .Where(e => e.Id % 2 == 0)
             .OrderBy(e => e.Name)
             .ToPageAsync(request);
@@ -353,8 +353,8 @@ public class PageExtensionsTests
         var request = new PageRequest(pageNumber: 2, pageSize: 5);
 
         // Act
-        var result1 = await context.TestEntities.ToPageAsync(request);
-        var result2 = await context.TestEntities.ToPageAsync(request);
+        Page<TestEntity> result1 = await context.TestEntities.ToPageAsync(request);
+        Page<TestEntity> result2 = await context.TestEntities.ToPageAsync(request);
 
         // Assert
         result1.Items.Should().BeEquivalentTo(result2.Items);

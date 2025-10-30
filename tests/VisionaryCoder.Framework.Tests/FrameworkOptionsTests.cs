@@ -208,8 +208,8 @@ public class FrameworkOptionsTests
         var options = new FrameworkOptions();
 
         // Act - Modify one property at a time and verify others remain unchanged
-        var originalHttpTimeout = options.DefaultHttpTimeoutSeconds;
-        var originalCacheExpiration = options.DefaultCacheExpirationMinutes;
+        int originalHttpTimeout = options.DefaultHttpTimeoutSeconds;
+        int originalCacheExpiration = options.DefaultCacheExpirationMinutes;
 
         options.EnableCorrelationId = false;
 
@@ -238,7 +238,7 @@ public class FrameworkOptionsTests
     {
         // Arrange
         var options1 = new FrameworkOptions();
-        var options2 = options1;
+        FrameworkOptions options2 = options1;
 
         // Act
         options2.EnableCorrelationId = false;

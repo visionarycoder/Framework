@@ -1,8 +1,12 @@
 using FluentAssertions;
+
 using Microsoft.Extensions.Configuration;
+
 using Moq;
-using VisionaryCoder.Framework.Abstractions;
-using VisionaryCoder.Framework.Configuration.Azure;
+using Moq.Language;
+
+using VisionaryCoder.Framework.AppConfiguration.Azure;
+using VisionaryCoder.Framework.Secrets;
 using VisionaryCoder.Framework.Secrets.Azure.KeyVault;
 using VisionaryCoder.Framework.Secrets.Local;
 
@@ -92,7 +96,7 @@ public class LocalSecretProviderTests
         var provider = new LocalSecretProvider(mockConfiguration.Object, options);
 
         // Act
-        var result = await provider.GetAsync(secretName);
+        string? result = await provider.GetAsync(secretName);
 
         // Assert
         result.Should().BeNull("whitespace-only names are treated as valid but non-existent secrets");
@@ -109,7 +113,7 @@ public class LocalSecretProviderTests
         var provider = new LocalSecretProvider(mockConfiguration.Object, options);
 
         // Act
-        var result = await provider.GetAsync(secretName);
+        string? result = await provider.GetAsync(secretName);
 
         // Assert
         result.Should().Be(expectedValue);
@@ -127,7 +131,7 @@ public class LocalSecretProviderTests
         var provider = new LocalSecretProvider(mockConfiguration.Object, options);
 
         // Act
-        var result = await provider.GetAsync(secretName);
+        string? result = await provider.GetAsync(secretName);
 
         // Assert
         result.Should().Be(expectedValue);
@@ -149,7 +153,7 @@ public class LocalSecretProviderTests
         try
         {
             // Act
-            var result = await provider.GetAsync(secretName);
+            string? result = await provider.GetAsync(secretName);
 
             // Assert
             result.Should().Be(expectedValue);
@@ -174,7 +178,7 @@ public class LocalSecretProviderTests
         var provider = new LocalSecretProvider(mockConfiguration.Object, options);
 
         // Act
-        var result = await provider.GetAsync(secretName);
+        string? result = await provider.GetAsync(secretName);
 
         // Assert
         result.Should().Be(prefixedValue, "prefixed key should take priority");
@@ -197,7 +201,7 @@ public class LocalSecretProviderTests
         try
         {
             // Act
-            var result = await provider.GetAsync(secretName);
+            string? result = await provider.GetAsync(secretName);
 
             // Assert
             result.Should().Be(configValue, "configuration should take priority over environment variable");
@@ -218,7 +222,7 @@ public class LocalSecretProviderTests
         var provider = new LocalSecretProvider(mockConfiguration.Object, options);
 
         // Act
-        var result = await provider.GetAsync(secretName);
+        string? result = await provider.GetAsync(secretName);
 
         // Assert
         result.Should().BeNull("non-existent secrets should return null");
@@ -235,7 +239,7 @@ public class LocalSecretProviderTests
         var provider = new LocalSecretProvider(mockConfiguration.Object, options);
 
         // Act
-        var result = await provider.GetAsync(secretName);
+        string? result = await provider.GetAsync(secretName);
 
         // Assert
         result.Should().Be(expectedValue);
@@ -266,7 +270,7 @@ public class LocalSecretProviderTests
         cts.Cancel();
 
         // Act
-        var result = await provider.GetAsync("TestSecret", cts.Token);
+        string? result = await provider.GetAsync("TestSecret", cts.Token);
 
         // Assert
         result.Should().Be("test-value", "LocalSecretProvider doesn't check cancellation token");
@@ -280,15 +284,15 @@ public class LocalSecretProviderTests
         string value1 = "value-1";
         string value2 = "value-2";
         
-        var setupSequence = mockConfiguration.SetupSequence(c => c[$"Secrets:{secretName}"])
+        ISetupSequentialResult<string?> setupSequence = mockConfiguration.SetupSequence(c => c[$"Secrets:{secretName}"])
             .Returns(value1)
             .Returns(value2);
         
         var provider = new LocalSecretProvider(mockConfiguration.Object, options);
 
         // Act
-        var result1 = await provider.GetAsync(secretName);
-        var result2 = await provider.GetAsync(secretName);
+        string? result1 = await provider.GetAsync(secretName);
+        string? result2 = await provider.GetAsync(secretName);
 
         // Assert
         result1.Should().Be(value1);
@@ -307,7 +311,7 @@ public class LocalSecretProviderTests
         var provider = new LocalSecretProvider(mockConfiguration.Object, customOptions);
 
         // Act
-        var result = await provider.GetAsync(secretName);
+        string? result = await provider.GetAsync(secretName);
 
         // Assert
         result.Should().Be(expectedValue);

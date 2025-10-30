@@ -116,7 +116,7 @@ public class FrameworkConstantsTests
     public void LoggingTemplate_ShouldContainRequiredPlaceholders()
     {
         // Arrange
-        var template = Constants.Logging.DefaultTemplate;
+        string template = Constants.Logging.DefaultTemplate;
 
         // Assert - Template should contain standard structured logging placeholders
         template.Should().Contain("{Timestamp");
@@ -138,25 +138,25 @@ public class FrameworkConstantsTests
         // If compilation succeeds, the test passes
 
         // Main constants
-        var version = Constants.Version;
-        var configSection = Constants.ConfigurationSection;
+        string version = Constants.Version;
+        string configSection = Constants.ConfigurationSection;
 
         // Timeout constants
-        var httpTimeout = Constants.Timeouts.DefaultHttpTimeoutSeconds;
-        var dbTimeout = Constants.Timeouts.DefaultDatabaseTimeoutSeconds;
-        var cacheTimeout = Constants.Timeouts.DefaultCacheExpirationMinutes;
+        int httpTimeout = Constants.Timeouts.DefaultHttpTimeoutSeconds;
+        int dbTimeout = Constants.Timeouts.DefaultDatabaseTimeoutSeconds;
+        int cacheTimeout = Constants.Timeouts.DefaultCacheExpirationMinutes;
 
         // Header constants
-        var correlationHeader = Constants.Headers.CorrelationId;
-        var requestHeader = Constants.Headers.RequestId;
-        var userHeader = Constants.Headers.UserContext;
-        var versionHeader = Constants.Headers.ApiVersion;
+        string correlationHeader = Constants.Headers.CorrelationId;
+        string requestHeader = Constants.Headers.RequestId;
+        string userHeader = Constants.Headers.UserContext;
+        string versionHeader = Constants.Headers.ApiVersion;
 
         // Logging constants
-        var template = Constants.Logging.DefaultTemplate;
-        var correlationProp = Constants.Logging.CorrelationIdProperty;
-        var requestProp = Constants.Logging.RequestIdProperty;
-        var userProp = Constants.Logging.UserIdProperty;
+        string template = Constants.Logging.DefaultTemplate;
+        string correlationProp = Constants.Logging.CorrelationIdProperty;
+        string requestProp = Constants.Logging.RequestIdProperty;
+        string userProp = Constants.Logging.UserIdProperty;
 
         // Assert that all values are not null (compilation test)
         version.Should().NotBeNull();

@@ -224,7 +224,7 @@ public class StorageImplementationTests
         var implementation = new StorageImplementation(typeof(TestStorageProvider));
 
         // Act
-        var result = implementation.ToString();
+        string? result = implementation.ToString();
 
         // Assert
         result.Should().Contain("TestStorageProvider");
@@ -238,7 +238,7 @@ public class StorageImplementationTests
         var implementation = new StorageImplementation(typeof(TestStorageProvider), options);
 
         // Act
-        var result = implementation.ToString();
+        string? result = implementation.ToString();
 
         // Assert
         result.Should().Contain("TestStorageProvider");
@@ -258,7 +258,7 @@ public class StorageImplementationTests
         var implementation = new StorageImplementation(type, options);
 
         // Act
-        var (implementationType, extractedOptions) = implementation;
+        (Type implementationType, object? extractedOptions) = implementation;
 
         // Assert
         implementationType.Should().Be(type);
@@ -273,7 +273,7 @@ public class StorageImplementationTests
         var implementation = new StorageImplementation(type);
 
         // Act
-        var (implementationType, options) = implementation;
+        (Type implementationType, object? options) = implementation;
 
         // Assert
         implementationType.Should().Be(type);
@@ -292,7 +292,7 @@ public class StorageImplementationTests
         Type newType = typeof(AnotherTestProvider);
 
         // Act
-        var modified = original with { ImplementationType = newType };
+        StorageImplementation modified = original with { ImplementationType = newType };
 
         // Assert
         modified.ImplementationType.Should().Be(newType);
@@ -308,7 +308,7 @@ public class StorageImplementationTests
         string newOptions = "modified";
 
         // Act
-        var modified = original with { Options = newOptions };
+        StorageImplementation modified = original with { Options = newOptions };
 
         // Assert
         modified.Options.Should().Be(newOptions);

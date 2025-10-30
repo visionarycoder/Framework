@@ -1,5 +1,7 @@
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
+
+using VisionaryCoder.Framework.Proxy.Caching;
 using VisionaryCoder.Framework.Proxy.Interceptors.Caching;
 
 namespace VisionaryCoder.Framework.Tests.Proxy.Interceptors.Caching;
@@ -78,7 +80,7 @@ public class CachePolicyTests
         var policy = new CachePolicy();
 
         // Act
-        var result = policy.ShouldCache(new object());
+        bool result = policy.ShouldCache(new object());
 
         // Assert
         result.Should().BeTrue();
@@ -105,7 +107,7 @@ public class CachePolicyTests
         var policy = new CachePolicy();
 
         // Act
-        var result = policy.ShouldRefresh(new object());
+        bool result = policy.ShouldRefresh(new object());
 
         // Assert
         result.Should().BeFalse();
@@ -179,7 +181,7 @@ public class CachePolicyTests
         var policy = new CachePolicy();
 
         // Act
-        var result = policy.ShouldCache(null!);
+        bool result = policy.ShouldCache(null!);
 
         // Assert
         result.Should().BeTrue();
@@ -192,7 +194,7 @@ public class CachePolicyTests
         var policy = new CachePolicy();
 
         // Act
-        var result = policy.ShouldRefresh(null!);
+        bool result = policy.ShouldRefresh(null!);
 
         // Assert
         result.Should().BeFalse();

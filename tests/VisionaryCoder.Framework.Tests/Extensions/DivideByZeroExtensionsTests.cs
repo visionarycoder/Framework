@@ -38,7 +38,7 @@ public class DivideByZeroExtensionsTests
         int value = 5;
 
         // Act & Assert
-        var action = () => DivideByZeroExtensions.ThrowIfZero(value);
+        Action action = () => DivideByZeroExtensions.ThrowIfZero(value);
         action.Should().NotThrow();
     }
 
@@ -60,7 +60,7 @@ public class DivideByZeroExtensionsTests
         double value = 3.14;
 
         // Act & Assert
-        var action = () => DivideByZeroExtensions.ThrowIfZero(value);
+        Action action = () => DivideByZeroExtensions.ThrowIfZero(value);
         action.Should().NotThrow();
     }
 
@@ -82,7 +82,7 @@ public class DivideByZeroExtensionsTests
         decimal value = 1.5m;
 
         // Act & Assert
-        var action = () => DivideByZeroExtensions.ThrowIfZero(value);
+        Action action = () => DivideByZeroExtensions.ThrowIfZero(value);
         action.Should().NotThrow();
     }
 
@@ -207,7 +207,7 @@ public class DivideByZeroExtensionsTests
         int defaultValue = 999;
 
         // Act
-        var result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
+        int result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
 
         // Assert
         result.Should().Be(5);
@@ -222,7 +222,7 @@ public class DivideByZeroExtensionsTests
         int defaultValue = 999;
 
         // Act
-        var result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
+        int result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
 
         // Assert
         result.Should().Be(999);
@@ -237,7 +237,7 @@ public class DivideByZeroExtensionsTests
         double defaultValue = -1.0;
 
         // Act
-        var result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
+        double result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
 
         // Assert
         result.Should().Be(5.0);
@@ -252,7 +252,7 @@ public class DivideByZeroExtensionsTests
         double defaultValue = -1.0;
 
         // Act
-        var result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
+        double result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
 
         // Assert
         result.Should().Be(-1.0);
@@ -267,7 +267,7 @@ public class DivideByZeroExtensionsTests
         decimal defaultValue = 0m;
 
         // Act
-        var result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
+        decimal result = DivideByZeroExtensions.SafeDivide(numerator, denominator, defaultValue);
 
         // Assert
         result.Should().Be(5m);
@@ -285,7 +285,7 @@ public class DivideByZeroExtensionsTests
         int denominator = 4;
 
         // Act
-        var result = DivideByZeroExtensions.SafeDivide(numerator, denominator);
+        int result = DivideByZeroExtensions.SafeDivide(numerator, denominator);
 
         // Assert
         result.Should().Be(5);
@@ -299,7 +299,7 @@ public class DivideByZeroExtensionsTests
         int denominator = 0;
 
         // Act
-        var result = DivideByZeroExtensions.SafeDivide(numerator, denominator);
+        int result = DivideByZeroExtensions.SafeDivide(numerator, denominator);
 
         // Assert
         result.Should().Be(0);
@@ -313,7 +313,7 @@ public class DivideByZeroExtensionsTests
         double denominator = 0.0;
 
         // Act
-        var result = DivideByZeroExtensions.SafeDivide(numerator, denominator);
+        double result = DivideByZeroExtensions.SafeDivide(numerator, denominator);
 
         // Assert
         result.Should().Be(0.0);
@@ -331,7 +331,7 @@ public class DivideByZeroExtensionsTests
         int denominator = 3;
 
         // Act
-        var success = DivideByZeroExtensions.TryDivide(numerator, denominator, out var result);
+        bool success = DivideByZeroExtensions.TryDivide(numerator, denominator, out int result);
 
         // Assert
         success.Should().BeTrue();
@@ -346,7 +346,7 @@ public class DivideByZeroExtensionsTests
         int denominator = 0;
 
         // Act
-        var success = DivideByZeroExtensions.TryDivide(numerator, denominator, out var result);
+        bool success = DivideByZeroExtensions.TryDivide(numerator, denominator, out int result);
 
         // Assert
         success.Should().BeFalse();
@@ -361,7 +361,7 @@ public class DivideByZeroExtensionsTests
         double denominator = 7.0;
 
         // Act
-        var success = DivideByZeroExtensions.TryDivide(numerator, denominator, out var result);
+        bool success = DivideByZeroExtensions.TryDivide(numerator, denominator, out double result);
 
         // Assert
         success.Should().BeTrue();
@@ -376,7 +376,7 @@ public class DivideByZeroExtensionsTests
         double denominator = 0.0;
 
         // Act
-        var success = DivideByZeroExtensions.TryDivide(numerator, denominator, out var result);
+        bool success = DivideByZeroExtensions.TryDivide(numerator, denominator, out double result);
 
         // Assert
         success.Should().BeFalse();
@@ -391,7 +391,7 @@ public class DivideByZeroExtensionsTests
         decimal denominator = 6.15m;
 
         // Act
-        var success = DivideByZeroExtensions.TryDivide(numerator, denominator, out var result);
+        bool success = DivideByZeroExtensions.TryDivide(numerator, denominator, out decimal result);
 
         // Assert
         success.Should().BeTrue();
@@ -410,7 +410,7 @@ public class DivideByZeroExtensionsTests
         int defaultValue = 42;
 
         // Act
-        var result = value.DefaultIfZero(defaultValue);
+        int result = value.DefaultIfZero(defaultValue);
 
         // Assert
         result.Should().Be(42);
@@ -424,7 +424,7 @@ public class DivideByZeroExtensionsTests
         int defaultValue = 42;
 
         // Act
-        var result = value.DefaultIfZero(defaultValue);
+        int result = value.DefaultIfZero(defaultValue);
 
         // Assert
         result.Should().Be(15);
@@ -438,7 +438,7 @@ public class DivideByZeroExtensionsTests
         double defaultValue = 3.14;
 
         // Act
-        var result = value.DefaultIfZero(defaultValue);
+        double result = value.DefaultIfZero(defaultValue);
 
         // Assert
         result.Should().Be(3.14);
@@ -452,7 +452,7 @@ public class DivideByZeroExtensionsTests
         double defaultValue = 3.14;
 
         // Act
-        var result = value.DefaultIfZero(defaultValue);
+        double result = value.DefaultIfZero(defaultValue);
 
         // Assert
         result.Should().Be(2.5);
@@ -466,7 +466,7 @@ public class DivideByZeroExtensionsTests
         decimal defaultValue = 9.99m;
 
         // Act
-        var result = value.DefaultIfZero(defaultValue);
+        decimal result = value.DefaultIfZero(defaultValue);
 
         // Assert
         result.Should().Be(9.99m);
@@ -480,7 +480,7 @@ public class DivideByZeroExtensionsTests
         decimal defaultValue = 9.99m;
 
         // Act
-        var result = value.DefaultIfZero(defaultValue);
+        decimal result = value.DefaultIfZero(defaultValue);
 
         // Assert
         result.Should().Be(7.77m);
@@ -504,7 +504,7 @@ public class DivideByZeroExtensionsTests
             if (!value.IsZero())
             {
                 DivideByZeroExtensions.ThrowIfZero(divisor); // This should not throw for divisor = 2
-                var result = DivideByZeroExtensions.SafeDivide(value, divisor);
+                int result = DivideByZeroExtensions.SafeDivide(value, divisor);
                 results.Add(result);
             }
             else
@@ -521,19 +521,19 @@ public class DivideByZeroExtensionsTests
     public void DivideByZeroExtensions_WithDifferentNumericTypes_ShouldWorkConsistently()
     {
         // Test with int
-        var intResult = DivideByZeroExtensions.SafeDivide(10, 0, -1);
+        int intResult = DivideByZeroExtensions.SafeDivide(10, 0, -1);
         intResult.Should().Be(-1);
 
         // Test with double  
-        var doubleResult = DivideByZeroExtensions.SafeDivide(10.0, 0.0, -1.0);
+        double doubleResult = DivideByZeroExtensions.SafeDivide(10.0, 0.0, -1.0);
         doubleResult.Should().Be(-1.0);
 
         // Test with decimal
-        var decimalResult = DivideByZeroExtensions.SafeDivide(10m, 0m, -1m);
+        decimal decimalResult = DivideByZeroExtensions.SafeDivide(10m, 0m, -1m);
         decimalResult.Should().Be(-1m);
 
         // Test with float
-        var floatResult = DivideByZeroExtensions.SafeDivide(10f, 0f, -1f);
+        float floatResult = DivideByZeroExtensions.SafeDivide(10f, 0f, -1f);
         floatResult.Should().Be(-1f);
 
         // All should consistently return the default value when dividing by zero
@@ -547,17 +547,17 @@ public class DivideByZeroExtensionsTests
     public void DivideByZeroExtensions_TryDividePattern_ShouldHandleEdgeCases()
     {
         // Test successful division
-        var success1 = DivideByZeroExtensions.TryDivide(100, 25, out var result1);
+        bool success1 = DivideByZeroExtensions.TryDivide(100, 25, out int result1);
         success1.Should().BeTrue();
         result1.Should().Be(4);
 
         // Test zero division
-        var success2 = DivideByZeroExtensions.TryDivide(100, 0, out var result2);
+        bool success2 = DivideByZeroExtensions.TryDivide(100, 0, out int result2);
         success2.Should().BeFalse();
         result2.Should().Be(0);
 
         // Test zero numerator (valid division)
-        var success3 = DivideByZeroExtensions.TryDivide(0, 5, out var result3);
+        bool success3 = DivideByZeroExtensions.TryDivide(0, 5, out int result3);
         success3.Should().BeTrue();
         result3.Should().Be(0);
     }

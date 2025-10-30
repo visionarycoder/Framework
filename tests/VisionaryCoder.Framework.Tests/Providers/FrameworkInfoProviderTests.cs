@@ -14,7 +14,7 @@ public class FrameworkInfoProviderTests
         var provider = new FrameworkInfoProvider();
 
         // Act
-        var name = provider.Name;
+        string name = provider.Name;
 
         // Assert
         name.Should().Be("VisionaryCoder Framework");
@@ -27,7 +27,7 @@ public class FrameworkInfoProviderTests
         var provider = new FrameworkInfoProvider();
 
         // Act
-        var name = provider.Name;
+        string name = provider.Name;
 
         // Assert
         name.Should().NotBeNullOrEmpty();
@@ -40,7 +40,7 @@ public class FrameworkInfoProviderTests
         var provider = new FrameworkInfoProvider();
 
         // Act
-        var description = provider.Description;
+        string description = provider.Description;
 
         // Assert
         description.Should().Be("A comprehensive framework for building enterprise-grade applications with proxy interceptor architecture.");
@@ -53,7 +53,7 @@ public class FrameworkInfoProviderTests
         var provider = new FrameworkInfoProvider();
 
         // Act
-        var description = provider.Description;
+        string description = provider.Description;
 
         // Assert
         description.Should().NotBeNullOrEmpty();
@@ -66,7 +66,7 @@ public class FrameworkInfoProviderTests
         var provider = new FrameworkInfoProvider();
 
         // Act
-        var version = provider.Version;
+        string version = provider.Version;
 
         // Assert
         version.Should().NotBeNullOrEmpty("version should always be available");
@@ -82,7 +82,7 @@ public class FrameworkInfoProviderTests
         var provider = new FrameworkInfoProvider();
 
         // Act
-        var version = provider.Version;
+        string version = provider.Version;
 
         // Assert
         version.Should().MatchRegex(@"^\d+\.\d+\.\d+",
@@ -96,9 +96,9 @@ public class FrameworkInfoProviderTests
         var provider = new FrameworkInfoProvider();
 
         // Act
-        var version1 = provider.Version;
-        var version2 = provider.Version;
-        var version3 = provider.Version;
+        string version1 = provider.Version;
+        string version2 = provider.Version;
+        string version3 = provider.Version;
 
         // Assert
         version1.Should().Be(version2);
@@ -113,7 +113,7 @@ public class FrameworkInfoProviderTests
         DateTimeOffset now = DateTimeOffset.UtcNow;
 
         // Act
-        var compiledAt = provider.CompiledAt;
+        DateTimeOffset compiledAt = provider.CompiledAt;
 
         // Assert
         compiledAt.Should().BeBefore(now, "compiled time must be in the past");
@@ -127,7 +127,7 @@ public class FrameworkInfoProviderTests
         DateTimeOffset oneYearAgo = DateTimeOffset.UtcNow.AddYears(-1);
 
         // Act
-        var compiledAt = provider.CompiledAt;
+        DateTimeOffset compiledAt = provider.CompiledAt;
 
         // Assert
         compiledAt.Should().BeAfter(oneYearAgo, "compiled time should be within the last year");
@@ -140,9 +140,9 @@ public class FrameworkInfoProviderTests
         var provider = new FrameworkInfoProvider();
 
         // Act
-        var time1 = provider.CompiledAt;
-        var time2 = provider.CompiledAt;
-        var time3 = provider.CompiledAt;
+        DateTimeOffset time1 = provider.CompiledAt;
+        DateTimeOffset time2 = provider.CompiledAt;
+        DateTimeOffset time3 = provider.CompiledAt;
 
         // Assert
         time1.Should().Be(time2);
@@ -170,10 +170,10 @@ public class FrameworkInfoProviderTests
         var provider = new FrameworkInfoProvider();
 
         // Act & Assert
-        var name = () => provider.Name;
-        var description = () => provider.Description;
-        var version = () => provider.Version;
-        var compiledAt = () => provider.CompiledAt;
+        Func<string> name = () => provider.Name;
+        Func<string> description = () => provider.Description;
+        Func<string> version = () => provider.Version;
+        Func<DateTimeOffset> compiledAt = () => provider.CompiledAt;
 
         name.Should().NotThrow();
         description.Should().NotThrow();
@@ -189,7 +189,7 @@ public class FrameworkInfoProviderTests
         int[] reasonableYears = new[] { 2024, 2025, 2026, 2027 };
 
         // Act
-        var compiledAt = provider.CompiledAt;
+        DateTimeOffset compiledAt = provider.CompiledAt;
 
         // Assert
         compiledAt.Year.Should().BeOneOf(reasonableYears,

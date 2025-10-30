@@ -1,5 +1,7 @@
 using FluentAssertions;
 
+using VisionaryCoder.Framework.Models;
+
 namespace VisionaryCoder.Framework.Tests.Extensions;
 
 /// <summary>
@@ -56,7 +58,7 @@ public class MonthTests
     public void ConstructorWithInvalidOrdinal_ShouldThrowArgumentOutOfRangeException(int invalidOrdinal)
     {
         // Arrange & Act & Assert
-        var action = () => new Month(invalidOrdinal);
+        Func<Month> action = () => new Month(invalidOrdinal);
         action.Should().Throw<ArgumentOutOfRangeException>()
             .WithParameterName("ordinal")
             .WithMessage("Ordinal must be between 0 and 13*");
@@ -115,7 +117,7 @@ public class MonthTests
     public void ConstructorWithNullName_ShouldThrowArgumentNullException()
     {
         // Arrange & Act & Assert
-        var action = () => new Month((string)null!);
+        Func<Month> action = () => new Month((string)null!);
         action.Should().Throw<ArgumentNullException>()
             .WithParameterName("name");
     }
@@ -128,7 +130,7 @@ public class MonthTests
     public void ConstructorWithInvalidName_ShouldThrowArgumentOutOfRangeException(string invalidName)
     {
         // Arrange & Act & Assert
-        var action = () => new Month(invalidName);
+        Func<Month> action = () => new Month(invalidName);
         action.Should().Throw<ArgumentOutOfRangeException>()
             .WithParameterName("name")
             .WithMessage($"Name is not a valid month name: {invalidName}*");
@@ -199,7 +201,7 @@ public class MonthTests
         var month = new Month(Month.March);
 
         // Act
-        var result = month.ToString();
+        string result = month.ToString();
 
         // Assert
         result.Should().Be(Month.March.Name);
@@ -212,7 +214,7 @@ public class MonthTests
         var month = new Month();
 
         // Act
-        var result = month.ToString();
+        string result = month.ToString();
 
         // Assert
         result.Should().Be(Month.Unknown.Name);
@@ -276,10 +278,10 @@ public class MonthTests
     public void Constructor_WithCaseSensitiveNames_ShouldThrowForIncorrectCase()
     {
         // Arrange & Act & Assert
-        var action = () => new Month("january"); // lowercase
+        Func<Month> action = () => new Month("january"); // lowercase
         action.Should().Throw<ArgumentOutOfRangeException>();
 
-        var action2 = () => new Month("JANUARY"); // uppercase
+        Func<Month> action2 = () => new Month("JANUARY"); // uppercase
         action2.Should().Throw<ArgumentOutOfRangeException>();
     }
 

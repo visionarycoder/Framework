@@ -1,5 +1,7 @@
 using FluentAssertions;
-using VisionaryCoder.Framework.Proxy.Abstractions;
+
+using VisionaryCoder.Framework.Proxy;
+using VisionaryCoder.Framework.Proxy.Caching;
 using VisionaryCoder.Framework.Proxy.Interceptors.Caching;
 
 namespace VisionaryCoder.Framework.Tests.Proxy.Interceptors.Caching;
@@ -19,7 +21,7 @@ public class NullCachingInterceptorTests
     public void Order_ShouldReturn150()
     {
         // Act
-        var order = interceptor.Order;
+        int order = interceptor.Order;
 
         // Assert
         order.Should().Be(150);
@@ -35,7 +37,7 @@ public class NullCachingInterceptorTests
             Method = "GET",
             Url = "https://api.example.com/users/1"
         };
-        var expectedResponse = Response<string>.Success("Test Result");
+        var expectedResponse = ProxyResponse<string>.Success("Test Result");
         bool wasCalled = false;
 
         ProxyDelegate<string> next = (ctx, ct) =>
@@ -46,7 +48,7 @@ public class NullCachingInterceptorTests
         };
 
         // Act
-        var result = await interceptor.InvokeAsync(context, next);
+        ProxyResponse<string> result = await interceptor.InvokeAsync(context, next);
 
         // Assert
         result.Should().Be(expectedResponse);
@@ -63,11 +65,11 @@ public class NullCachingInterceptorTests
         ProxyDelegate<int> next = (ctx, ct) =>
         {
             callCount++;
-            return Task.FromResult(Response<int>.Success(42));
+            return Task.FromResult(ProxyResponse<int>.Success(42));
         };
 
         // Act
-        var result = await interceptor.InvokeAsync(context, next);
+        ProxyResponse<int> result = await interceptor.InvokeAsync(context, next);
 
         // Assert
         result.Data.Should().Be(42);
@@ -89,13 +91,13 @@ public class NullCachingInterceptorTests
         ProxyDelegate<int> next = (ctx, ct) =>
         {
             callCount++;
-            return Task.FromResult(Response<int>.Success(callCount));
+            return Task.FromResult(ProxyResponse<int>.Success(callCount));
         };
 
         // Act - call multiple times with same context
-        var result1 = await interceptor.InvokeAsync(context, next);
-        var result2 = await interceptor.InvokeAsync(context, next);
-        var result3 = await interceptor.InvokeAsync(context, next);
+        ProxyResponse<int> result1 = await interceptor.InvokeAsync(context, next);
+        ProxyResponse<int> result2 = await interceptor.InvokeAsync(context, next);
+        ProxyResponse<int> result3 = await interceptor.InvokeAsync(context, next);
 
         // Assert - each call should execute next delegate (no caching)
         result1.Data.Should().Be(1);
@@ -115,7 +117,7 @@ public class NullCachingInterceptorTests
         ProxyDelegate<string> next = (ctx, ct) =>
         {
             receivedToken = ct;
-            return Task.FromResult(Response<string>.Success("Result"));
+            return Task.FromResult(ProxyResponse<string>.Success("Result"));
         };
 
         // Act
@@ -130,12 +132,12 @@ public class NullCachingInterceptorTests
     {
         // Arrange
         var context = new ProxyContext();
-        var expectedResponse = Response<string?>.Success(null);
+        var expectedResponse = ProxyResponse<string?>.Success(null);
 
         ProxyDelegate<string?> next = (ctx, ct) => Task.FromResult(expectedResponse);
 
         // Act
-        var result = await interceptor.InvokeAsync(context, next);
+        ProxyResponse<string?> result = await interceptor.InvokeAsync(context, next);
 
         // Assert
         result.Should().Be(expectedResponse);
@@ -160,7 +162,7 @@ public class NullCachingInterceptorTests
         ProxyDelegate<object> next = (ctx, ct) =>
         {
             wasCalled = true;
-            return Task.FromResult(Response<object>.Success(new object()));
+            return Task.FromResult(ProxyResponse<object>.Success(new object()));
         };
 
         // Act
@@ -181,12 +183,12 @@ public class NullCachingInterceptorTests
             Name = "Test",
             Items = new List<string> { "A", "B", "C" }
         };
-        var expectedResponse = Response<ComplexType>.Success(expectedData);
+        var expectedResponse = ProxyResponse<ComplexType>.Success(expectedData);
 
         ProxyDelegate<ComplexType> next = (ctx, ct) => Task.FromResult(expectedResponse);
 
         // Act
-        var result = await interceptor.InvokeAsync(context, next);
+        ProxyResponse<ComplexType> result = await interceptor.InvokeAsync(context, next);
 
         // Assert
         result.Data.Should().BeEquivalentTo(expectedData);
@@ -220,7 +222,7 @@ public class NullCachingInterceptorTests
         ProxyDelegate<string> next = (ctx, ct) =>
         {
             ct.ThrowIfCancellationRequested();
-            return Task.FromResult(Response<string>.Success("Result"));
+            return Task.FromResult(ProxyResponse<string>.Success("Result"));
         };
 
         // Act
@@ -240,7 +242,7 @@ public class NullCachingInterceptorTests
         ProxyDelegate<int> next = (ctx, ct) =>
         {
             Interlocked.Increment(ref counter);
-            return Task.FromResult(Response<int>.Success(counter));
+            return Task.FromResult(ProxyResponse<int>.Success(counter));
         };
 
         // Act - call concurrently
@@ -248,7 +250,7 @@ public class NullCachingInterceptorTests
             .Select(_ => interceptor.InvokeAsync(context, next))
             .ToList();
 
-        var results = await Task.WhenAll(tasks);
+        ProxyResponse<int>[] results = await Task.WhenAll(tasks);
 
         // Assert - all calls should execute (no caching)
         counter.Should().Be(10);

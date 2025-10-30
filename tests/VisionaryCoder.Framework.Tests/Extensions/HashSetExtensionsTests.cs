@@ -216,7 +216,7 @@ public class HashSetExtensionsTests
         var collection = new List<int> { 2, 4, 5 };
 
         // Act
-        var result = target.ContainsAll(collection);
+        bool result = target.ContainsAll(collection);
 
         // Assert
         result.Should().BeTrue();
@@ -230,7 +230,7 @@ public class HashSetExtensionsTests
         var collection = new List<int> { 2, 4, 5 }; // 4 and 5 are missing
 
         // Act
-        var result = target.ContainsAll(collection);
+        bool result = target.ContainsAll(collection);
 
         // Assert
         result.Should().BeFalse();
@@ -244,7 +244,7 @@ public class HashSetExtensionsTests
         var collection = new List<int>();
 
         // Act
-        var result = target.ContainsAll(collection);
+        bool result = target.ContainsAll(collection);
 
         // Assert
         result.Should().BeTrue(); // Empty collection is considered a subset
@@ -258,7 +258,7 @@ public class HashSetExtensionsTests
         var collection = new List<int> { 1, 2 };
 
         // Act
-        var result = target.ContainsAll(collection);
+        bool result = target.ContainsAll(collection);
 
         // Assert
         result.Should().BeFalse();
@@ -272,7 +272,7 @@ public class HashSetExtensionsTests
         var collection = new List<int>();
 
         // Act
-        var result = target.ContainsAll(collection);
+        bool result = target.ContainsAll(collection);
 
         // Assert
         result.Should().BeTrue();
@@ -286,7 +286,7 @@ public class HashSetExtensionsTests
         var collection = new List<int> { 1, 2, 3 };
 
         // Act
-        var result = target.ContainsAll(collection);
+        bool result = target.ContainsAll(collection);
 
         // Assert
         result.Should().BeTrue();
@@ -328,7 +328,7 @@ public class HashSetExtensionsTests
         var collection = new List<int> { 3, 4, 5 }; // Only 3 is present
 
         // Act
-        var result = target.ContainsAny(collection);
+        bool result = target.ContainsAny(collection);
 
         // Assert
         result.Should().BeTrue();
@@ -342,7 +342,7 @@ public class HashSetExtensionsTests
         var collection = new List<int> { 4, 5, 6 };
 
         // Act
-        var result = target.ContainsAny(collection);
+        bool result = target.ContainsAny(collection);
 
         // Assert
         result.Should().BeFalse();
@@ -356,7 +356,7 @@ public class HashSetExtensionsTests
         var collection = new List<int>();
 
         // Act
-        var result = target.ContainsAny(collection);
+        bool result = target.ContainsAny(collection);
 
         // Assert
         result.Should().BeFalse(); // No elements to check
@@ -370,7 +370,7 @@ public class HashSetExtensionsTests
         var collection = new List<int> { 1, 2, 3 };
 
         // Act
-        var result = target.ContainsAny(collection);
+        bool result = target.ContainsAny(collection);
 
         // Assert
         result.Should().BeFalse();
@@ -384,7 +384,7 @@ public class HashSetExtensionsTests
         var collection = new List<int>();
 
         // Act
-        var result = target.ContainsAny(collection);
+        bool result = target.ContainsAny(collection);
 
         // Assert
         result.Should().BeFalse();
@@ -398,7 +398,7 @@ public class HashSetExtensionsTests
         var collection = new List<int> { 2, 4 };
 
         // Act
-        var result = target.ContainsAny(collection);
+        bool result = target.ContainsAny(collection);
 
         // Assert
         result.Should().BeTrue();
@@ -420,8 +420,8 @@ public class HashSetExtensionsTests
         // Act
         target.AddRange(toAdd);
         target.RemoveRange(toRemove);
-        var containsAll = target.ContainsAll(toCheck);
-        var containsAny = target.ContainsAny(new List<int> { 7, 8, 1 });
+        bool containsAll = target.ContainsAll(toCheck);
+        bool containsAny = target.ContainsAny(new List<int> { 7, 8, 1 });
 
         // Assert
         target.Should().Contain(new[] { 1, 3, 4, 5, 6 });
@@ -440,8 +440,8 @@ public class HashSetExtensionsTests
 
         // Act
         target.AddRange(newFruits);
-        var hasCommonFruits = target.ContainsAny(new List<string> { "grape", "cherry" });
-        var hasAllCitrus = target.ContainsAll(new List<string> { "lemon", "lime" });
+        bool hasCommonFruits = target.ContainsAny(new List<string> { "grape", "cherry" });
+        bool hasAllCitrus = target.ContainsAll(new List<string> { "lemon", "lime" });
 
         // Assert
         target.Should().HaveCount(4); // No duplicate apple
@@ -464,7 +464,7 @@ public class HashSetExtensionsTests
 
         // Act
         target.AddRange(newPeople);
-        var containsAllSearched = target.ContainsAll(searchPeople);
+        bool containsAllSearched = target.ContainsAll(searchPeople);
 
         // Assert
         target.Should().HaveCount(3);

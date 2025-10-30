@@ -212,8 +212,8 @@ public class StorageFactoryOptionsTests
         method?.Invoke(options, new object?[] { "test", implementationType, null });
 
         // Act
-        var exists = options.Implementations.TryGetValue("test", out var implementation);
-        var notExists = options.Implementations.TryGetValue("missing", out var missing);
+        bool exists = options.Implementations.TryGetValue("test", out StorageImplementation? implementation);
+        bool notExists = options.Implementations.TryGetValue("missing", out StorageImplementation? missing);
 
         // Assert
         exists.Should().BeTrue();

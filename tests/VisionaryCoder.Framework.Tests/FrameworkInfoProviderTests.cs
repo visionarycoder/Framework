@@ -1,6 +1,7 @@
 using FluentAssertions;
+
 using System.Reflection;
-using VisionaryCoder.Framework.Abstractions;
+
 using VisionaryCoder.Framework.Providers;
 
 namespace VisionaryCoder.Framework.Tests;
@@ -25,7 +26,7 @@ public class FrameworkInfoProviderTests
     public void Version_ShouldStartWithFrameworkConstantsVersion()
     {
         // Act
-        var version = provider.Version;
+        string version = provider.Version;
 
         // Assert
         version.Should().StartWith(Constants.Version, "version should start with the semantic version");
@@ -36,7 +37,7 @@ public class FrameworkInfoProviderTests
     public void Name_ShouldReturnCorrectFrameworkName()
     {
         // Act
-        var name = provider.Name;
+        string name = provider.Name;
 
         // Assert
         name.Should().Be("VisionaryCoder Framework");
@@ -46,7 +47,7 @@ public class FrameworkInfoProviderTests
     public void Description_ShouldReturnCorrectDescription()
     {
         // Act
-        var description = provider.Description;
+        string description = provider.Description;
 
         // Assert
         description.Should().Be("A comprehensive framework for building enterprise-grade applications with proxy interceptor architecture.");
@@ -59,7 +60,7 @@ public class FrameworkInfoProviderTests
     public void CompiledAt_ShouldBeValidDateTimeOffset()
     {
         // Act
-        var compiledAt = provider.CompiledAt;
+        DateTimeOffset compiledAt = provider.CompiledAt;
 
         // Assert
         compiledAt.Should().NotBe(default);
@@ -75,8 +76,8 @@ public class FrameworkInfoProviderTests
         var provider2 = new FrameworkInfoProvider();
 
         // Act
-        var compiledAt1 = provider1.CompiledAt;
-        var compiledAt2 = provider2.CompiledAt;
+        DateTimeOffset compiledAt1 = provider1.CompiledAt;
+        DateTimeOffset compiledAt2 = provider2.CompiledAt;
 
         // Assert
         // CompiledAt should be the same for all instances since it's based on assembly creation time
@@ -123,7 +124,7 @@ public class FrameworkInfoProviderTests
         DateTime expectedTime = fileInfo.CreationTime;
 
         // Act
-        var actualTime = provider.CompiledAt;
+        DateTimeOffset actualTime = provider.CompiledAt;
 
         // Assert
         // Since CompiledAt uses the same logic as our test, they should match
@@ -185,12 +186,12 @@ public class FrameworkInfoProviderTests
         }
 
         // Act & Assert
-        var firstVersion = providers[0].Version;
-        var firstName = providers[0].Name;
-        var firstDescription = providers[0].Description;
-        var firstCompiledAt = providers[0].CompiledAt;
+        string firstVersion = providers[0].Version;
+        string firstName = providers[0].Name;
+        string firstDescription = providers[0].Description;
+        DateTimeOffset firstCompiledAt = providers[0].CompiledAt;
 
-        foreach (var p in providers.Skip(1))
+        foreach (FrameworkInfoProvider p in providers.Skip(1))
         {
             p.Version.Should().Be(firstVersion);
             p.Name.Should().Be(firstName);

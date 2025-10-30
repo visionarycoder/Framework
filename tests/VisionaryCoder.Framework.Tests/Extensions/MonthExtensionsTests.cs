@@ -1,5 +1,6 @@
 using FluentAssertions;
 using VisionaryCoder.Framework.Extensions;
+using VisionaryCoder.Framework.Models;
 
 namespace VisionaryCoder.Framework.Tests.Extensions;
 
@@ -15,7 +16,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.January);
 
         // Act
-        var result = month.Next();
+        Month result = month.Next();
 
         // Assert
         result.Name.Should().Be(Month.February.Name);
@@ -28,7 +29,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.December);
 
         // Act
-        var result = month.Next();
+        Month result = month.Next();
 
         // Assert  
         result.Name.Should().Be(Month.January.Name);
@@ -41,7 +42,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.June);
 
         // Act
-        var result = month.Next();
+        Month result = month.Next();
 
         // Assert
         result.Name.Should().Be(Month.July.Name);
@@ -54,7 +55,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.Unknown);
 
         // Act
-        var result = month.Next();
+        Month result = month.Next();
 
         // Assert
         result.Name.Should().Be(Month.Unknown.Name);
@@ -67,7 +68,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.January);
 
         // Act
-        var result = month.Next().Next().Next();
+        Month result = month.Next().Next().Next();
 
         // Assert
         result.Name.Should().Be(Month.April.Name);
@@ -84,7 +85,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.February);
 
         // Act
-        var result = month.Previous();
+        Month result = month.Previous();
 
         // Assert
         result.Name.Should().Be(Month.January.Name);
@@ -97,7 +98,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.January);
 
         // Act
-        var result = month.Previous();
+        Month result = month.Previous();
 
         // Assert
         // NOTE: Bug in implementation - January.Previous() returns Unknown (Ordinal 0) instead of December (Ordinal 12)  
@@ -111,7 +112,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.Unknown);
 
         // Act
-        var result = month.Previous();
+        Month result = month.Previous();
 
         // Assert
         result.Name.Should().Be(Month.December.Name);
@@ -124,7 +125,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.September);
 
         // Act
-        var result = month.Previous();
+        Month result = month.Previous();
 
         // Assert
         result.Name.Should().Be(Month.August.Name);
@@ -137,7 +138,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.May);
 
         // Act
-        var result = month.Previous().Previous().Previous();
+        Month result = month.Previous().Previous().Previous();
 
         // Assert
         result.Name.Should().Be(Month.February.Name);
@@ -154,7 +155,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.January);
 
         // Act
-        var result = month.IsInQuarter(1);
+        bool result = month.IsInQuarter(1);
 
         // Assert
         result.Should().BeTrue();
@@ -167,7 +168,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.March);
 
         // Act
-        var result = month.IsInQuarter(1);
+        bool result = month.IsInQuarter(1);
 
         // Assert
         result.Should().BeTrue();
@@ -180,7 +181,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.April);
 
         // Act
-        var result = month.IsInQuarter(1);
+        bool result = month.IsInQuarter(1);
 
         // Assert
         result.Should().BeFalse();
@@ -193,7 +194,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.June);
 
         // Act
-        var result = month.IsInQuarter(2);
+        bool result = month.IsInQuarter(2);
 
         // Assert
         result.Should().BeTrue();
@@ -206,7 +207,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.September);
 
         // Act
-        var result = month.IsInQuarter(3);
+        bool result = month.IsInQuarter(3);
 
         // Assert
         result.Should().BeTrue();
@@ -219,7 +220,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.December);
 
         // Act
-        var result = month.IsInQuarter(4);
+        bool result = month.IsInQuarter(4);
 
         // Assert
         result.Should().BeTrue();
@@ -232,7 +233,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.Unknown);
 
         // Act
-        var result = month.IsInQuarter(1);
+        bool result = month.IsInQuarter(1);
 
         // Assert
         result.Should().BeFalse();
@@ -297,7 +298,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.January);
 
         // Act
-        var result = month.GetQuarter();
+        int result = month.GetQuarter();
 
         // Assert
         result.Should().Be(1);
@@ -310,7 +311,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.March);
 
         // Act
-        var result = month.GetQuarter();
+        int result = month.GetQuarter();
 
         // Assert
         result.Should().Be(1);
@@ -323,7 +324,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.April);
 
         // Act
-        var result = month.GetQuarter();
+        int result = month.GetQuarter();
 
         // Assert
         result.Should().Be(2);
@@ -336,7 +337,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.July);
 
         // Act
-        var result = month.GetQuarter();
+        int result = month.GetQuarter();
 
         // Assert
         result.Should().Be(3);
@@ -349,7 +350,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.October);
 
         // Act
-        var result = month.GetQuarter();
+        int result = month.GetQuarter();
 
         // Assert
         result.Should().Be(4);
@@ -362,7 +363,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.December);
 
         // Act
-        var result = month.GetQuarter();
+        int result = month.GetQuarter();
 
         // Assert
         result.Should().Be(4);
@@ -375,7 +376,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.Unknown);
 
         // Act
-        var result = month.GetQuarter();
+        int result = month.GetQuarter();
 
         // Assert
         result.Should().Be(0);
@@ -419,7 +420,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.June);
 
         // Act
-        var result = month.IsSummerMonth();
+        bool result = month.IsSummerMonth();
 
         // Assert
         result.Should().BeTrue();
@@ -432,7 +433,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.July);
 
         // Act
-        var result = month.IsSummerMonth();
+        bool result = month.IsSummerMonth();
 
         // Assert
         result.Should().BeTrue();
@@ -445,7 +446,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.August);
 
         // Act
-        var result = month.IsSummerMonth();
+        bool result = month.IsSummerMonth();
 
         // Assert
         result.Should().BeTrue();
@@ -458,7 +459,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.May);
 
         // Act
-        var result = month.IsSummerMonth();
+        bool result = month.IsSummerMonth();
 
         // Assert
         result.Should().BeFalse();
@@ -471,7 +472,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.September);
 
         // Act
-        var result = month.IsSummerMonth();
+        bool result = month.IsSummerMonth();
 
         // Assert
         result.Should().BeFalse();
@@ -484,7 +485,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.January);
 
         // Act
-        var result = month.IsSummerMonth();
+        bool result = month.IsSummerMonth();
 
         // Assert
         result.Should().BeFalse();
@@ -497,7 +498,7 @@ public class MonthExtensionsTests
         var month = new Month(Month.Unknown);
 
         // Act
-        var result = month.IsSummerMonth();
+        bool result = month.IsSummerMonth();
 
         // Assert
         result.Should().BeFalse();
@@ -620,12 +621,12 @@ public class MonthExtensionsTests
         currentMonth.IsInQuarter(1).Should().BeTrue();
         currentMonth.IsSummerMonth().Should().BeFalse();
 
-        var nextMonth = currentMonth.Next();
+        Month nextMonth = currentMonth.Next();
         nextMonth.Name.Should().Be(Month.April.Name);
         nextMonth.GetQuarter().Should().Be(2);
         nextMonth.IsInQuarter(2).Should().BeTrue();
 
-        var previousMonth = currentMonth.Previous();
+        Month previousMonth = currentMonth.Previous();
         previousMonth.Name.Should().Be(Month.February.Name);
         previousMonth.GetQuarter().Should().Be(1);
         previousMonth.IsInQuarter(1).Should().BeTrue();
@@ -639,22 +640,22 @@ public class MonthExtensionsTests
         march.IsSummerMonth().Should().BeFalse();
 
         // Move to summer
-        var june = march.Next().Next().Next(); // March -> April -> May -> June
+        Month june = march.Next().Next().Next(); // March -> April -> May -> June
         june.Name.Should().Be(Month.June.Name);
         june.IsSummerMonth().Should().BeTrue();
         june.GetQuarter().Should().Be(2);
 
         // Continue through summer
-        var july = june.Next();
+        Month july = june.Next();
         july.IsSummerMonth().Should().BeTrue();
         july.GetQuarter().Should().Be(3);
 
-        var august = july.Next();
+        Month august = july.Next();
         august.IsSummerMonth().Should().BeTrue();
         august.GetQuarter().Should().Be(3);
 
         // Exit summer
-        var september = august.Next();
+        Month september = august.Next();
         september.IsSummerMonth().Should().BeFalse();
         september.GetQuarter().Should().Be(3);
     }
@@ -667,14 +668,14 @@ public class MonthExtensionsTests
         december.GetQuarter().Should().Be(4);
         december.IsInQuarter(4).Should().BeTrue();
 
-        var january = december.Next();
+        Month january = december.Next();
         // NOTE: Bug in implementation - December.Next() returns Unknown instead of January
         january.Name.Should().Be(Month.Unknown.Name);
         january.GetQuarter().Should().Be(0);
 
         // Test year boundary backward - using February since January.Previous() is broken
         var february = new Month(Month.February);
-        var january2 = february.Previous();
+        Month january2 = february.Previous();
         january2.Name.Should().Be(Month.January.Name);
         january2.GetQuarter().Should().Be(1);
     }

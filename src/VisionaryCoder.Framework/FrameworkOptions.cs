@@ -14,7 +14,7 @@ public sealed class FrameworkOptions
     /// Gets or sets whether structured logging is enabled.
     public bool EnableStructuredLogging { get; set; } = true;
     /// Gets or sets the default HTTP timeout in seconds.
-    public int DefaultHttpTimeoutSeconds { get; set; } = FrameworkConstants.Timeouts.DefaultHttpTimeoutSeconds;
+    public int DefaultHttpTimeoutSeconds { get; set; } = Constants.Timeouts.DefaultHttpTimeoutSeconds;
     /// Gets or sets the default cache expiration in minutes.
-    public int DefaultCacheExpirationMinutes { get; set; } = FrameworkConstants.Timeouts.DefaultCacheExpirationMinutes;
+    public int DefaultCacheExpirationMinutes { get; set; } = Constants.Timeouts.DefaultCacheExpirationMinutes;
 }

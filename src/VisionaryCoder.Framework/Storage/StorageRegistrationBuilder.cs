@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using VisionaryCoder.Framework.Abstractions;
 using VisionaryCoder.Framework.Storage.Ftp;
 using VisionaryCoder.Framework.Storage.Local;
 
@@ -25,8 +24,8 @@ public sealed class StorageRegistrationBuilder
     public StorageRegistrationBuilder AddLocal(string name = "local")
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        services.Configure<StorageFactoryOptions>(options => options.RegisterImplementation(name, typeof(LocalStorageService)));
-        services.TryAddTransient<LocalStorageService>();
+        services.Configure<StorageFactoryOptions>(options => options.RegisterImplementation(name, typeof(LocalStorageProvider)));
+        services.TryAddTransient<LocalStorageProvider>();
         return this;
     }
     /// <summary>
@@ -37,8 +36,8 @@ public sealed class StorageRegistrationBuilder
     public StorageRegistrationBuilder AddFtp(string name, FtpStorageOptions options)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        services.Configure<StorageFactoryOptions>(factoryOptions => factoryOptions.RegisterImplementation(name, typeof(FtpStorageProviderService), options));
-        services.TryAddTransient<FtpStorageProviderService>();
+        services.Configure<StorageFactoryOptions>(factoryOptions => factoryOptions.RegisterImplementation(name, typeof(FtpStorageProvider), options));
+        services.TryAddTransient<FtpStorageProvider>();
         return this;
     }
 

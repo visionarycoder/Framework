@@ -15,20 +15,20 @@ public class GuidCorrelationIdGeneratorTests
     }
 
     [TestMethod]
-    public void GenerateCorrelationId_ShouldReturnNonEmptyString()
+    public void GenerateId_ShouldReturnNonEmptyString()
     {
         // Act
-        var correlationId = generator.GenerateCorrelationId();
+        string correlationId = generator.GenerateId();
 
         // Assert
         correlationId.Should().NotBeNullOrWhiteSpace();
     }
 
     [TestMethod]
-    public void GenerateCorrelationId_ShouldReturnValidGuid()
+    public void GenerateId_ShouldReturnValidGuid()
     {
         // Act
-        var correlationId = generator.GenerateCorrelationId();
+        string correlationId = generator.GenerateId();
 
         // Assert
         Guid.TryParse(correlationId, out Guid parsedGuid).Should().BeTrue();
@@ -36,21 +36,21 @@ public class GuidCorrelationIdGeneratorTests
     }
 
     [TestMethod]
-    public void GenerateCorrelationId_ShouldUseHyphenatedFormat()
+    public void GenerateId_ShouldUseHyphenatedFormat()
     {
         // Act
-        var correlationId = generator.GenerateCorrelationId();
+        string correlationId = generator.GenerateId();
 
         // Assert - format "D" produces lowercase with hyphens (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
         correlationId.Should().MatchRegex(@"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$");
     }
 
     [TestMethod]
-    public void GenerateCorrelationId_CalledMultipleTimes_ShouldReturnUniqueIds()
+    public void GenerateId_CalledMultipleTimes_ShouldReturnUniqueIds()
     {
         // Arrange & Act
         var ids = Enumerable.Range(0, 100)
-            .Select(_ => generator.GenerateCorrelationId())
+            .Select(_ => generator.GenerateId())
             .ToList();
 
         // Assert
@@ -59,7 +59,7 @@ public class GuidCorrelationIdGeneratorTests
     }
 
     [TestMethod]
-    public void GenerateCorrelationId_CalledConcurrently_ShouldReturnUniqueIds()
+    public void GenerateId_CalledConcurrently_ShouldReturnUniqueIds()
     {
         // Arrange
         var ids = new System.Collections.Concurrent.ConcurrentBag<string>();
@@ -67,7 +67,7 @@ public class GuidCorrelationIdGeneratorTests
         // Act - call concurrently
         Parallel.For(0, 1000, _ =>
         {
-            ids.Add(generator.GenerateCorrelationId());
+            ids.Add(generator.GenerateId());
         });
 
         // Assert
@@ -76,11 +76,11 @@ public class GuidCorrelationIdGeneratorTests
     }
 
     [TestMethod]
-    public void GenerateCorrelationId_ShouldAlwaysReturn36Characters()
+    public void GenerateId_ShouldAlwaysReturn36Characters()
     {
         // Arrange & Act
         var ids = Enumerable.Range(0, 10)
-            .Select(_ => generator.GenerateCorrelationId())
+            .Select(_ => generator.GenerateId())
             .ToList();
 
         // Assert - GUID format D is always 36 characters (32 hex + 4 hyphens)
@@ -88,11 +88,11 @@ public class GuidCorrelationIdGeneratorTests
     }
 
     [TestMethod]
-    public void GenerateCorrelationId_ShouldUseLowercase()
+    public void GenerateId_ShouldUseLowercase()
     {
         // Arrange & Act
         var ids = Enumerable.Range(0, 10)
-            .Select(_ => generator.GenerateCorrelationId())
+            .Select(_ => generator.GenerateId())
             .ToList();
 
         // Assert - format "D" produces lowercase
@@ -100,11 +100,11 @@ public class GuidCorrelationIdGeneratorTests
     }
 
     [TestMethod]
-    public void GenerateCorrelationId_ShouldNotContainBraces()
+    public void GenerateId_ShouldNotContainBraces()
     {
         // Arrange & Act
         var ids = Enumerable.Range(0, 10)
-            .Select(_ => generator.GenerateCorrelationId())
+            .Select(_ => generator.GenerateId())
             .ToList();
 
         // Assert - format "D" does not include braces
@@ -116,7 +116,7 @@ public class GuidCorrelationIdGeneratorTests
     }
 
     [TestMethod]
-    public void GenerateCorrelationId_MultipleGenerators_ShouldProduceUniqueIds()
+    public void GenerateId_MultipleGenerators_ShouldProduceUniqueIds()
     {
         // Arrange
         var generator1 = new GuidCorrelationIdGenerator();
@@ -126,12 +126,12 @@ public class GuidCorrelationIdGeneratorTests
         // Act
         var ids = new List<string>
         {
-            generator1.GenerateCorrelationId(),
-            generator2.GenerateCorrelationId(),
-            generator3.GenerateCorrelationId(),
-            generator1.GenerateCorrelationId(),
-            generator2.GenerateCorrelationId(),
-            generator3.GenerateCorrelationId()
+            generator1.GenerateId(),
+            generator2.GenerateId(),
+            generator3.GenerateId(),
+            generator1.GenerateId(),
+            generator2.GenerateId(),
+            generator3.GenerateId()
         };
 
         // Assert
@@ -139,7 +139,7 @@ public class GuidCorrelationIdGeneratorTests
     }
 
     [TestMethod]
-    public void GenerateCorrelationId_ShouldBeThreadSafe()
+    public void GenerateId_ShouldBeThreadSafe()
     {
         // Arrange
         var errors = new System.Collections.Concurrent.ConcurrentBag<Exception>();
@@ -150,7 +150,7 @@ public class GuidCorrelationIdGeneratorTests
         {
             try
             {
-                var id = generator.GenerateCorrelationId();
+                string id = generator.GenerateId();
                 ids.Add(id);
             }
             catch (Exception ex)

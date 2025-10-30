@@ -217,7 +217,7 @@ public class FrameworkResultTests
             var result = ServiceResult<int>.Success(originalValue);
 
             // Act
-            var mappedResult = result.Map(x => x.ToString());
+            ServiceResult<string> mappedResult = result.Map(x => x.ToString());
 
             // Assert
             mappedResult.IsSuccess.Should().BeTrue();
@@ -235,7 +235,7 @@ public class FrameworkResultTests
             var result = ServiceResult<int>.Failure(errorMessage, exception);
 
             // Act
-            var mappedResult = result.Map(x => x.ToString());
+            ServiceResult<string> mappedResult = result.Map(x => x.ToString());
 
             // Assert
             mappedResult.IsSuccess.Should().BeFalse();
@@ -252,7 +252,7 @@ public class FrameworkResultTests
             var result = ServiceResult<int>.Failure(errorMessage);
 
             // Act
-            var mappedResult = result.Map(x => x.ToString());
+            ServiceResult<string> mappedResult = result.Map(x => x.ToString());
 
             // Assert
             mappedResult.IsSuccess.Should().BeFalse();
@@ -270,7 +270,7 @@ public class FrameworkResultTests
             var mapperException = new InvalidOperationException("Mapper failed");
 
             // Act
-            var mappedResult = result.Map<string>(x => throw mapperException);
+            ServiceResult<string> mappedResult = result.Map<string>(x => throw mapperException);
 
             // Assert
             mappedResult.IsSuccess.Should().BeFalse();
@@ -286,7 +286,7 @@ public class FrameworkResultTests
             var result = ServiceResult<string?>.Success(null);
 
             // Act
-            var mappedResult = result.Map(x => x?.Length ?? 0);
+            ServiceResult<int> mappedResult = result.Map(x => x?.Length ?? 0);
 
             // Assert
             mappedResult.IsSuccess.Should().BeFalse();
@@ -301,7 +301,7 @@ public class FrameworkResultTests
             var result = ServiceResult<object>.Success(person);
 
             // Act
-            var mappedResult = result.Map(p => $"{((dynamic)p).Name} is {((dynamic)p).Age} years old");
+            ServiceResult<string> mappedResult = result.Map(p => $"{((dynamic)p).Name} is {((dynamic)p).Age} years old");
 
             // Assert
             mappedResult.IsSuccess.Should().BeTrue();
@@ -507,8 +507,8 @@ public class FrameworkResultTests
         var initialResult = ServiceResult<int>.Success(42);
 
         // Act
-        var stringResult = initialResult.Map(x => x.ToString());
-        var lengthResult = stringResult.Map(s => s.Length);
+        ServiceResult<string> stringResult = initialResult.Map(x => x.ToString());
+        ServiceResult<int> lengthResult = stringResult.Map(s => s.Length);
 
         // Assert
         lengthResult.IsSuccess.Should().BeTrue();
@@ -523,7 +523,7 @@ public class FrameworkResultTests
         var failedResult = ServiceResult<int>.Failure("Custom message", originalException);
 
         // Act
-        var mappedResult = failedResult.Map(x => x.ToString());
+        ServiceResult<string> mappedResult = failedResult.Map(x => x.ToString());
 
         // Assert
         mappedResult.IsFailure.Should().BeTrue();

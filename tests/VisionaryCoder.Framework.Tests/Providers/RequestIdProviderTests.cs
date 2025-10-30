@@ -46,7 +46,7 @@ public sealed class RequestIdProviderTests
         var provider = new RequestIdProvider();
 
         // Act
-        var newId = provider.GenerateNew();
+        string newId = provider.GenerateNew();
 
         // Assert
         newId.Should().HaveLength(8, "request ID should be 8-character hex string");
@@ -88,10 +88,10 @@ public sealed class RequestIdProviderTests
     {
         // Arrange
         var provider = new RequestIdProvider();
-        var initialId = provider.RequestId;
+        string initialId = provider.RequestId;
 
         // Act
-        var newId = provider.GenerateNew();
+        string newId = provider.GenerateNew();
 
         // Assert
         provider.RequestId.Should().NotBe(initialId);
@@ -106,7 +106,7 @@ public sealed class RequestIdProviderTests
         provider.SetRequestId("old-id");
 
         // Act
-        var generated = provider.GenerateNew();
+        string generated = provider.GenerateNew();
 
         // Assert
         provider.RequestId.Should().Be(generated);
@@ -151,7 +151,7 @@ public sealed class RequestIdProviderTests
         var provider = new RequestIdProvider();
 
         // Act
-        var newId = provider.GenerateNew();
+        string newId = provider.GenerateNew();
 
         // Assert
         newId.Should().MatchRegex(@"^[0-9A-F]{8}$",

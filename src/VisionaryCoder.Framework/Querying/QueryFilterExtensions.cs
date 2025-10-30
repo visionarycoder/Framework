@@ -69,13 +69,16 @@ public static class QueryFilterExtensions
     /// </example>
     public static QueryFilter<T> Or<T>(this QueryFilter<T> left, QueryFilter<T> right)
     {
+        
         ArgumentNullException.ThrowIfNull(left);
         ArgumentNullException.ThrowIfNull(right);
 
         ParameterExpression parameter = left.Predicate.Parameters[0];
         Expression rightBody = right.Predicate.Body.ReplaceParameter(right.Predicate.Parameters[0], parameter);
         BinaryExpression body = Expression.OrElse(left.Predicate.Body, rightBody);
+
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, parameter));
+        
     }
 
     /// <summary>
@@ -89,10 +92,14 @@ public static class QueryFilterExtensions
     /// </example>
     public static QueryFilter<T> Not<T>(this QueryFilter<T> filter)
     {
+
         ArgumentNullException.ThrowIfNull(filter);
+
         ParameterExpression parameter = filter.Predicate.Parameters[0];
         UnaryExpression body = Expression.Not(filter.Predicate.Body);
+
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, parameter));
+        
     }
 
     /// <summary>
@@ -107,7 +114,9 @@ public static class QueryFilterExtensions
     /// </example>
     public static QueryFilter<T> Contains<T>(Expression<Func<T, string>> selector, string? value)
     {
+
         ArgumentNullException.ThrowIfNull(selector);
+
         if (string.IsNullOrWhiteSpace(value))
         {
             return True<T>();
@@ -116,7 +125,9 @@ public static class QueryFilterExtensions
         ParameterExpression param = selector.Parameters[0];
         ConstantExpression constant = Expression.Constant(value, typeof(string));
         MethodCallExpression body = Expression.Call(selector.Body, nameof(string.Contains), Type.EmptyTypes, constant);
+
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
+        
     }
 
     /// <summary>
@@ -131,7 +142,9 @@ public static class QueryFilterExtensions
     /// </example>
     public static QueryFilter<T> StartsWith<T>(Expression<Func<T, string>> selector, string? value)
     {
+
         ArgumentNullException.ThrowIfNull(selector);
+
         if (string.IsNullOrWhiteSpace(value))
         {
             return True<T>();
@@ -140,7 +153,9 @@ public static class QueryFilterExtensions
         ParameterExpression param = selector.Parameters[0];
         ConstantExpression constant = Expression.Constant(value, typeof(string));
         MethodCallExpression body = Expression.Call(selector.Body, nameof(string.StartsWith), Type.EmptyTypes, constant);
+
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
+        
     }
 
     /// <summary>
@@ -155,7 +170,9 @@ public static class QueryFilterExtensions
     /// </example>
     public static QueryFilter<T> EndsWith<T>(Expression<Func<T, string>> selector, string? value)
     {
+
         ArgumentNullException.ThrowIfNull(selector);
+        
         if (string.IsNullOrWhiteSpace(value))
         {
             return True<T>();
@@ -164,7 +181,9 @@ public static class QueryFilterExtensions
         ParameterExpression param = selector.Parameters[0];
         ConstantExpression constant = Expression.Constant(value, typeof(string));
         MethodCallExpression body = Expression.Call(selector.Body, nameof(string.EndsWith), Type.EmptyTypes, constant);
+
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
+        
     }
 
     /// <summary>
@@ -183,7 +202,9 @@ public static class QueryFilterExtensions
     /// </example>
     public static QueryFilter<T> Join<T>(this IEnumerable<QueryFilter<T>> filters, bool useAnd = true)
     {
+
         ArgumentNullException.ThrowIfNull(filters);
+        
         using IEnumerator<QueryFilter<T>> e = filters.GetEnumerator();
         if (!e.MoveNext())
         {
@@ -197,13 +218,13 @@ public static class QueryFilterExtensions
             current = useAnd ? current.And(next) : current.Or(next);
         }
         return current;
+        
     }
 
     /// <summary>
     /// Joins multiple filters using AND semantics by default. If <paramref name="useAnd"/> is false, uses OR semantics.
     /// </summary>
-    public static QueryFilter<T> Join<T>(bool useAnd, params QueryFilter<T>[] filters)
-        => (filters ?? Array.Empty<QueryFilter<T>>()).Join(useAnd);
+    public static QueryFilter<T> Join<T>(bool useAnd, params QueryFilter<T>[] filters) => (filters ?? Array.Empty<QueryFilter<T>>()).Join(useAnd);
 
     private static QueryFilter<T> True<T>()
     {
@@ -211,13 +232,11 @@ public static class QueryFilterExtensions
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(Expression.Constant(true), p));
     }
 
-    private static Expression ReplaceParameter(this Expression expression, ParameterExpression source, ParameterExpression target)
-        => new ParameterReplacer(source, target).Visit(expression)!;
+    private static Expression ReplaceParameter(this Expression expression, ParameterExpression source, ParameterExpression target) => new ParameterReplacer(source, target).Visit(expression)!;
 
     private sealed class ParameterReplacer(ParameterExpression source, ParameterExpression target) : ExpressionVisitor
     {
-        protected override Expression VisitParameter(ParameterExpression node)
-            => node == source ? target : base.VisitParameter(node);
+        protected override Expression VisitParameter(ParameterExpression node) => node == source ? target : base.VisitParameter(node);
     }
 
     // Case-insensitive string helpers
@@ -232,8 +251,11 @@ public static class QueryFilterExtensions
     /// </example>
     public static QueryFilter<T> ContainsIgnoreCase<T>(Expression<Func<T, string>> selector, string? value)
     {
+        
         ArgumentNullException.ThrowIfNull(selector);
-        if (string.IsNullOrWhiteSpace(value)) return True<T>();
+
+        if (string.IsNullOrWhiteSpace(value))
+            return True<T>();
 
         ParameterExpression param = selector.Parameters[0];
         // x => x.Prop != null && x.Prop.ToLowerInvariant().Contains(value.ToLowerInvariant())
@@ -245,7 +267,9 @@ public static class QueryFilterExtensions
         ConstantExpression right = Expression.Constant(value.ToLowerInvariant());
         MethodCallExpression containsCall = Expression.Call(left, contains, right);
         BinaryExpression body = Expression.AndAlso(notNull, containsCall);
+        
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
+        
     }
 
     /// <summary>

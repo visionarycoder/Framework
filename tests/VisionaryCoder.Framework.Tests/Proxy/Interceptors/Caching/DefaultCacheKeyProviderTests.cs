@@ -1,5 +1,6 @@
 using FluentAssertions;
-using VisionaryCoder.Framework.Proxy.Abstractions;
+
+using VisionaryCoder.Framework.Proxy;
 using VisionaryCoder.Framework.Proxy.Interceptors.Caching;
 
 namespace VisionaryCoder.Framework.Tests.Proxy.Interceptors.Caching;
@@ -29,7 +30,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key = provider.GenerateKey<string>(context);
+        string key = provider.GenerateKey<string>(context);
 
         // Assert
         key.Should().NotBeNullOrWhiteSpace();
@@ -52,7 +53,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key = provider.GenerateKey<string>(context);
+        string key = provider.GenerateKey<string>(context);
 
         // Assert
         key.Should().NotBeNullOrWhiteSpace();
@@ -70,8 +71,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key1 = provider.GenerateKey<string>(context);
-        var key2 = provider.GenerateKey<string>(context);
+        string key1 = provider.GenerateKey<string>(context);
+        string key2 = provider.GenerateKey<string>(context);
 
         // Assert
         key1.Should().Be(key2);
@@ -95,8 +96,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key1 = provider.GenerateKey<string>(context1);
-        var key2 = provider.GenerateKey<string>(context2);
+        string key1 = provider.GenerateKey<string>(context1);
+        string key2 = provider.GenerateKey<string>(context2);
 
         // Assert
         key1.Should().NotBe(key2);
@@ -114,8 +115,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var keyString = provider.GenerateKey<string>(context);
-        var keyInt = provider.GenerateKey<int>(context);
+        string keyString = provider.GenerateKey<string>(context);
+        string keyInt = provider.GenerateKey<int>(context);
 
         // Assert
         keyString.Should().NotBe(keyInt);
@@ -137,7 +138,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key = provider.GenerateKey<string>(context);
+        string key = provider.GenerateKey<string>(context);
 
         // Assert
         key.Should().NotBeNullOrWhiteSpace();
@@ -155,7 +156,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key = provider.GenerateKey<string>(context);
+        string key = provider.GenerateKey<string>(context);
 
         // Assert
         key.Should().NotBeNullOrWhiteSpace();
@@ -173,7 +174,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key = provider.GenerateKey<string>(context);
+        string key = provider.GenerateKey<string>(context);
 
         // Assert
         key.Should().NotBeNullOrWhiteSpace();
@@ -191,7 +192,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key = provider.GenerateKey<string>(context);
+        string key = provider.GenerateKey<string>(context);
 
         // Assert
         key.Should().NotBeNullOrWhiteSpace();
@@ -220,8 +221,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var keyWithout = provider.GenerateKey<string>(contextWithoutHeader);
-        var keyWith = provider.GenerateKey<string>(contextWithHeader);
+        string keyWithout = provider.GenerateKey<string>(contextWithoutHeader);
+        string keyWith = provider.GenerateKey<string>(contextWithHeader);
 
         // Assert
         keyWithout.Should().NotBe(keyWith);
@@ -250,8 +251,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var keyWithout = provider.GenerateKey<string>(contextWithoutHeader);
-        var keyWith = provider.GenerateKey<string>(contextWithHeader);
+        string keyWithout = provider.GenerateKey<string>(contextWithoutHeader);
+        string keyWith = provider.GenerateKey<string>(contextWithHeader);
 
         // Assert
         keyWithout.Should().NotBe(keyWith);
@@ -276,8 +277,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var keyWithout = provider.GenerateKey<string>(contextWithoutHeader);
-        var keyWith = provider.GenerateKey<string>(contextWithHeader);
+        string keyWithout = provider.GenerateKey<string>(contextWithoutHeader);
+        string keyWith = provider.GenerateKey<string>(contextWithHeader);
 
         // Assert
         keyWithout.Should().Be(keyWith);
@@ -311,8 +312,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key1 = provider.GenerateKey<string>(context1);
-        var key2 = provider.GenerateKey<string>(context2);
+        string key1 = provider.GenerateKey<string>(context1);
+        string key2 = provider.GenerateKey<string>(context2);
 
         // Assert
         key1.Should().Be(key2); // Order should not matter
@@ -345,8 +346,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var keyRelevant = provider.GenerateKey<string>(contextRelevantOnly);
-        var keyMixed = provider.GenerateKey<string>(contextMixed);
+        string keyRelevant = provider.GenerateKey<string>(contextRelevantOnly);
+        string keyMixed = provider.GenerateKey<string>(contextMixed);
 
         // Assert
         keyRelevant.Should().Be(keyMixed); // Irrelevant headers should be ignored
@@ -372,8 +373,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key1 = provider.GenerateKey<string>(context1);
-        var key2 = provider.GenerateKey<string>(context2);
+        string key1 = provider.GenerateKey<string>(context1);
+        string key2 = provider.GenerateKey<string>(context2);
 
     }
 
@@ -394,7 +395,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key = provider.GenerateKey<string>(context);
+        string key = provider.GenerateKey<string>(context);
 
         // Assert
         key.Should().NotBeNullOrWhiteSpace();
@@ -413,7 +414,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key = provider.GenerateKey<string>(context);
+        string key = provider.GenerateKey<string>(context);
 
         // Assert
         key.Should().NotBeNullOrWhiteSpace();
@@ -431,7 +432,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key = provider.GenerateKey<string>(context);
+        string key = provider.GenerateKey<string>(context);
 
         // Assert
         key.Should().NotBeNullOrWhiteSpace();
@@ -456,8 +457,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key1 = provider.GenerateKey<string>(contextWithoutHeaders);
-        var key2 = provider.GenerateKey<string>(contextWithEmptyHeaders);
+        string key1 = provider.GenerateKey<string>(contextWithoutHeaders);
+        string key2 = provider.GenerateKey<string>(contextWithEmptyHeaders);
 
         // Assert
         key1.Should().Be(key2);
@@ -486,8 +487,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key1 = provider.GenerateKey<string>(contextWithoutHeaders);
-        var key2 = provider.GenerateKey<string>(contextWithIrrelevantHeaders);
+        string key1 = provider.GenerateKey<string>(contextWithoutHeaders);
+        string key2 = provider.GenerateKey<string>(contextWithIrrelevantHeaders);
 
         // Assert
         key1.Should().Be(key2);
@@ -513,8 +514,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key1 = provider.GenerateKey<string>(context1);
-        var key2 = provider.GenerateKey<string>(context2);
+        string key1 = provider.GenerateKey<string>(context1);
+        string key2 = provider.GenerateKey<string>(context2);
 
         // Assert
         key1.Should().NotBe(key2);
@@ -536,7 +537,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key = provider.GenerateKey<string>(context);
+        string key = provider.GenerateKey<string>(context);
 
         // Assert
         key.Should().MatchRegex(@"^[A-Za-z0-9+/=]+$");
@@ -590,8 +591,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key1 = provider.GenerateKey<SearchResult>(context);
-        var key2 = provider.GenerateKey<SearchResult>(context);
+        string key1 = provider.GenerateKey<SearchResult>(context);
+        string key2 = provider.GenerateKey<SearchResult>(context);
 
         // Assert
         key1.Should().Be(key2);

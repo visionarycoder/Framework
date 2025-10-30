@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Configuration;
-using VisionaryCoder.Framework.Abstractions;
+
 using VisionaryCoder.Framework.Secrets.Azure.KeyVault;
 
 namespace VisionaryCoder.Framework.Secrets.Local;

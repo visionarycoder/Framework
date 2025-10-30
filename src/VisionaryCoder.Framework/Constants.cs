@@ -8,6 +8,7 @@ namespace VisionaryCoder.Framework;
 /// </summary>
 public static class Constants
 {
+    
     /// <summary>
     /// The version of the VisionaryCoder Framework.
     /// </summary>

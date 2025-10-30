@@ -41,7 +41,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("123.45");
 
         // Act
-        var result = CliInputUtilities.GetDecimalInput();
+        decimal result = CliInputUtilities.GetDecimalInput();
 
         // Assert
         result.Should().Be(123.45m);
@@ -54,7 +54,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("invalid", "456.78");
 
         // Act
-        var result = CliInputUtilities.GetDecimalInput();
+        decimal result = CliInputUtilities.GetDecimalInput();
 
         // Assert
         result.Should().Be(456.78m);
@@ -68,7 +68,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("  789.12  ");
 
         // Act
-        var result = CliInputUtilities.GetDecimalInput();
+        decimal result = CliInputUtilities.GetDecimalInput();
 
         // Assert
         result.Should().Be(789.12m);
@@ -81,7 +81,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("0");
 
         // Act
-        var result = CliInputUtilities.GetDecimalInput();
+        decimal result = CliInputUtilities.GetDecimalInput();
 
         // Assert
         result.Should().Be(0m);
@@ -94,7 +94,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("-123.45");
 
         // Act
-        var result = CliInputUtilities.GetDecimalInput();
+        decimal result = CliInputUtilities.GetDecimalInput();
 
         // Assert
         result.Should().Be(-123.45m);
@@ -107,7 +107,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("42");
 
         // Act
-        var result = CliInputUtilities.GetIntegerInput();
+        int result = CliInputUtilities.GetIntegerInput();
 
         // Assert
         result.Should().Be(42);
@@ -120,7 +120,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("invalid", "123");
 
         // Act
-        var result = CliInputUtilities.GetIntegerInput();
+        int result = CliInputUtilities.GetIntegerInput();
 
         // Assert
         result.Should().Be(123);
@@ -134,7 +134,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("  999  ");
 
         // Act
-        var result = CliInputUtilities.GetIntegerInput();
+        int result = CliInputUtilities.GetIntegerInput();
 
         // Assert
         result.Should().Be(999);
@@ -147,7 +147,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("0");
 
         // Act
-        var result = CliInputUtilities.GetIntegerInput();
+        int result = CliInputUtilities.GetIntegerInput();
 
         // Assert
         result.Should().Be(0);
@@ -160,7 +160,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("-42");
 
         // Act
-        var result = CliInputUtilities.GetIntegerInput();
+        int result = CliInputUtilities.GetIntegerInput();
 
         // Assert
         result.Should().Be(-42);
@@ -173,7 +173,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("123.45", "100");
 
         // Act
-        var result = CliInputUtilities.GetIntegerInput();
+        int result = CliInputUtilities.GetIntegerInput();
 
         // Assert
         result.Should().Be(100);
@@ -187,7 +187,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("hello world");
 
         // Act
-        var result = CliInputUtilities.GetStringInput();
+        string result = CliInputUtilities.GetStringInput();
 
         // Assert
         result.Should().Be("HELLO WORLD");
@@ -200,7 +200,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("  test  ");
 
         // Act
-        var result = CliInputUtilities.GetStringInput();
+        string result = CliInputUtilities.GetStringInput();
 
         // Assert
         result.Should().Be("TEST");
@@ -213,7 +213,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("", "valid");
 
         // Act
-        var result = CliInputUtilities.GetStringInput();
+        string result = CliInputUtilities.GetStringInput();
 
         // Assert
         result.Should().Be("VALID");
@@ -227,7 +227,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("   ", "test");
 
         // Act
-        var result = CliInputUtilities.GetStringInput();
+        string result = CliInputUtilities.GetStringInput();
 
         // Assert
         result.Should().Be("TEST");
@@ -241,7 +241,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("MiXeD cAsE");
 
         // Act
-        var result = CliInputUtilities.GetStringInput();
+        string result = CliInputUtilities.GetStringInput();
 
         // Assert
         result.Should().Be("MIXED CASE");
@@ -257,7 +257,7 @@ public class CliInputUtilitiesTests
             SetConsoleInput(tempFile);
 
             // Act
-            var result = CliInputUtilities.PromptForInputFile();
+            FileInfo? result = CliInputUtilities.PromptForInputFile();
 
             // Assert
             result.Should().NotBeNull();
@@ -282,7 +282,7 @@ public class CliInputUtilitiesTests
             SetConsoleInput(nonExistentFile, tempFile);
 
             // Act
-            var result = CliInputUtilities.PromptForInputFile();
+            FileInfo? result = CliInputUtilities.PromptForInputFile();
 
             // Assert
             result.Should().NotBeNull();
@@ -306,7 +306,7 @@ public class CliInputUtilitiesTests
             SetConsoleInput("", tempFile);
 
             // Act
-            var result = CliInputUtilities.PromptForInputFile();
+            FileInfo? result = CliInputUtilities.PromptForInputFile();
 
             // Assert
             result.Should().NotBeNull();
@@ -327,7 +327,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("exit");
 
         // Act
-        var result = CliInputUtilities.PromptForInputFile();
+        FileInfo? result = CliInputUtilities.PromptForInputFile();
 
         // Assert
         result.Should().BeNull();
@@ -340,7 +340,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("x");
 
         // Act
-        var result = CliInputUtilities.PromptForInputFile();
+        FileInfo? result = CliInputUtilities.PromptForInputFile();
 
         // Assert
         result.Should().BeNull();
@@ -353,7 +353,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("q");
 
         // Act
-        var result = CliInputUtilities.PromptForInputFile();
+        FileInfo? result = CliInputUtilities.PromptForInputFile();
 
         // Assert
         result.Should().BeNull();
@@ -366,7 +366,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("EXIT");
 
         // Act
-        var result = CliInputUtilities.PromptForInputFile();
+        FileInfo? result = CliInputUtilities.PromptForInputFile();
 
         // Assert
         result.Should().BeNull();
@@ -380,7 +380,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput(tempFolder);
 
         // Act
-        var result = CliInputUtilities.PromptForInputFolder();
+        DirectoryInfo? result = CliInputUtilities.PromptForInputFolder();
 
         // Assert
         result.Should().NotBeNull();
@@ -398,7 +398,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput(nonExistentFolder, tempFolder);
 
         // Act
-        var result = CliInputUtilities.PromptForInputFolder();
+        DirectoryInfo? result = CliInputUtilities.PromptForInputFolder();
 
         // Assert
         result.Should().NotBeNull();
@@ -413,7 +413,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("", tempFolder);
 
         // Act
-        var result = CliInputUtilities.PromptForInputFolder();
+        DirectoryInfo? result = CliInputUtilities.PromptForInputFolder();
 
         // Assert
         result.Should().NotBeNull();
@@ -427,7 +427,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("exit");
 
         // Act
-        var result = CliInputUtilities.PromptForInputFolder();
+        DirectoryInfo? result = CliInputUtilities.PromptForInputFolder();
 
         // Assert
         result.Should().BeNull();
@@ -440,7 +440,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("x");
 
         // Act
-        var result = CliInputUtilities.PromptForInputFolder();
+        DirectoryInfo? result = CliInputUtilities.PromptForInputFolder();
 
         // Assert
         result.Should().BeNull();
@@ -453,7 +453,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("q");
 
         // Act
-        var result = CliInputUtilities.PromptForInputFolder();
+        DirectoryInfo? result = CliInputUtilities.PromptForInputFolder();
 
         // Assert
         result.Should().BeNull();
@@ -466,7 +466,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("EXIT");
 
         // Act
-        var result = CliInputUtilities.PromptForInputFolder();
+        DirectoryInfo? result = CliInputUtilities.PromptForInputFolder();
 
         // Assert
         result.Should().BeNull();
@@ -480,7 +480,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput($"  {tempFolder}  ");
 
         // Act
-        var result = CliInputUtilities.PromptForInputFolder();
+        DirectoryInfo? result = CliInputUtilities.PromptForInputFolder();
 
         // Assert
         result.Should().NotBeNull();
@@ -496,7 +496,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput(decimal.MaxValue.ToString());
 
         // Act
-        var result = CliInputUtilities.GetDecimalInput();
+        decimal result = CliInputUtilities.GetDecimalInput();
 
         // Assert
         result.Should().Be(decimal.MaxValue);
@@ -509,7 +509,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput(decimal.MinValue.ToString());
 
         // Act
-        var result = CliInputUtilities.GetDecimalInput();
+        decimal result = CliInputUtilities.GetDecimalInput();
 
         // Assert
         result.Should().Be(decimal.MinValue);
@@ -523,7 +523,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput(int.MaxValue.ToString());
 
         // Act
-        var result = CliInputUtilities.GetIntegerInput();
+        int result = CliInputUtilities.GetIntegerInput();
 
         // Assert
         result.Should().Be(int.MaxValue);
@@ -536,7 +536,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput(int.MinValue.ToString());
 
         // Act
-        var result = CliInputUtilities.GetIntegerInput();
+        int result = CliInputUtilities.GetIntegerInput();
 
         // Assert
         result.Should().Be(int.MinValue);
@@ -549,7 +549,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("hello@world!123");
 
         // Act
-        var result = CliInputUtilities.GetStringInput();
+        string result = CliInputUtilities.GetStringInput();
 
         // Assert
         result.Should().Be("HELLO@WORLD!123");
@@ -562,7 +562,7 @@ public class CliInputUtilitiesTests
         SetConsoleInput("héllo wörld");
 
         // Act
-        var result = CliInputUtilities.GetStringInput();
+        string result = CliInputUtilities.GetStringInput();
 
         // Assert
         result.Should().Be("HÉLLO WÖRLD");

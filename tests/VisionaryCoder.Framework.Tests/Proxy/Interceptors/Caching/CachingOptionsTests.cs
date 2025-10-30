@@ -1,6 +1,9 @@
 using FluentAssertions;
+
 using Microsoft.Extensions.Caching.Memory;
-using VisionaryCoder.Framework.Proxy.Abstractions;
+
+using VisionaryCoder.Framework.Proxy;
+using VisionaryCoder.Framework.Proxy.Caching;
 using VisionaryCoder.Framework.Proxy.Interceptors.Caching;
 
 namespace VisionaryCoder.Framework.Tests.Proxy.Interceptors.Caching;
@@ -155,7 +158,7 @@ public class CachingOptionsTests
         };
 
         // Act
-        var key = options.KeyGenerator!(context);
+        string key = options.KeyGenerator!(context);
 
         // Assert
         key.Should().Be("GET-https://api.example.com/users");

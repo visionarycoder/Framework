@@ -24,7 +24,7 @@ public class CorrelationIdProviderTests
     public void CorrelationId_WhenNoIdSet_ShouldGenerateNew()
     {
         // Act
-        var correlationId = provider.CorrelationId;
+        string correlationId = provider.CorrelationId;
 
         // Assert
         correlationId.Should().NotBeNullOrWhiteSpace();
@@ -36,10 +36,10 @@ public class CorrelationIdProviderTests
     public void CorrelationId_WhenIdAlreadySet_ShouldReturnSameId()
     {
         // Arrange
-        var firstCall = provider.CorrelationId;
+        string firstCall = provider.CorrelationId;
 
         // Act
-        var secondCall = provider.CorrelationId;
+        string secondCall = provider.CorrelationId;
 
         // Assert
         secondCall.Should().Be(firstCall);
@@ -53,7 +53,7 @@ public class CorrelationIdProviderTests
         provider.SetCorrelationId(expectedId);
 
         // Act
-        var result = provider.CorrelationId;
+        string result = provider.CorrelationId;
 
         // Assert
         result.Should().Be(expectedId);
@@ -67,7 +67,7 @@ public class CorrelationIdProviderTests
     public void GenerateNew_ShouldReturnValidFormat()
     {
         // Act
-        var result = provider.GenerateNew();
+        string result = provider.GenerateNew();
 
         // Assert
         result.Should().NotBeNullOrWhiteSpace();
@@ -79,7 +79,7 @@ public class CorrelationIdProviderTests
     public void GenerateNew_ShouldReturnUpperCaseOnly()
     {
         // Act
-        var result = provider.GenerateNew();
+        string result = provider.GenerateNew();
 
         // Assert
         result.Should().Be(result.ToUpperInvariant());
@@ -89,8 +89,8 @@ public class CorrelationIdProviderTests
     public void GenerateNew_WhenCalledMultipleTimes_ShouldReturnDifferentValues()
     {
         // Act
-        var first = provider.GenerateNew();
-        var second = provider.GenerateNew();
+        string first = provider.GenerateNew();
+        string second = provider.GenerateNew();
 
         // Assert
         first.Should().NotBe(second);
@@ -100,8 +100,8 @@ public class CorrelationIdProviderTests
     public void GenerateNew_ShouldSetCurrentCorrelationId()
     {
         // Act
-        var generated = provider.GenerateNew();
-        var current = provider.CorrelationId;
+        string generated = provider.GenerateNew();
+        string current = provider.CorrelationId;
 
         // Assert
         current.Should().Be(generated);
@@ -114,8 +114,8 @@ public class CorrelationIdProviderTests
         provider.SetCorrelationId("ORIGINAL123");
 
         // Act
-        var newId = provider.GenerateNew();
-        var currentId = provider.CorrelationId;
+        string newId = provider.GenerateNew();
+        string currentId = provider.CorrelationId;
 
         // Assert
         currentId.Should().Be(newId);
@@ -143,7 +143,7 @@ public class CorrelationIdProviderTests
     public void SetCorrelationId_WithNullValue_ShouldThrowArgumentException()
     {
         // Arrange & Act & Assert
-        var action = () => provider.SetCorrelationId(null!);
+        Action action = () => provider.SetCorrelationId(null!);
         action.Should().Throw<ArgumentException>()
             .WithParameterName("correlationId");
     }
@@ -152,7 +152,7 @@ public class CorrelationIdProviderTests
     public void SetCorrelationId_WithEmptyString_ShouldThrowArgumentException()
     {
         // Arrange & Act & Assert
-        var action = () => provider.SetCorrelationId("");
+        Action action = () => provider.SetCorrelationId("");
         action.Should().Throw<ArgumentException>()
             .WithParameterName("correlationId");
     }
@@ -161,7 +161,7 @@ public class CorrelationIdProviderTests
     public void SetCorrelationId_WithWhitespace_ShouldThrowArgumentException()
     {
         // Arrange & Act & Assert
-        var action = () => provider.SetCorrelationId("   ");
+        Action action = () => provider.SetCorrelationId("   ");
         action.Should().Throw<ArgumentException>()
             .WithParameterName("correlationId");
     }
@@ -236,7 +236,7 @@ public class CorrelationIdProviderTests
         var provider = new CorrelationIdProvider();
 
         // Act & Assert - Initial state
-        var initialId = provider.CorrelationId;
+        string initialId = provider.CorrelationId;
         initialId.Should().NotBeNullOrWhiteSpace();
 
         // Act & Assert - Set custom ID
@@ -244,7 +244,7 @@ public class CorrelationIdProviderTests
         provider.CorrelationId.Should().Be("CUSTOM123");
 
         // Act & Assert - Generate new ID
-        var newId = provider.GenerateNew();
+        string newId = provider.GenerateNew();
         provider.CorrelationId.Should().Be(newId);
         newId.Should().NotBe("CUSTOM123");
         newId.Should().NotBe(initialId);

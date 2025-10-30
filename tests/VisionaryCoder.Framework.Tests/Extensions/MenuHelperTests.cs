@@ -292,7 +292,7 @@ public class MenuHelperTests
     public void ShowSeparator_WithNegativeWidth_ShouldThrowArgumentOutOfRangeException()
     {
         // Act & Assert - PadRight throws exception for negative values
-        var act = () => MenuHelper.ShowSeparator(-5);
+        Action act = () => MenuHelper.ShowSeparator(-5);
         act.Should().Throw<ArgumentOutOfRangeException>()
            .WithParameterName("totalWidth");
     }

@@ -18,7 +18,7 @@ public class DateTimeExtensionsTests
         var input = new DateTime(2024, 1, 10, 15, 30, 45); // Wednesday
 
         // Act
-        var result = input.GetProceedingWeekday();
+        DateTime result = input.GetProceedingWeekday();
 
         // Assert
         result.Should().Be(new DateTime(2024, 1, 14)); // Next Sunday
@@ -33,7 +33,7 @@ public class DateTimeExtensionsTests
         var input = new DateTime(2024, 1, 10); // Wednesday
 
         // Act
-        var result = input.GetProceedingWeekday(DayOfWeek.Friday);
+        DateTime result = input.GetProceedingWeekday(DayOfWeek.Friday);
 
         // Assert
         result.Should().Be(new DateTime(2024, 1, 12)); // Next Friday
@@ -47,7 +47,7 @@ public class DateTimeExtensionsTests
         var input = new DateTime(2024, 1, 10); // Wednesday
 
         // Act
-        var result = input.GetProceedingWeekday(DayOfWeek.Wednesday);
+        DateTime result = input.GetProceedingWeekday(DayOfWeek.Wednesday);
 
         // Assert
         result.Should().Be(new DateTime(2024, 1, 17)); // Next Wednesday (7 days later)
@@ -81,7 +81,7 @@ public class DateTimeExtensionsTests
         var input = new DateTime(2024, 1, 10); // Wednesday
 
         // Act
-        var result = input.GetPreviousWeekday(DayOfWeek.Monday);
+        DateTime result = input.GetPreviousWeekday(DayOfWeek.Monday);
 
         // Assert
         result.Should().Be(new DateTime(2024, 1, 8)); // Previous Monday
@@ -96,7 +96,7 @@ public class DateTimeExtensionsTests
         var input = new DateTime(2024, 1, 10); // Wednesday
 
         // Act
-        var result = input.GetPreviousWeekday(DayOfWeek.Wednesday);
+        DateTime result = input.GetPreviousWeekday(DayOfWeek.Wednesday);
 
         // Assert
         result.Should().Be(new DateTime(2024, 1, 3)); // Previous Wednesday (7 days earlier)
@@ -131,7 +131,7 @@ public class DateTimeExtensionsTests
         var offset = TimeSpan.FromDays(3);
 
         // Act
-        var result = dateTime.GetDateOnly(offset);
+        DateTime result = dateTime.GetDateOnly(offset);
 
         // Assert
         result.Should().Be(new DateTime(2024, 1, 7)); // 3 days earlier, date only
@@ -146,7 +146,7 @@ public class DateTimeExtensionsTests
         var offset = TimeSpan.FromDays(5);
 
         // Act
-        var result = dateTime.GetDateOnly(offset, DateTimeExtensions.ShiftDate.ToFuture);
+        DateTime result = dateTime.GetDateOnly(offset, DateTimeExtensions.ShiftDate.ToFuture);
 
         // Assert
         result.Should().Be(new DateTime(2024, 1, 15)); // 5 days later, date only
@@ -161,8 +161,8 @@ public class DateTimeExtensionsTests
         var offset = TimeSpan.FromHours(20);
 
         // Act
-        var resultPast = dateTime.GetDateOnly(offset, DateTimeExtensions.ShiftDate.ToPast);
-        var resultFuture = dateTime.GetDateOnly(offset, DateTimeExtensions.ShiftDate.ToFuture);
+        DateTime resultPast = dateTime.GetDateOnly(offset, DateTimeExtensions.ShiftDate.ToPast);
+        DateTime resultFuture = dateTime.GetDateOnly(offset, DateTimeExtensions.ShiftDate.ToFuture);
 
         // Assert
         resultPast.Should().Be(new DateTime(2024, 1, 9)); // Previous day due to hour offset
@@ -177,7 +177,7 @@ public class DateTimeExtensionsTests
         TimeSpan offset = TimeSpan.Zero;
 
         // Act
-        var result = dateTime.GetDateOnly(offset);
+        DateTime result = dateTime.GetDateOnly(offset);
 
         // Assert
         result.Should().Be(new DateTime(2024, 1, 10)); // Same date, time stripped
@@ -195,7 +195,7 @@ public class DateTimeExtensionsTests
         var saturday = new DateTime(2024, 1, 13); // Saturday
 
         // Act
-        var result = saturday.IsWeekend();
+        bool result = saturday.IsWeekend();
 
         // Assert
         result.Should().BeTrue();
@@ -208,7 +208,7 @@ public class DateTimeExtensionsTests
         var sunday = new DateTime(2024, 1, 14); // Sunday
 
         // Act
-        var result = sunday.IsWeekend();
+        bool result = sunday.IsWeekend();
 
         // Assert
         result.Should().BeTrue();
@@ -263,7 +263,7 @@ public class DateTimeExtensionsTests
         var wednesday = new DateTime(2024, 1, 10, 15, 30, 45); // Wednesday
 
         // Act
-        var result = wednesday.GetStartOfWeek();
+        DateTime result = wednesday.GetStartOfWeek();
 
         // Assert
         result.Should().Be(new DateTime(2024, 1, 8)); // Monday of that week
@@ -278,7 +278,7 @@ public class DateTimeExtensionsTests
         var wednesday = new DateTime(2024, 1, 10); // Wednesday
 
         // Act
-        var result = wednesday.GetStartOfWeek(DayOfWeek.Sunday);
+        DateTime result = wednesday.GetStartOfWeek(DayOfWeek.Sunday);
 
         // Assert
         result.Should().Be(new DateTime(2024, 1, 7)); // Sunday of that week
@@ -292,7 +292,7 @@ public class DateTimeExtensionsTests
         var monday = new DateTime(2024, 1, 8, 10, 15, 30); // Monday
 
         // Act
-        var result = monday.GetStartOfWeek(DayOfWeek.Monday);
+        DateTime result = monday.GetStartOfWeek(DayOfWeek.Monday);
 
         // Assert
         result.Should().Be(new DateTime(2024, 1, 8)); // Same Monday, time stripped
@@ -338,7 +338,7 @@ public class DateTimeExtensionsTests
         var startDate = new DateTime(2024, 1, 10, 14, 30, 45); // Wednesday with time
 
         // Act - Chain multiple operations
-        var result = startDate
+        DateTime result = startDate
             .GetStartOfWeek(DayOfWeek.Monday)
             .GetProceedingWeekday(DayOfWeek.Friday);
 
@@ -354,8 +354,8 @@ public class DateTimeExtensionsTests
         var lastDay = new DateTime(2024, 1, 31); // Wednesday
 
         // Act
-        var nextSunday = lastDay.GetProceedingWeekday(DayOfWeek.Sunday);
-        var previousMonday = lastDay.GetPreviousWeekday(DayOfWeek.Monday);
+        DateTime nextSunday = lastDay.GetProceedingWeekday(DayOfWeek.Sunday);
+        DateTime previousMonday = lastDay.GetPreviousWeekday(DayOfWeek.Monday);
 
         // Assert
         nextSunday.Should().Be(new DateTime(2024, 2, 4)); // First Sunday of February
@@ -369,8 +369,8 @@ public class DateTimeExtensionsTests
         var feb28 = new DateTime(2024, 2, 28); // Wednesday
 
         // Act
-        var nextSunday = feb28.GetProceedingWeekday(DayOfWeek.Sunday);
-        var dateWithOffset = feb28.GetDateOnly(TimeSpan.FromDays(2), DateTimeExtensions.ShiftDate.ToFuture);
+        DateTime nextSunday = feb28.GetProceedingWeekday(DayOfWeek.Sunday);
+        DateTime dateWithOffset = feb28.GetDateOnly(TimeSpan.FromDays(2), DateTimeExtensions.ShiftDate.ToFuture);
 
         // Assert
         nextSunday.Should().Be(new DateTime(2024, 3, 3)); // First Sunday of March

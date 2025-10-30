@@ -47,7 +47,7 @@ public sealed class CorrelationIdProviderTests
         var provider = new CorrelationIdProvider();
 
         // Act
-        var newId = provider.GenerateNew();
+        string newId = provider.GenerateNew();
 
         // Assert
         newId.Should().HaveLength(12, "correlation ID should be 12-character hex string");
@@ -75,10 +75,10 @@ public sealed class CorrelationIdProviderTests
     {
         // Arrange
         var provider = new CorrelationIdProvider();
-        var initialId = provider.CorrelationId;
+        string initialId = provider.CorrelationId;
 
         // Act
-        var newId = provider.GenerateNew();
+        string newId = provider.GenerateNew();
 
         // Assert
         provider.CorrelationId.Should().NotBe(initialId);
@@ -93,7 +93,7 @@ public sealed class CorrelationIdProviderTests
         provider.SetCorrelationId("old-correlation-id");
 
         // Act
-        var generated = provider.GenerateNew();
+        string generated = provider.GenerateNew();
 
         // Assert
         provider.CorrelationId.Should().Be(generated);
@@ -122,7 +122,7 @@ public sealed class CorrelationIdProviderTests
         var provider = new CorrelationIdProvider();
 
         // Act
-        var newId = provider.GenerateNew();
+        string newId = provider.GenerateNew();
 
         // Assert
         newId.Should().MatchRegex(@"^[0-9A-F]{12}$",
@@ -171,8 +171,8 @@ public sealed class CorrelationIdProviderTests
 
         // Act
         provider.SetCorrelationId(customId);
-        var setId = provider.CorrelationId;
-        var generatedId = provider.GenerateNew();
+        string setId = provider.CorrelationId;
+        string generatedId = provider.GenerateNew();
 
         // Assert
         setId.Should().Be(customId);
@@ -185,11 +185,11 @@ public sealed class CorrelationIdProviderTests
     {
         // Arrange
         var provider1 = new CorrelationIdProvider();
-        var id1 = provider1.GenerateNew();
+        string id1 = provider1.GenerateNew();
 
         // Act
         var provider2 = new CorrelationIdProvider();
-        var id2 = provider2.CorrelationId;
+        string id2 = provider2.CorrelationId;
 
         // Assert
         id2.Should().Be(id1,

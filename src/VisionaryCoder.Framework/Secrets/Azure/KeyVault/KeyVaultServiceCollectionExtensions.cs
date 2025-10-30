@@ -2,10 +2,11 @@ using Azure;
 using Azure.Core;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using VisionaryCoder.Framework.Abstractions;
+
 using VisionaryCoder.Framework.Secrets.Local;
 
 namespace VisionaryCoder.Framework.Secrets.Azure.KeyVault;
@@ -47,8 +48,8 @@ public static class KeyVaultServiceCollectionExtensions
         {
             services.AddSingleton<ISecretProvider>(provider =>
             {
-                var config = provider.GetRequiredService<IConfiguration>();
-                var keyVaultOptions = provider.GetRequiredService<IOptions<KeyVaultOptions>>().Value;
+                IConfiguration config = provider.GetRequiredService<IConfiguration>();
+                KeyVaultOptions keyVaultOptions = provider.GetRequiredService<IOptions<KeyVaultOptions>>().Value;
                 return new LocalSecretProvider(config, keyVaultOptions);
             });
             return services;
@@ -57,7 +58,7 @@ public static class KeyVaultServiceCollectionExtensions
         // Configure Azure Key Vault client with managed identity
         services.AddSingleton(provider =>
         {
-            var opts = provider.GetRequiredService<IOptions<KeyVaultOptions>>();
+            IOptions<KeyVaultOptions> opts = provider.GetRequiredService<IOptions<KeyVaultOptions>>();
             var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions
             {
                 ExcludeInteractiveBrowserCredential = true // Better for production scenarios

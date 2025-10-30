@@ -7,8 +7,8 @@ public static class PageExtensions
     // Offset-based (simple, fine for small/medium datasets)
     public static async Task<Page<T>> ToPageAsync<T>(this IQueryable<T> query, PageRequest request, CancellationToken cancellationToken = default)
     {
-        var count = await query.CountAsync(cancellationToken);
-        var items = await query
+        int count = await query.CountAsync(cancellationToken);
+        List<T> items = await query
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
             .ToListAsync(cancellationToken);

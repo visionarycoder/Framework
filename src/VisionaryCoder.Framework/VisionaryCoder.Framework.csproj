@@ -21,18 +21,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="C:\Dev\GitHub\VisionaryCoder\vc\docs\diagrams\query-filtering\query-filter-class-diagram.mmd" Link="query-filter-class-diagram.mmd" />
-		<None Include="C:\Dev\GitHub\VisionaryCoder\vc\docs\diagrams\query-filtering\query-filter-sequence-diagram.mmd" Link="query-filter-sequence-diagram.mmd" />
 		<None Include="README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\VisionaryCoder.Framework.Abstractions\VisionaryCoder.Framework.Abstractions.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Secrets\Azure\AppConfiguration\" />
-	</ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\\.json\schemas\queryfilter.schema.json">
+      <Link>Schemas\queryfilter.schema.json</Link>
+      <LogicalName>VisionaryCoder.Framework.Schemas.queryfilter.schema.json</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="FluentFTP" />
@@ -53,6 +50,8 @@
 	  <PackageReference Include="Azure.Identity" />
 	  <PackageReference Include="Azure.Storage.Blobs" />
 	  <PackageReference Include="Azure.Security.KeyVault.Secrets" />
+	  <PackageReference Include="NJsonSchema" />
+	  <PackageReference Include="Polly" />
 	</ItemGroup>
 
 </Project>

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using VisionaryCoder.Framework.Primitives;
 
-namespace VisionaryCoder.Framework.Primitives.AspNetCore;
+namespace VisionaryCoder.Framework.Primitives.Web.AspNetCore;
 public sealed class EntityIdModelBinderProvider : IModelBinderProvider
 {
     public IModelBinder? GetBinder(ModelBinderProviderContext ctx)

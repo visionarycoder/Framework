@@ -1,4 +1,5 @@
 using FluentAssertions;
+
 using VisionaryCoder.Framework.Proxy.Interceptors.Security;
 
 namespace VisionaryCoder.Framework.Tests.Proxy.Interceptors.Security;

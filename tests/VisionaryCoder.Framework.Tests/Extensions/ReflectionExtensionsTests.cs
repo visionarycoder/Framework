@@ -111,7 +111,7 @@ public class ReflectionExtensionsTests
         Type interfaceType = typeof(IList);
 
         // Act
-        var result = type.ImplementsInterface(interfaceType);
+        bool result = type.ImplementsInterface(interfaceType);
 
         // Assert
         result.Should().BeTrue();
@@ -125,7 +125,7 @@ public class ReflectionExtensionsTests
         Type interfaceType = typeof(IList);
 
         // Act
-        var result = type.ImplementsInterface(interfaceType);
+        bool result = type.ImplementsInterface(interfaceType);
 
         // Assert
         result.Should().BeFalse();
@@ -139,7 +139,7 @@ public class ReflectionExtensionsTests
         Type interfaceType = typeof(IEnumerable<int>);
 
         // Act
-        var result = type.ImplementsInterface(interfaceType);
+        bool result = type.ImplementsInterface(interfaceType);
 
         // Assert
         result.Should().BeTrue();
@@ -153,7 +153,7 @@ public class ReflectionExtensionsTests
         Type interfaceType = typeof(string); // Not an interface
 
         // Act
-        var result = type.ImplementsInterface(interfaceType);
+        bool result = type.ImplementsInterface(interfaceType);
 
         // Assert
         result.Should().BeFalse();
@@ -166,7 +166,7 @@ public class ReflectionExtensionsTests
         Type interfaceType = typeof(IDisposable);
 
         // Act
-        var result = interfaceType.ImplementsInterface(interfaceType);
+        bool result = interfaceType.ImplementsInterface(interfaceType);
 
         // Assert
         result.Should().BeTrue();
@@ -179,7 +179,7 @@ public class ReflectionExtensionsTests
         Type classType = typeof(string);
 
         // Act
-        var result = classType.ImplementsInterface(classType);
+        bool result = classType.ImplementsInterface(classType);
 
         // Assert
         result.Should().BeFalse();
@@ -217,7 +217,7 @@ public class ReflectionExtensionsTests
         Type interfaceType = typeof(IEnumerable);
 
         // Act
-        var result = type.ImplementsInterface(interfaceType);
+        bool result = type.ImplementsInterface(interfaceType);
 
         // Assert
         result.Should().BeTrue();
@@ -235,7 +235,7 @@ public class ReflectionExtensionsTests
         string methodName = "GetHashCode"; // This method has overloads causing ambiguous match
 
         // Act & Assert - GetHashCode has overloads causing AmbiguousMatchException
-        var act = () => obj.InvokeMethod(methodName);
+        Func<object?> act = () => obj.InvokeMethod(methodName);
         act.Should().Throw<AmbiguousMatchException>();
     }
 
@@ -248,7 +248,7 @@ public class ReflectionExtensionsTests
         object[] parameters = new object[] { "World" };
 
         // Act & Assert - IndexOf has overloads causing AmbiguousMatchException
-        var act = () => obj.InvokeMethod(methodName, parameters);
+        Func<object?> act = () => obj.InvokeMethod(methodName, parameters);
         act.Should().Throw<AmbiguousMatchException>();
     }
 
@@ -261,7 +261,7 @@ public class ReflectionExtensionsTests
         object[] parameters = new object[] { "World", "Universe" };
 
         // Act & Assert - Replace has overloads causing AmbiguousMatchException
-        var act = () => obj.InvokeMethod(methodName, parameters);
+        Func<object?> act = () => obj.InvokeMethod(methodName, parameters);
         act.Should().Throw<AmbiguousMatchException>();
     }
 
@@ -274,7 +274,7 @@ public class ReflectionExtensionsTests
         object[] parameters = new object[] { "test" };
 
         // Act
-        var result = list.InvokeMethod(methodName, parameters);
+        object? result = list.InvokeMethod(methodName, parameters);
 
         // Assert
         result.Should().BeNull();
@@ -289,7 +289,7 @@ public class ReflectionExtensionsTests
         string methodName = "GetValue";
 
         // Act
-        var result = obj.InvokeMethod(methodName);
+        object? result = obj.InvokeMethod(methodName);
 
         // Assert
         result.Should().Be("TestValue");
@@ -380,11 +380,11 @@ public class ReflectionExtensionsTests
 
         // Act & Assert
         // Test type checking
-        var implementsDisposable = testObj.GetType().ImplementsInterface(typeof(IDisposable));
+        bool implementsDisposable = testObj.GetType().ImplementsInterface(typeof(IDisposable));
         implementsDisposable.Should().BeTrue();
 
         // Test method invocation
-        var result = testObj.InvokeMethod("GetValue");
+        object? result = testObj.InvokeMethod("GetValue");
         result.Should().Be("TestValue");
 
         // Test calling class detection
@@ -413,10 +413,10 @@ public class ReflectionExtensionsTests
         dictionary.GetType().ImplementsInterface(typeof(IDisposable)).Should().BeFalse();
 
         // Test method invocation
-        var containsResult = dictionary.InvokeMethod("ContainsKey", "test");
+        object? containsResult = dictionary.InvokeMethod("ContainsKey", "test");
         containsResult.Should().Be(true);
 
-        var countResult = dictionary.InvokeMethod("get_Count");
+        object? countResult = dictionary.InvokeMethod("get_Count");
         countResult.Should().Be(1);
     }
 

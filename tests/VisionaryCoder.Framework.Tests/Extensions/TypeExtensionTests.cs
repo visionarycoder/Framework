@@ -15,7 +15,7 @@ public class TypeExtensionTests
         object? value = null;
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeFalse();
@@ -28,7 +28,7 @@ public class TypeExtensionTests
         bool value = true;
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeTrue();
@@ -41,7 +41,7 @@ public class TypeExtensionTests
         bool value = false;
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeFalse();
@@ -54,7 +54,7 @@ public class TypeExtensionTests
         string value = "true";
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeTrue();
@@ -67,7 +67,7 @@ public class TypeExtensionTests
         string value = "false";
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeFalse();
@@ -80,7 +80,7 @@ public class TypeExtensionTests
         string value = "invalid";
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeFalse();
@@ -93,7 +93,7 @@ public class TypeExtensionTests
         int value = 5;
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeTrue();
@@ -106,7 +106,7 @@ public class TypeExtensionTests
         int value = 0;
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeFalse();
@@ -119,7 +119,7 @@ public class TypeExtensionTests
         long value = 100L;
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeTrue();
@@ -132,7 +132,7 @@ public class TypeExtensionTests
         long value = 0L;
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeFalse();
@@ -145,7 +145,7 @@ public class TypeExtensionTests
         double value = 0.1;
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeTrue();
@@ -158,7 +158,7 @@ public class TypeExtensionTests
         double value = 0.0;
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeFalse();
@@ -171,7 +171,7 @@ public class TypeExtensionTests
         decimal value = 1.5m;
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeTrue();
@@ -184,7 +184,7 @@ public class TypeExtensionTests
         decimal value = 0m;
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeFalse();
@@ -197,7 +197,7 @@ public class TypeExtensionTests
         object value = new object();
 
         // Act
-        var result = value.AsBoolean();
+        bool result = value.AsBoolean();
 
         // Assert
         result.Should().BeFalse();
@@ -214,7 +214,7 @@ public class TypeExtensionTests
         object? value = null;
 
         // Act
-        var result = value.AsInteger(42);
+        int result = value.AsInteger(42);
 
         // Assert
         result.Should().Be(42);
@@ -227,7 +227,7 @@ public class TypeExtensionTests
         object? value = null;
 
         // Act
-        var result = value.AsInteger();
+        int result = value.AsInteger();
 
         // Assert
         result.Should().Be(0);
@@ -240,7 +240,7 @@ public class TypeExtensionTests
         int value = 123;
 
         // Act
-        var result = value.AsInteger();
+        int result = value.AsInteger();
 
         // Assert
         result.Should().Be(123);
@@ -253,7 +253,7 @@ public class TypeExtensionTests
         string value = "456";
 
         // Act
-        var result = value.AsInteger();
+        int result = value.AsInteger();
 
         // Assert
         result.Should().Be(456);
@@ -266,7 +266,7 @@ public class TypeExtensionTests
         string value = "invalid";
 
         // Act
-        var result = value.AsInteger(99);
+        int result = value.AsInteger(99);
 
         // Assert
         result.Should().Be(99);
@@ -279,7 +279,7 @@ public class TypeExtensionTests
         double value = 123.7;
 
         // Act
-        var result = value.AsInteger();
+        int result = value.AsInteger();
 
         // Assert
         result.Should().Be(123);
@@ -292,7 +292,7 @@ public class TypeExtensionTests
         decimal value = 456.9m;
 
         // Act
-        var result = value.AsInteger();
+        int result = value.AsInteger();
 
         // Assert
         result.Should().Be(456);
@@ -305,7 +305,7 @@ public class TypeExtensionTests
         float value = 789.3f;
 
         // Act
-        var result = value.AsInteger();
+        int result = value.AsInteger();
 
         // Assert
         result.Should().Be(789);
@@ -318,7 +318,7 @@ public class TypeExtensionTests
         bool value = true;
 
         // Act
-        var result = value.AsInteger();
+        int result = value.AsInteger();
 
         // Assert
         result.Should().Be(1);
@@ -331,7 +331,7 @@ public class TypeExtensionTests
         bool value = false;
 
         // Act
-        var result = value.AsInteger();
+        int result = value.AsInteger();
 
         // Assert
         result.Should().Be(0);
@@ -344,7 +344,7 @@ public class TypeExtensionTests
         object value = new object();
 
         // Act
-        var result = value.AsInteger(77);
+        int result = value.AsInteger(77);
 
         // Assert
         result.Should().Be(77);
@@ -361,7 +361,7 @@ public class TypeExtensionTests
         object? value = null;
 
         // Act
-        var result = value.AsString("default");
+        string result = value.AsString("default");
 
         // Assert
         result.Should().Be("default");
@@ -374,7 +374,7 @@ public class TypeExtensionTests
         object? value = null;
 
         // Act
-        var result = value.AsString();
+        string result = value.AsString();
 
         // Assert
         result.Should().Be("");
@@ -387,7 +387,7 @@ public class TypeExtensionTests
         string value = "test string";
 
         // Act
-        var result = value.AsString();
+        string result = value.AsString();
 
         // Assert
         result.Should().Be("test string");
@@ -400,7 +400,7 @@ public class TypeExtensionTests
         int value = 123;
 
         // Act
-        var result = value.AsString();
+        string result = value.AsString();
 
         // Assert
         result.Should().Be("123");
@@ -413,7 +413,7 @@ public class TypeExtensionTests
         bool value = true;
 
         // Act
-        var result = value.AsString();
+        string result = value.AsString();
 
         // Assert
         result.Should().Be("True");
@@ -426,7 +426,7 @@ public class TypeExtensionTests
         var value = new DateTime(2024, 1, 1);
 
         // Act
-        var result = value.AsString();
+        string result = value.AsString();
 
         // Assert
         result.Should().Contain("2024");
@@ -444,7 +444,7 @@ public class TypeExtensionTests
         object? value = null;
 
         // Act
-        var result = value.AsLong(100L);
+        long result = value.AsLong(100L);
 
         // Assert
         result.Should().Be(100L);
@@ -457,7 +457,7 @@ public class TypeExtensionTests
         long value = 9876543210L;
 
         // Act
-        var result = value.AsLong();
+        long result = value.AsLong();
 
         // Assert
         result.Should().Be(9876543210L);
@@ -470,7 +470,7 @@ public class TypeExtensionTests
         int value = 123;
 
         // Act
-        var result = value.AsLong();
+        long result = value.AsLong();
 
         // Assert
         result.Should().Be(123L);
@@ -483,7 +483,7 @@ public class TypeExtensionTests
         string value = "987654321";
 
         // Act
-        var result = value.AsLong();
+        long result = value.AsLong();
 
         // Assert
         result.Should().Be(987654321L);
@@ -496,7 +496,7 @@ public class TypeExtensionTests
         string value = "invalid";
 
         // Act
-        var result = value.AsLong(555L);
+        long result = value.AsLong(555L);
 
         // Assert
         result.Should().Be(555L);
@@ -513,7 +513,7 @@ public class TypeExtensionTests
         object? value = null;
 
         // Act
-        var result = value.AsDouble(1.5);
+        double result = value.AsDouble(1.5);
 
         // Assert
         result.Should().Be(1.5);
@@ -526,7 +526,7 @@ public class TypeExtensionTests
         double value = 123.456;
 
         // Act
-        var result = value.AsDouble();
+        double result = value.AsDouble();
 
         // Assert
         result.Should().Be(123.456);
@@ -539,7 +539,7 @@ public class TypeExtensionTests
         int value = 42;
 
         // Act
-        var result = value.AsDouble();
+        double result = value.AsDouble();
 
         // Assert
         result.Should().Be(42.0);
@@ -552,7 +552,7 @@ public class TypeExtensionTests
         string value = "987.654";
 
         // Act
-        var result = value.AsDouble();
+        double result = value.AsDouble();
 
         // Assert
         result.Should().Be(987.654);
@@ -565,7 +565,7 @@ public class TypeExtensionTests
         string value = "invalid";
 
         // Act
-        var result = value.AsDouble(2.5);
+        double result = value.AsDouble(2.5);
 
         // Assert
         result.Should().Be(2.5);
@@ -583,7 +583,7 @@ public class TypeExtensionTests
         var defaultValue = new DateTime(2024, 1, 1);
 
         // Act
-        var result = value.AsDateTime(defaultValue);
+        DateTime result = value.AsDateTime(defaultValue);
 
         // Assert
         result.Should().Be(defaultValue);
@@ -596,7 +596,7 @@ public class TypeExtensionTests
         var value = new DateTime(2024, 6, 15);
 
         // Act
-        var result = value.AsDateTime();
+        DateTime result = value.AsDateTime();
 
         // Assert
         result.Should().Be(new DateTime(2024, 6, 15));
@@ -609,7 +609,7 @@ public class TypeExtensionTests
         string value = "2024-01-01";
 
         // Act
-        var result = value.AsDateTime();
+        DateTime result = value.AsDateTime();
 
         // Assert
         result.Year.Should().Be(2024);
@@ -625,7 +625,7 @@ public class TypeExtensionTests
         var defaultValue = new DateTime(2023, 12, 31);
 
         // Act
-        var result = value.AsDateTime(defaultValue);
+        DateTime result = value.AsDateTime(defaultValue);
 
         // Assert
         result.Should().Be(defaultValue);
@@ -643,7 +643,7 @@ public class TypeExtensionTests
         var defaultValue = Guid.NewGuid();
 
         // Act
-        var result = value.AsGuid(defaultValue);
+        Guid result = value.AsGuid(defaultValue);
 
         // Assert
         result.Should().Be(defaultValue);
@@ -657,7 +657,7 @@ public class TypeExtensionTests
         Guid value = guid;
 
         // Act
-        var result = value.AsGuid();
+        Guid result = value.AsGuid();
 
         // Assert
         result.Should().Be(guid);
@@ -671,7 +671,7 @@ public class TypeExtensionTests
         string value = guid.ToString();
 
         // Act
-        var result = value.AsGuid();
+        Guid result = value.AsGuid();
 
         // Assert
         result.Should().Be(guid);
@@ -685,7 +685,7 @@ public class TypeExtensionTests
         var defaultValue = Guid.NewGuid();
 
         // Act
-        var result = value.AsGuid(defaultValue);
+        Guid result = value.AsGuid(defaultValue);
 
         // Assert
         result.Should().Be(defaultValue);
@@ -702,10 +702,10 @@ public class TypeExtensionTests
         string stringValue = "123";
 
         // Act
-        var asInt = stringValue.AsInteger();
-        var asDouble = asInt.AsDouble();
-        var asString = asDouble.AsString();
-        var asBool = asInt.AsBoolean();
+        int asInt = stringValue.AsInteger();
+        double asDouble = asInt.AsDouble();
+        string asString = asDouble.AsString();
+        bool asBool = asInt.AsBoolean();
 
         // Assert
         asInt.Should().Be(123);
@@ -730,8 +730,8 @@ public class TypeExtensionTests
         foreach (var testCase in testCases)
         {
             // Act
-            var intResult = testCase.Input.AsInteger();
-            var boolResult = testCase.Input.AsBoolean();
+            int intResult = testCase.Input.AsInteger();
+            bool boolResult = testCase.Input.AsBoolean();
 
             // Assert
             intResult.Should().Be(testCase.ExpectedInt, $"because input {testCase.Input} should convert to {testCase.ExpectedInt}");

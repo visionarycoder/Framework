@@ -1,0 +1,11 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "**/queries/*.json",
+        "**/filters/*.json"
+      ],
+      "url": "./.json/schemas/queryfilter.schema.json"
+    }
+  ]
+}

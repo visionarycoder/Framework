@@ -28,7 +28,7 @@ public sealed class QueryFilterExtensionsTests
         var filter2 = new QueryFilter<TestEntity>(e => e.Id < 100);
 
         // Act
-        var combined = filter1.And(filter2);
+        QueryFilter<TestEntity> combined = filter1.And(filter2);
 
         // Assert
         combined.Should().NotBeNull();
@@ -77,7 +77,7 @@ public sealed class QueryFilterExtensionsTests
         var filter2 = new QueryFilter<TestEntity>(e => e.Id > 90);
 
         // Act
-        var combined = filter1.Or(filter2);
+        QueryFilter<TestEntity> combined = filter1.Or(filter2);
 
         // Assert
         combined.Should().NotBeNull();
@@ -125,7 +125,7 @@ public sealed class QueryFilterExtensionsTests
         var filter = new QueryFilter<TestEntity>(e => e.Id > 50);
 
         // Act
-        var negated = filter.Not();
+        QueryFilter<TestEntity> negated = filter.Not();
 
         // Assert
         negated.Should().NotBeNull();
@@ -157,7 +157,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Name;
 
         // Act
-        var filter = QueryFilterExtensions.Contains(selector, "test");
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.Contains(selector, "test");
 
         // Assert
         filter.Should().NotBeNull();
@@ -172,7 +172,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Name;
 
         // Act
-        var filter = QueryFilterExtensions.Contains(selector, null);
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.Contains(selector, null);
 
         // Assert
         filter.Should().NotBeNull();
@@ -186,7 +186,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Name;
 
         // Act
-        var filter = QueryFilterExtensions.Contains(selector, "");
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.Contains(selector, "");
 
         // Assert
         filter.Should().NotBeNull();
@@ -200,7 +200,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Name;
 
         // Act
-        var filter = QueryFilterExtensions.Contains(selector, "   ");
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.Contains(selector, "   ");
 
         // Assert
         filter.Should().NotBeNull();
@@ -231,7 +231,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Name;
 
         // Act
-        var filter = QueryFilterExtensions.StartsWith(selector, "test");
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.StartsWith(selector, "test");
 
         // Assert
         filter.Should().NotBeNull();
@@ -246,7 +246,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Name;
 
         // Act
-        var filter = QueryFilterExtensions.StartsWith(selector, null);
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.StartsWith(selector, null);
 
         // Assert
         filter.Should().NotBeNull();
@@ -277,7 +277,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Email;
 
         // Act
-        var filter = QueryFilterExtensions.EndsWith(selector, ".com");
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.EndsWith(selector, ".com");
 
         // Assert
         filter.Should().NotBeNull();
@@ -292,7 +292,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Email;
 
         // Act
-        var filter = QueryFilterExtensions.EndsWith(selector, null);
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.EndsWith(selector, null);
 
         // Assert
         filter.Should().NotBeNull();
@@ -323,7 +323,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Name;
 
         // Act
-        var filter = QueryFilterExtensions.ContainsIgnoreCase(selector, "TEST");
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.ContainsIgnoreCase(selector, "TEST");
 
         // Assert
         filter.Should().NotBeNull();
@@ -340,7 +340,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Name;
 
         // Act
-        var filter = QueryFilterExtensions.ContainsIgnoreCase(selector, "test");
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.ContainsIgnoreCase(selector, "test");
 
         // Assert - This will check the null-safety in the expression
         filter.Should().NotBeNull();
@@ -354,7 +354,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Name;
 
         // Act
-        var filter = QueryFilterExtensions.ContainsIgnoreCase(selector, null);
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.ContainsIgnoreCase(selector, null);
 
         // Assert
         filter.Should().NotBeNull();
@@ -385,7 +385,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Name;
 
         // Act
-        var filter = QueryFilterExtensions.StartsWithIgnoreCase(selector, "TEST");
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.StartsWithIgnoreCase(selector, "TEST");
 
         // Assert
         filter.Should().NotBeNull();
@@ -402,7 +402,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Name;
 
         // Act
-        var filter = QueryFilterExtensions.StartsWithIgnoreCase(selector, "test");
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.StartsWithIgnoreCase(selector, "test");
 
         // Assert
         filter.Should().NotBeNull();
@@ -433,7 +433,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Email;
 
         // Act
-        var filter = QueryFilterExtensions.EndsWithIgnoreCase(selector, ".COM");
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.EndsWithIgnoreCase(selector, ".COM");
 
         // Assert
         filter.Should().NotBeNull();
@@ -450,7 +450,7 @@ public sealed class QueryFilterExtensionsTests
         Expression<Func<TestEntity, string>> selector = e => e.Email;
 
         // Act
-        var filter = QueryFilterExtensions.EndsWithIgnoreCase(selector, ".com");
+        QueryFilter<TestEntity> filter = QueryFilterExtensions.EndsWithIgnoreCase(selector, ".com");
 
         // Assert
         filter.Should().NotBeNull();
@@ -478,7 +478,7 @@ public sealed class QueryFilterExtensionsTests
     public void Join_WithMultipleFiltersAndTrue_ShouldCombineWithAnd()
     {
         // Arrange
-        var filters = new[]
+        QueryFilter<TestEntity>[] filters = new[]
         {
             new QueryFilter<TestEntity>(e => e.Id > 0),
             new QueryFilter<TestEntity>(e => e.Id < 100),
@@ -486,7 +486,7 @@ public sealed class QueryFilterExtensionsTests
         };
 
         // Act
-        var combined = filters.Join(useAnd: true);
+        QueryFilter<TestEntity> combined = filters.Join(useAnd: true);
 
         // Assert
         combined.Should().NotBeNull();
@@ -498,14 +498,14 @@ public sealed class QueryFilterExtensionsTests
     public void Join_WithMultipleFiltersAndFalse_ShouldCombineWithOr()
     {
         // Arrange
-        var filters = new[]
+        QueryFilter<TestEntity>[] filters = new[]
         {
             new QueryFilter<TestEntity>(e => e.Id < 10),
             new QueryFilter<TestEntity>(e => e.Id > 90)
         };
 
         // Act
-        var combined = filters.Join(useAnd: false);
+        QueryFilter<TestEntity> combined = filters.Join(useAnd: false);
 
         // Assert
         combined.Should().NotBeNull();
@@ -518,10 +518,10 @@ public sealed class QueryFilterExtensionsTests
     public void Join_WithEmptySequence_ShouldReturnAlwaysTrueFilter()
     {
         // Arrange
-        var filters = Array.Empty<QueryFilter<TestEntity>>();
+        QueryFilter<TestEntity>[] filters = Array.Empty<QueryFilter<TestEntity>>();
 
         // Act
-        var combined = filters.Join();
+        QueryFilter<TestEntity> combined = filters.Join();
 
         // Assert
         combined.Should().NotBeNull();
@@ -549,7 +549,7 @@ public sealed class QueryFilterExtensionsTests
         var filter2 = new QueryFilter<TestEntity>(e => e.Id < 100);
 
         // Act
-        var combined = QueryFilterExtensions.Join(true, filter1, filter2);
+        QueryFilter<TestEntity> combined = QueryFilterExtensions.Join(true, filter1, filter2);
 
         // Assert
         combined.Should().NotBeNull();
@@ -561,7 +561,7 @@ public sealed class QueryFilterExtensionsTests
     public void Join_ParamsOverload_WithNullArray_ShouldReturnAlwaysTrueFilter()
     {
         // Act
-        var combined = QueryFilterExtensions.Join<TestEntity>(true, null!);
+        QueryFilter<TestEntity> combined = QueryFilterExtensions.Join<TestEntity>(true, null!);
 
         // Assert
         combined.Should().NotBeNull();
@@ -638,7 +638,7 @@ public sealed class QueryFilterExtensionsTests
             new TestEntity(4, "David", "david@test.com")
         }.AsQueryable();
 
-        var filters = new[]
+        QueryFilter<TestEntity>[] filters = new[]
         {
             new QueryFilter<TestEntity>(e => e.Id > 1),
             new QueryFilter<TestEntity>(e => e.Id < 4)
@@ -663,7 +663,7 @@ public sealed class QueryFilterExtensionsTests
             new TestEntity(2, "Bob", "bob@test.com")
         }.AsQueryable();
 
-        var filters = new[]
+        QueryFilter<TestEntity>?[] filters = new[]
         {
             new QueryFilter<TestEntity>(e => e.Id > 0),
             null,
@@ -682,7 +682,7 @@ public sealed class QueryFilterExtensionsTests
     {
         // Arrange
         IQueryable<TestEntity> source = null!;
-        var filters = new[] { new QueryFilter<TestEntity>(e => e.Id > 0) };
+        QueryFilter<TestEntity>[] filters = new[] { new QueryFilter<TestEntity>(e => e.Id > 0) };
 
         // Act
         Action act = () => source.ApplyAll(filters);
@@ -721,9 +721,9 @@ public sealed class QueryFilterExtensionsTests
             new TestEntity(4, "David Davis", "david@test.org")
         }.AsQueryable();
 
-        var hasA = QueryFilterExtensions.ContainsIgnoreCase<TestEntity>(e => e.Name, "a");
-        var gmail = QueryFilterExtensions.EndsWithIgnoreCase<TestEntity>(e => e.Email, "@gmail.com");
-        var filter = hasA.And(gmail);
+        QueryFilter<TestEntity> hasA = QueryFilterExtensions.ContainsIgnoreCase<TestEntity>(e => e.Name, "a");
+        QueryFilter<TestEntity> gmail = QueryFilterExtensions.EndsWithIgnoreCase<TestEntity>(e => e.Email, "@gmail.com");
+        QueryFilter<TestEntity> filter = hasA.And(gmail);
 
         // Act
         var result = data.Apply(filter).ToList();
@@ -745,9 +745,9 @@ public sealed class QueryFilterExtensionsTests
             new TestEntity(3, "Charlie", "charlie@hotmail.com")
         }.AsQueryable();
 
-        var gmail = QueryFilterExtensions.EndsWithIgnoreCase<TestEntity>(e => e.Email, "@gmail.com");
-        var yahoo = QueryFilterExtensions.EndsWithIgnoreCase<TestEntity>(e => e.Email, "@yahoo.com");
-        var filter = gmail.Or(yahoo);
+        QueryFilter<TestEntity> gmail = QueryFilterExtensions.EndsWithIgnoreCase<TestEntity>(e => e.Email, "@gmail.com");
+        QueryFilter<TestEntity> yahoo = QueryFilterExtensions.EndsWithIgnoreCase<TestEntity>(e => e.Email, "@yahoo.com");
+        QueryFilter<TestEntity> filter = gmail.Or(yahoo);
 
         // Act
         var result = data.Apply(filter).ToList();
@@ -769,8 +769,8 @@ public sealed class QueryFilterExtensionsTests
             new TestEntity(3, "Charlie", "charlie@test.com")
         }.AsQueryable();
 
-        var hasAlice = QueryFilterExtensions.ContainsIgnoreCase<TestEntity>(e => e.Name, "alice");
-        var notAlice = hasAlice.Not();
+        QueryFilter<TestEntity> hasAlice = QueryFilterExtensions.ContainsIgnoreCase<TestEntity>(e => e.Name, "alice");
+        QueryFilter<TestEntity> notAlice = hasAlice.Not();
 
         // Act
         var result = data.Apply(notAlice).ToList();

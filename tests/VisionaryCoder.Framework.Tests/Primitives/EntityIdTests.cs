@@ -1,5 +1,5 @@
 using FluentAssertions;
-using VisionaryCoder.Framework.Abstractions;
+
 using VisionaryCoder.Framework.Primitives;
 
 namespace VisionaryCoder.Framework.Tests.Primitives;
@@ -149,7 +149,7 @@ public class EntityIdTests
         var id = new EntityId<TestUser, int>(value);
 
         // Act
-        var result = id.ToString();
+        string result = id.ToString();
 
         // Assert
         result.Should().Be(expected);
@@ -163,7 +163,7 @@ public class EntityIdTests
         var id = new EntityId<TestUser, string>(value);
 
         // Act
-        var result = id.ToString();
+        string result = id.ToString();
 
         // Assert
         result.Should().Be(value);
@@ -177,7 +177,7 @@ public class EntityIdTests
         var id = new EntityId<TestProduct, Guid>(guid);
 
         // Act
-        var result = id.ToString();
+        string result = id.ToString();
 
         // Assert
         result.Should().Be("12345678-1234-1234-1234-123456789012");
@@ -414,7 +414,7 @@ public class EntityIdTests
     public void TryParse_WithIntString_ShouldReturnExpectedResult(string text, bool expectedSuccess, int expectedValue)
     {
         // Act
-        var success = EntityId<TestUser, int>.TryParse(text, out var id);
+        bool success = EntityId<TestUser, int>.TryParse(text, out EntityId<TestUser, int> id);
 
         // Assert
         success.Should().Be(expectedSuccess);
@@ -432,7 +432,7 @@ public class EntityIdTests
         var expectedGuid = Guid.Parse(guidString);
 
         // Act
-        var success = EntityId<TestProduct, Guid>.TryParse(guidString, out var id);
+        bool success = EntityId<TestProduct, Guid>.TryParse(guidString, out EntityId<TestProduct, Guid> id);
 
         // Assert
         success.Should().BeTrue();
@@ -446,7 +446,7 @@ public class EntityIdTests
     public void TryParse_WithInvalidGuidString_ShouldReturnFalse(string text)
     {
         // Act
-        var success = EntityId<TestProduct, Guid>.TryParse(text, out var id);
+        bool success = EntityId<TestProduct, Guid>.TryParse(text, out EntityId<TestProduct, Guid> id);
 
         // Assert
         success.Should().BeFalse();
@@ -462,7 +462,7 @@ public class EntityIdTests
     public void TryParse_WithString_ShouldReturnExpectedResult(string text, bool expectedSuccess)
     {
         // Act
-        var success = EntityId<TestUser, string>.TryParse(text, out var id);
+        bool success = EntityId<TestUser, string>.TryParse(text, out EntityId<TestUser, string> id);
 
         // Assert
         success.Should().Be(expectedSuccess);
@@ -479,7 +479,7 @@ public class EntityIdTests
     public void TryParse_WithLongString_ShouldReturnExpectedResult(string text, bool expectedSuccess, long expectedValue)
     {
         // Act
-        var success = EntityId<TestOrder, long>.TryParse(text, out var id);
+        bool success = EntityId<TestOrder, long>.TryParse(text, out EntityId<TestOrder, long> id);
 
         // Assert
         success.Should().Be(expectedSuccess);
@@ -496,7 +496,7 @@ public class EntityIdTests
     public void TryParse_WithShortString_ShouldReturnExpectedResult(string text, bool expectedSuccess, short expectedValue)
     {
         // Act
-        var success = EntityId<TestOrder, short>.TryParse(text, out var id);
+        bool success = EntityId<TestOrder, short>.TryParse(text, out EntityId<TestOrder, short> id);
 
         // Assert
         success.Should().Be(expectedSuccess);
@@ -518,7 +518,7 @@ public class EntityIdTests
         var iEntityId = (IEntityId)id;
 
         // Act
-        var valueType = iEntityId.ValueType;
+        Type valueType = iEntityId.ValueType;
 
         // Assert
         valueType.Should().Be(typeof(int));
@@ -533,7 +533,7 @@ public class EntityIdTests
         var iEntityId = (IEntityId)id;
 
         // Act
-        var boxedValue = iEntityId.BoxedValue;
+        object boxedValue = iEntityId.BoxedValue;
 
         // Assert
         boxedValue.Should().Be(value);
@@ -548,7 +548,7 @@ public class EntityIdTests
         var iEntityId = (IEntityId)id;
 
         // Act
-        var valueType = iEntityId.ValueType;
+        Type valueType = iEntityId.ValueType;
 
         // Assert
         valueType.Should().Be(typeof(string));
@@ -562,7 +562,7 @@ public class EntityIdTests
         var iEntityId = (IEntityId)id;
 
         // Act
-        var valueType = iEntityId.ValueType;
+        Type valueType = iEntityId.ValueType;
 
         // Assert
         valueType.Should().Be(typeof(Guid));
@@ -658,7 +658,7 @@ public class EntityIdTests
     public void TryParse_WithIntOverflow_ShouldReturnFalse(string text)
     {
         // Act
-        var success = EntityId<TestUser, int>.TryParse(text, out _);
+        bool success = EntityId<TestUser, int>.TryParse(text, out _);
 
         // Assert
         success.Should().BeFalse();
@@ -668,7 +668,7 @@ public class EntityIdTests
     public void TryParse_WithNullString_ShouldReturnFalse()
     {
         // Act
-        var success = EntityId<TestUser, string>.TryParse(null!, out _);
+        bool success = EntityId<TestUser, string>.TryParse(null!, out _);
 
         // Assert
         success.Should().BeFalse();
@@ -681,7 +681,7 @@ public class EntityIdTests
         var id = new EntityId<TestUser, int>(-42);
 
         // Act
-        var result = id.ToString();
+        string result = id.ToString();
 
         // Assert
         result.Should().Be("-42");

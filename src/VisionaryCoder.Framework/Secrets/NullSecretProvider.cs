@@ -1,5 +1,3 @@
-using VisionaryCoder.Framework.Abstractions;
-
 namespace VisionaryCoder.Framework.Secrets;
 
 /// <summary>

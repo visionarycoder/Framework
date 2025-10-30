@@ -82,7 +82,7 @@ public class QueryFilterTests
         var filter = new QueryFilter<TestUser>(predicate);
 
         // Act
-        var retrievedPredicate = filter.Predicate;
+        Expression<Func<TestUser, bool>> retrievedPredicate = filter.Predicate;
 
         // Assert
         retrievedPredicate.Should().BeSameAs(predicate);
@@ -116,11 +116,11 @@ public class QueryFilterTests
         // Arrange
         Expression<Func<TestUser, bool>> predicate = u => u.Age < 25;
         var filter = new QueryFilter<TestUser>(predicate);
-        var compiledFunc = filter.Predicate.Compile();
+        Func<TestUser, bool> compiledFunc = filter.Predicate.Compile();
         var testUser = new TestUser("Test", 20);
 
         // Act
-        var result = compiledFunc(testUser);
+        bool result = compiledFunc(testUser);
 
         // Assert
         result.Should().BeTrue();
@@ -273,7 +273,7 @@ public class QueryFilterTests
         var user = new TestUser("Test", 25);
 
         // Act
-        var result = filter.Predicate.Compile()(user);
+        bool result = filter.Predicate.Compile()(user);
 
         // Assert
         result.Should().BeTrue();

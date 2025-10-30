@@ -289,8 +289,8 @@ public class ConstantsTests
     public void Headers_CorrelationId_ShouldAlignWithLogging_CorrelationIdProperty()
     {
         // Assert - Header name (with hyphens) and logging property should represent the same concept (case-insensitive)
-        var headerWithoutPrefix = Constants.Headers.CorrelationId.Replace("X-", "").Replace("-", "");
-        var loggingProperty = Constants.Logging.CorrelationIdProperty;
+        string headerWithoutPrefix = Constants.Headers.CorrelationId.Replace("X-", "").Replace("-", "");
+        string loggingProperty = Constants.Logging.CorrelationIdProperty;
         headerWithoutPrefix.Should().BeEquivalentTo(loggingProperty, "both represent the same correlation ID concept");
     }
 
@@ -298,8 +298,8 @@ public class ConstantsTests
     public void Headers_RequestId_ShouldAlignWithLogging_RequestIdProperty()
     {
         // Assert - Header name (with hyphens) and logging property should represent the same concept (case-insensitive)
-        var headerWithoutPrefix = Constants.Headers.RequestId.Replace("X-", "").Replace("-", "");
-        var loggingProperty = Constants.Logging.RequestIdProperty;
+        string headerWithoutPrefix = Constants.Headers.RequestId.Replace("X-", "").Replace("-", "");
+        string loggingProperty = Constants.Logging.RequestIdProperty;
         headerWithoutPrefix.Should().BeEquivalentTo(loggingProperty, "both represent the same request ID concept");
     }
 

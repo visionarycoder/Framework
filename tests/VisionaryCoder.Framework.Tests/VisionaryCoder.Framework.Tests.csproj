@@ -20,9 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\VisionaryCoder.Framework\VisionaryCoder.Framework.csproj" />
-    <ProjectReference Include="..\..\src\VisionaryCoder.Framework.Abstractions\VisionaryCoder.Framework.Abstractions.csproj" />
-    <ProjectReference Include="..\..\src\VisionaryCoder.Framework.Proxy\VisionaryCoder.Framework.Proxy.csproj" />
-    <ProjectReference Include="..\..\src\VisionaryCoder.Framework.Proxy.Abstractions\VisionaryCoder.Framework.Proxy.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

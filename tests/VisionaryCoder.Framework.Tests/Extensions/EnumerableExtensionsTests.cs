@@ -16,7 +16,7 @@ public class EnumerableExtensionsTests
         IEnumerable<int>? collection = null;
 
         // Act
-        var result = collection.ContainsDuplicates();
+        bool result = collection.ContainsDuplicates();
 
         // Assert
         result.Should().BeFalse();
@@ -29,7 +29,7 @@ public class EnumerableExtensionsTests
         var collection = new List<int>();
 
         // Act
-        var result = collection.ContainsDuplicates();
+        bool result = collection.ContainsDuplicates();
 
         // Assert
         result.Should().BeFalse();
@@ -42,7 +42,7 @@ public class EnumerableExtensionsTests
         var collection = new List<int> { 1 };
 
         // Act
-        var result = collection.ContainsDuplicates();
+        bool result = collection.ContainsDuplicates();
 
         // Assert
         result.Should().BeFalse();
@@ -55,7 +55,7 @@ public class EnumerableExtensionsTests
         var collection = new List<int> { 1, 2, 3, 4, 5 };
 
         // Act
-        var result = collection.ContainsDuplicates();
+        bool result = collection.ContainsDuplicates();
 
         // Assert
         result.Should().BeFalse();
@@ -68,7 +68,7 @@ public class EnumerableExtensionsTests
         var collection = new List<int> { 1, 2, 3, 2, 4 };
 
         // Act
-        var result = collection.ContainsDuplicates();
+        bool result = collection.ContainsDuplicates();
 
         // Assert
         result.Should().BeTrue();
@@ -82,7 +82,7 @@ public class EnumerableExtensionsTests
         StringComparer comparer = StringComparer.OrdinalIgnoreCase;
 
         // Act
-        var result = collection.ContainsDuplicates(comparer);
+        bool result = collection.ContainsDuplicates(comparer);
 
         // Assert
         result.Should().BeTrue();
@@ -96,7 +96,7 @@ public class EnumerableExtensionsTests
         StringComparer comparer = StringComparer.OrdinalIgnoreCase;
 
         // Act
-        var result = collection.ContainsDuplicates(comparer);
+        bool result = collection.ContainsDuplicates(comparer);
 
         // Assert
         result.Should().BeFalse();
@@ -113,7 +113,7 @@ public class EnumerableExtensionsTests
         IEnumerable<int>? source = null;
 
         // Act
-        var result = source.IsNullOrEmpty();
+        bool result = source.IsNullOrEmpty();
 
         // Assert
         result.Should().BeTrue();
@@ -126,7 +126,7 @@ public class EnumerableExtensionsTests
         var source = new List<int>();
 
         // Act
-        var result = source.IsNullOrEmpty();
+        bool result = source.IsNullOrEmpty();
 
         // Assert
         result.Should().BeTrue();
@@ -139,7 +139,7 @@ public class EnumerableExtensionsTests
         var source = new List<int> { 1, 2, 3 };
 
         // Act
-        var result = source.IsNullOrEmpty();
+        bool result = source.IsNullOrEmpty();
 
         // Assert
         result.Should().BeFalse();
@@ -437,7 +437,7 @@ public class EnumerableExtensionsTests
         IEnumerable<int>? source = null;
 
         // Act
-        var result = source.TryFirst(out var value);
+        bool result = source.TryFirst(out int value);
 
         // Assert
         result.Should().BeFalse();
@@ -451,7 +451,7 @@ public class EnumerableExtensionsTests
         var source = new List<int>();
 
         // Act
-        var result = source.TryFirst(out var value);
+        bool result = source.TryFirst(out int value);
 
         // Assert
         result.Should().BeFalse();
@@ -465,7 +465,7 @@ public class EnumerableExtensionsTests
         var source = new List<int> { 1, 2, 3 };
 
         // Act
-        var result = source.TryFirst(out var value);
+        bool result = source.TryFirst(out int value);
 
         // Assert
         result.Should().BeTrue();
@@ -483,7 +483,7 @@ public class EnumerableExtensionsTests
         IEnumerable<int>? source = null;
 
         // Act
-        var result = source.TryLast(out var value);
+        bool result = source.TryLast(out int value);
 
         // Assert
         result.Should().BeFalse();
@@ -497,7 +497,7 @@ public class EnumerableExtensionsTests
         var source = new List<int>();
 
         // Act
-        var result = source.TryLast(out var value);
+        bool result = source.TryLast(out int value);
 
         // Assert
         result.Should().BeFalse();
@@ -511,7 +511,7 @@ public class EnumerableExtensionsTests
         var source = new List<int> { 1, 2, 3 };
 
         // Act
-        var result = source.TryLast(out var value);
+        bool result = source.TryLast(out int value);
 
         // Assert
         result.Should().BeTrue();
@@ -525,7 +525,7 @@ public class EnumerableExtensionsTests
         int[] source = new int[] { 1, 2, 3 };
 
         // Act
-        var result = source.TryLast(out var value);
+        bool result = source.TryLast(out int value);
 
         // Assert
         result.Should().BeTrue();
@@ -539,7 +539,7 @@ public class EnumerableExtensionsTests
         IEnumerable<int> source = Enumerable.Range(1, 3);
 
         // Act
-        var result = source.TryLast(out var value);
+        bool result = source.TryLast(out int value);
 
         // Assert
         result.Should().BeTrue();
@@ -568,7 +568,7 @@ public class EnumerableExtensionsTests
         var source = new List<int> { 1, 2, 3 };
 
         // Act
-        var result = source.ToDelimitedString();
+        string result = source.ToDelimitedString();
 
         // Assert
         result.Should().Be("1, 2, 3");
@@ -581,7 +581,7 @@ public class EnumerableExtensionsTests
         var source = new List<string> { "a", "b", "c" };
 
         // Act
-        var result = source.ToDelimitedString(" | ");
+        string result = source.ToDelimitedString(" | ");
 
         // Assert
         result.Should().Be("a | b | c");
@@ -594,7 +594,7 @@ public class EnumerableExtensionsTests
         var source = new List<int>();
 
         // Act
-        var result = source.ToDelimitedString();
+        string result = source.ToDelimitedString();
 
         // Assert
         result.Should().BeEmpty();
@@ -804,7 +804,7 @@ public class EnumerableExtensionsTests
         };
 
         // Act
-        var adultNames = EnumerableExtensions.DistinctBy(source
+        string adultNames = EnumerableExtensions.DistinctBy(source
                 .Where(p => p.age >= 30), p => p.age)
             .WithIndex()
             .Select(item => $"{item.index}: {item.item.name}")

@@ -18,7 +18,7 @@ public class CollectionExtensionsTests
         ICollection<string>? collection = null;
 
         // Act
-        var result = collection.IsNullOrEmpty();
+        bool result = collection.IsNullOrEmpty();
 
         // Assert
         result.Should().BeTrue();
@@ -31,7 +31,7 @@ public class CollectionExtensionsTests
         var collection = new List<string>();
 
         // Act
-        var result = collection.IsNullOrEmpty();
+        bool result = collection.IsNullOrEmpty();
 
         // Assert
         result.Should().BeTrue();
@@ -44,7 +44,7 @@ public class CollectionExtensionsTests
         var collection = new List<string?> { null, null, null };
 
         // Act
-        var result = collection.IsNullOrEmpty();
+        bool result = collection.IsNullOrEmpty();
 
         // Assert
         result.Should().BeTrue();
@@ -57,7 +57,7 @@ public class CollectionExtensionsTests
         var collection = new List<int> { 0, 0, 0 };
 
         // Act
-        var result = collection.IsNullOrEmpty();
+        bool result = collection.IsNullOrEmpty();
 
         // Assert
         result.Should().BeTrue();
@@ -70,7 +70,7 @@ public class CollectionExtensionsTests
         var collection = new List<string> { "value1", "value2" };
 
         // Act
-        var result = collection.IsNullOrEmpty();
+        bool result = collection.IsNullOrEmpty();
 
         // Assert
         result.Should().BeFalse();
@@ -83,7 +83,7 @@ public class CollectionExtensionsTests
         var collection = new List<string?> { null, "valid", null };
 
         // Act
-        var result = collection.IsNullOrEmpty();
+        bool result = collection.IsNullOrEmpty();
 
         // Assert
         result.Should().BeFalse();
@@ -100,7 +100,7 @@ public class CollectionExtensionsTests
         ICollection<string>? collection = null;
 
         // Act
-        var result = collection.HasAny();
+        bool result = collection.HasAny();
 
         // Assert
         result.Should().BeFalse();
@@ -113,7 +113,7 @@ public class CollectionExtensionsTests
         var collection = new List<string>();
 
         // Act
-        var result = collection.HasAny();
+        bool result = collection.HasAny();
 
         // Assert
         result.Should().BeFalse();
@@ -126,7 +126,7 @@ public class CollectionExtensionsTests
         var collection = new List<string> { "item" };
 
         // Act
-        var result = collection.HasAny();
+        bool result = collection.HasAny();
 
         // Assert
         result.Should().BeTrue();
@@ -139,7 +139,7 @@ public class CollectionExtensionsTests
         var collection = new List<int> { 1, 2, 3, 4, 5 };
 
         // Act
-        var result = collection.HasAny();
+        bool result = collection.HasAny();
 
         // Assert
         result.Should().BeTrue();
@@ -190,7 +190,7 @@ public class CollectionExtensionsTests
         string[] itemsToAdd = new[] { "item1" };
 
         // Act & Assert
-        var action = () => collection!.AddRange(itemsToAdd);
+        Action action = () => collection!.AddRange(itemsToAdd);
         action.Should().Throw<ArgumentNullException>();
     }
 
@@ -220,7 +220,7 @@ public class CollectionExtensionsTests
         var collection = new List<string> { "first", "second", "third" };
 
         // Act
-        var result = collection.TryGetElement(1, out var value);
+        bool result = collection.TryGetElement(1, out string? value);
 
         // Assert
         result.Should().BeTrue();
@@ -234,7 +234,7 @@ public class CollectionExtensionsTests
         var collection = new List<string> { "first", "second" };
 
         // Act
-        var result = collection.TryGetElement(-1, out var value);
+        bool result = collection.TryGetElement(-1, out string? value);
 
         // Assert
         result.Should().BeFalse();
@@ -248,7 +248,7 @@ public class CollectionExtensionsTests
         var collection = new List<string> { "first", "second" };
 
         // Act
-        var result = collection.TryGetElement(5, out var value);
+        bool result = collection.TryGetElement(5, out string? value);
 
         // Assert
         result.Should().BeFalse();
@@ -262,7 +262,7 @@ public class CollectionExtensionsTests
         ICollection<string>? collection = null;
 
         // Act & Assert
-        var action = () => collection!.TryGetElement(0, out _);
+        Func<bool> action = () => collection!.TryGetElement(0, out _);
         action.Should().Throw<ArgumentNullException>();
     }
 
@@ -273,7 +273,7 @@ public class CollectionExtensionsTests
         var collection = new List<string>();
 
         // Act
-        var result = collection.TryGetElement(0, out var value);
+        bool result = collection.TryGetElement(0, out string? value);
 
         // Assert
         result.Should().BeFalse();
@@ -287,8 +287,8 @@ public class CollectionExtensionsTests
         var collection = new List<int> { 10, 20, 30 };
 
         // Act
-        var firstResult = collection.TryGetElement(0, out var firstValue);
-        var lastResult = collection.TryGetElement(2, out var lastValue);
+        bool firstResult = collection.TryGetElement(0, out int firstValue);
+        bool lastResult = collection.TryGetElement(2, out int lastValue);
 
         // Assert
         firstResult.Should().BeTrue();
@@ -308,7 +308,7 @@ public class CollectionExtensionsTests
         var collection = new List<int> { 1, 2, 3, 4, 5, 6 };
 
         // Act
-        var removedCount = collection.RemoveWhere(x => x % 2 == 0); // Remove even numbers
+        int removedCount = collection.RemoveWhere(x => x % 2 == 0); // Remove even numbers
 
         // Assert
         removedCount.Should().Be(3);
@@ -323,7 +323,7 @@ public class CollectionExtensionsTests
         var collection = new List<string> { "apple", "banana", "cherry" };
 
         // Act
-        var removedCount = collection.RemoveWhere(x => x.StartsWith("z"));
+        int removedCount = collection.RemoveWhere(x => x.StartsWith("z"));
 
         // Assert
         removedCount.Should().Be(0);
@@ -338,7 +338,7 @@ public class CollectionExtensionsTests
         var collection = new List<int> { 2, 4, 6, 8 };
 
         // Act
-        var removedCount = collection.RemoveWhere(x => x % 2 == 0);
+        int removedCount = collection.RemoveWhere(x => x % 2 == 0);
 
         // Assert
         removedCount.Should().Be(4);
@@ -352,7 +352,7 @@ public class CollectionExtensionsTests
         ICollection<string>? collection = null;
 
         // Act & Assert
-        var action = () => collection!.RemoveWhere(x => x.Length > 0);
+        Func<int> action = () => collection!.RemoveWhere(x => x.Length > 0);
         action.Should().Throw<ArgumentNullException>();
     }
 
@@ -363,7 +363,7 @@ public class CollectionExtensionsTests
         var collection = new List<string> { "item" };
 
         // Act & Assert
-        var action = () => collection.RemoveWhere(null!);
+        Func<int> action = () => collection.RemoveWhere(null!);
         action.Should().Throw<ArgumentNullException>();
     }
 
@@ -374,7 +374,7 @@ public class CollectionExtensionsTests
         var collection = new List<string>();
 
         // Act
-        var removedCount = collection.RemoveWhere(x => true);
+        int removedCount = collection.RemoveWhere(x => true);
 
         // Assert
         removedCount.Should().Be(0);
@@ -392,7 +392,7 @@ public class CollectionExtensionsTests
         var collection = new List<int> { 1, 2 };
 
         // Act
-        var result = collection.AddIf(3, x => x > 0);
+        bool result = collection.AddIf(3, x => x > 0);
 
         // Assert
         result.Should().BeTrue();
@@ -407,7 +407,7 @@ public class CollectionExtensionsTests
         var collection = new List<int> { 1, 2 };
 
         // Act
-        var result = collection.AddIf(-1, x => x > 0);
+        bool result = collection.AddIf(-1, x => x > 0);
 
         // Assert
         result.Should().BeFalse();
@@ -422,7 +422,7 @@ public class CollectionExtensionsTests
         ICollection<string>? collection = null;
 
         // Act & Assert
-        var action = () => collection!.AddIf("item", x => true);
+        Func<bool> action = () => collection!.AddIf("item", x => true);
         action.Should().Throw<ArgumentNullException>();
     }
 
@@ -433,8 +433,8 @@ public class CollectionExtensionsTests
         var collection = new List<string> { "apple", "banana" };
 
         // Act
-        var result1 = collection.AddIf("cherry", x => x.Length > 3);
-        var result2 = collection.AddIf("kiwi", x => x.Length > 5);
+        bool result1 = collection.AddIf("cherry", x => x.Length > 3);
+        bool result2 = collection.AddIf("kiwi", x => x.Length > 5);
 
         // Assert
         result1.Should().BeTrue();
@@ -451,7 +451,7 @@ public class CollectionExtensionsTests
         var collection = new List<string?> { "item1" };
 
         // Act
-        var result = collection.AddIf(null, x => x == null);
+        bool result = collection.AddIf(null, x => x == null);
 
         // Assert
         result.Should().BeTrue();
@@ -471,8 +471,8 @@ public class CollectionExtensionsTests
 
         // Act
         collection.AddRange(new[] { 6, 7, 8 });
-        var evenRemoved = collection.RemoveWhere(x => x % 2 == 0);
-        var added = collection.AddIf(9, x => x % 2 != 0);
+        int evenRemoved = collection.RemoveWhere(x => x % 2 == 0);
+        bool added = collection.AddIf(9, x => x % 2 != 0);
 
         // Assert
         evenRemoved.Should().Be(4); // Removed 2, 4, 6, 8
@@ -492,7 +492,7 @@ public class CollectionExtensionsTests
 
         // Test with List
         var list = new List<int> { 1, 2, 3 };
-        list.TryGetElement(1, out var value).Should().BeTrue();
+        list.TryGetElement(1, out int value).Should().BeTrue();
         value.Should().Be(2);
     }
 
