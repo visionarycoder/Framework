@@ -1,15 +1,18 @@
 # SOLID Principles Authentication Usage Examples
 
 ## Overview
+
 The VisionaryCoder.Framework.Authentication namespace now follows SOLID principles, specifically the **Dependency Inversion Principle** and **Null Object Pattern**. This ensures explicit intent in provider registration and safe fallback behavior.
 
 ## Core SOLID Principle Applied
 
 ### Dependency Inversion Principle (DIP)
+
 - **High-level modules should not depend on low-level modules; both should depend on abstractions**
 - **Abstractions should not depend on details; details should depend on abstractions**
 
 ### Implementation Strategy
+
 1. **Null Object Pattern**: Safe fallbacks without implicit defaults
 2. **Explicit Registration**: No automatic provider assumptions
 3. **Interface-Based Design**: All dependencies through contracts
@@ -85,6 +88,7 @@ public void ConfigureServices(IServiceCollection services)
 ## Null Object Pattern Benefits
 
 ### Safe Fallback Behavior
+
 ```csharp
 // If no explicit provider is registered, null objects provide safe behavior:
 
@@ -99,6 +103,7 @@ var tokenResult = await tokenProvider.GetTokenAsync(request); // returns failed 
 ```
 
 ### SOLID Principle Compliance
+
 1. **Single Responsibility**: Each provider has one clear purpose
 2. **Open/Closed**: Easily extend with new providers without modifying existing code
 3. **Liskov Substitution**: All implementations are substitutable through interfaces
@@ -108,6 +113,7 @@ var tokenResult = await tokenProvider.GetTokenAsync(request); // returns failed 
 ## Anti-Patterns to Avoid
 
 ### ❌ Don't rely on implicit defaults
+
 ```csharp
 // BAD: Assuming providers are automatically registered
 services.AddJwtAuthentication(options => { /* ... */ });
@@ -115,6 +121,7 @@ services.AddJwtAuthentication(options => { /* ... */ });
 ```
 
 ### ❌ Don't register concrete dependencies directly
+
 ```csharp
 // BAD: Bypassing the framework's registration methods
 services.AddScoped<DefaultUserContextProvider>();
@@ -124,6 +131,7 @@ services.AddScoped<DefaultUserContextProvider>();
 ## ✅ Best Practices
 
 ### Explicit Intent Required
+
 ```csharp
 // GOOD: Clear, explicit provider registration
 services.AddJwtAuthentication(options => { /* ... */ });
@@ -131,6 +139,7 @@ services.UseDefaultAuthenticationProviders(); // Explicit intent to use defaults
 ```
 
 ### Custom Implementation with Validation
+
 ```csharp
 public class ValidatedUserContextProvider : IUserContextProvider
 {
@@ -197,6 +206,7 @@ public async Task ShouldUseExplicitProviderWhenRegistered()
 ```
 
 This approach ensures that:
+
 1. **No implicit behavior** - everything must be explicitly registered
 2. **Safe fallbacks** - null objects prevent runtime errors
 3. **Clear intent** - developers must explicitly choose their providers

@@ -16,6 +16,6 @@ public interface ICacheKeyProvider
     /// The key should be unique and deterministic for the same context inputs.
     /// </summary>
     /// <param name="context">The proxy context containing request information.</param>
-    /// <returns>A unique cache key string for the context.</returns>
-    string GenerateKey(ProxyContext context);
+    /// <returns>A unique cache key string for the context, or null to bypass caching.</returns>
+    string? GenerateKey(ProxyContext context);
 }

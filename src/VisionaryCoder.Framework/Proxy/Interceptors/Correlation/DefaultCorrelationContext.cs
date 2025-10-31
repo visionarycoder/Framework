@@ -8,9 +8,9 @@ public sealed class DefaultCorrelationContext : ICorrelationContext
     private static readonly AsyncLocal<Dictionary<string, string>?> data = new();
     
     /// <inheritdoc />
-    public string CorrelationId 
+    public string? CorrelationId 
     { 
-        get => correlationId.Value ?? string.Empty;
+        get => correlationId.Value;
         set => correlationId.Value = value;
     }
     

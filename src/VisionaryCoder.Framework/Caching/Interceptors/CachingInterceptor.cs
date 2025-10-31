@@ -58,6 +58,13 @@ public sealed class CachingInterceptor(
 
         // Generate and try to retrieve from cache
         var cacheKey = keyProvider.GenerateKey(context);
+        if (cacheKey == null)
+        {
+            logger.LogDebug("No cache key generated for operation '{OperationName}', bypassing cache. Correlation ID: '{CorrelationId}'", 
+                operationName, correlationId);
+            return await next(context, cancellationToken);
+        }
+        
         var cachedResponse = await proxyCache.GetAsync<T>(cacheKey, cancellationToken);
 
         if (cachedResponse != null)

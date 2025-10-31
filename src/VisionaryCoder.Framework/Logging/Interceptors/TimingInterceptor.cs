@@ -67,7 +67,7 @@ public sealed class TimingInterceptor(ILogger<TimingInterceptor> logger) : IOrde
             
             return response;
         }
-        catch (OperationCanceledException ex) when (cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             stopwatch.Stop();
             var elapsedMs = stopwatch.ElapsedMilliseconds;

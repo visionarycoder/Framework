@@ -69,7 +69,7 @@ public class RoleBasedAuthorizationPolicy : IAuthorizationPolicy
             return Task.FromResult(result);
         }
 
-        var failureResult = AuthorizationResult.Failure(evaluation.FailureReason);
+        var failureResult = AuthorizationResult.Failure(evaluation.FailureReason ?? "Authorization failed");
         failureResult.Context["UserRoles"] = evaluation.UserRoles;
         failureResult.Context["RequiredRoles"] = requiredRoles;
         failureResult.Context["PolicyName"] = PolicyName;

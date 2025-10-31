@@ -11,7 +11,7 @@ public interface ICorrelationContext
     /// <summary>
     /// Gets or sets the correlation ID.
     /// </summary>
-    string CorrelationId { get; set; }
+    string? CorrelationId { get; set; }
 
     /// <summary>
     /// Gets or sets additional correlation data.

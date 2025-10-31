@@ -74,7 +74,7 @@ public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IOr
             
             throw;
         }
-        catch (OperationCanceledException ex) when (cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             var duration = DateTimeOffset.UtcNow - startTime;
             logger.LogWarning("Proxy operation '{OperationName}' was cancelled after {Duration}ms. Correlation ID: '{CorrelationId}'", 

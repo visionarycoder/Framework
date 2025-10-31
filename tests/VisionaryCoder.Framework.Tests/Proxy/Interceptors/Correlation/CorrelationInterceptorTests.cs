@@ -96,7 +96,7 @@ public class CorrelationInterceptorTests
     {
         // Arrange
         string generatedId = "generated-456";
-        mockCorrelationContext.Setup(c => c.CorrelationId).Returns((string?)null);
+        mockCorrelationContext.Setup(c => c.CorrelationId).Returns(null as string);
         mockIdGenerator.Setup(g => g.GenerateId()).Returns(generatedId);
         
         var context = new ProxyContext();
@@ -140,7 +140,7 @@ public class CorrelationInterceptorTests
     {
         // Arrange
         string generatedId = "new-corr-id";
-        mockCorrelationContext.Setup(c => c.CorrelationId).Returns((string?)null);
+        mockCorrelationContext.Setup(c => c.CorrelationId).Returns(null as string);
         mockIdGenerator.Setup(g => g.GenerateId()).Returns(generatedId);
         
         var context = new ProxyContext();
