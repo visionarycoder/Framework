@@ -8,14 +8,9 @@ namespace VisionaryCoder.Framework.Storage;
 /// <summary>
 /// Builder for configuring multiple storage implementations.
 /// </summary>
-public sealed class StorageRegistrationBuilder
+public sealed class StorageRegistrationBuilder(IServiceCollection services)
 {
-    private readonly IServiceCollection services;
-    
-    internal StorageRegistrationBuilder(IServiceCollection services)
-    {
-        this.services = services;
-    }
+
     /// <summary>
     /// Adds a local storage implementation to the factory.
     /// </summary>
@@ -28,6 +23,7 @@ public sealed class StorageRegistrationBuilder
         services.TryAddTransient<LocalStorageProvider>();
         return this;
     }
+
     /// <summary>
     /// Adds an FTP/FTPS storage implementation to the factory using FluentFTP.
     /// </summary>
