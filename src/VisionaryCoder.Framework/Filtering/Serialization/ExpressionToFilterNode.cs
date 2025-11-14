@@ -193,7 +193,13 @@ public static class ExpressionToFilterNode
             return new FilterCondition(path, FilterOperator.Contains, value);
         }
 
-        // Future: Custom methods can be added here
+        // Custom methods can be added here by checking call.Method.DeclaringType and Method.Name
+        // Example for custom method support:
+        // if (call.Method.DeclaringType == typeof(MyCustomClass) && call.Method.Name == "MyMethod")
+        // {
+        //     // Extract parameters and create appropriate FilterNode
+        //     return new FilterCondition(...);
+        // }
         return null;
 
     }
@@ -270,6 +276,11 @@ public static class ExpressionToFilterNode
         return string.Join('.', parts);
     }
 
+    /// <summary>
+    /// Translates LINQ Enumerable method calls (Any, All, Contains) to FilterNode structures.
+    /// </summary>
+    /// <param name="call">The method call expression representing a LINQ Enumerable method.</param>
+    /// <returns>A FilterNode representing the collection operation, or null if translation is not supported.</returns>
     static FilterNode? TranslateEnumerableMethod(MethodCallExpression call)
     {
         // First argument should be the collection (source)
@@ -337,6 +348,11 @@ public static class ExpressionToFilterNode
         return null;
     }
 
+    /// <summary>
+    /// Checks if a type is a collection type (array or implements IEnumerable&lt;T&gt;, ICollection&lt;T&gt;, or IList&lt;T&gt;).
+    /// </summary>
+    /// <param name="type">The type to check.</param>
+    /// <returns>True if the type is a collection type (excluding string); otherwise, false.</returns>
     static bool IsCollectionType(Type type)
     {
         if (type == typeof(string))
