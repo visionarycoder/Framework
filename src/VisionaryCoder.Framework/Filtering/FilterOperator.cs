@@ -8,5 +8,8 @@ public enum FilterOperator
     LessOrEqual,
     Contains,
     StartsWith,
-    EndsWith
+    EndsWith,
+    Any,
+    All,
+    HasElements
 }

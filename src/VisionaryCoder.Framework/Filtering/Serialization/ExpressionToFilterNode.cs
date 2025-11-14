@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace VisionaryCoder.Framework.Filtering.Serialization;
@@ -164,7 +165,35 @@ public static class ExpressionToFilterNode
                 : new FilterCondition(path, op.Value, value);
         }
 
-        // TODO: extend to Any(), custom methods, etc.
+        // Collection methods: Any(), All(), Contains()
+        if (call.Method.DeclaringType == typeof(Enumerable))
+        {
+            return TranslateEnumerableMethod(call);
+        }
+
+        // Collection instance methods: Contains() on List/ICollection
+        if (call.Object is not null && 
+            IsCollectionType(call.Object.Type) &&
+            call.Method.Name == nameof(List<object>.Contains) &&
+            call.Arguments.Count == 1)
+        {
+            var collectionMember = GetMember(call.Object);
+            if (collectionMember is null)
+            {
+                return null;
+            }
+
+            var path = GetMemberPath(collectionMember);
+            if (path is null)
+            {
+                return null;
+            }
+
+            var value = EvaluateToString(call.Arguments[0]);
+            return new FilterCondition(path, FilterOperator.Contains, value);
+        }
+
+        // Future: Custom methods can be added here
         return null;
 
     }
@@ -239,6 +268,88 @@ public static class ExpressionToFilterNode
 
         // Stop at the root parameter (e.g. x)
         return string.Join('.', parts);
+    }
+
+    static FilterNode? TranslateEnumerableMethod(MethodCallExpression call)
+    {
+        // First argument should be the collection (source)
+        if (call.Arguments.Count == 0)
+        {
+            return null;
+        }
+
+        var collectionExpr = call.Arguments[0];
+        var collectionMember = GetMember(collectionExpr);
+        if (collectionMember is null)
+        {
+            return null;
+        }
+
+        var path = GetMemberPath(collectionMember);
+        if (path is null)
+        {
+            return null;
+        }
+
+        switch (call.Method.Name)
+        {
+            case nameof(Enumerable.Any):
+                // Any() without predicate - just check if collection has elements
+                if (call.Arguments.Count == 1)
+                {
+                    return new FilterCollectionCondition(path, FilterOperator.HasElements, null);
+                }
+                // Any(predicate) - check if any element matches the predicate
+                else if (call.Arguments.Count == 2 && call.Arguments[1] is UnaryExpression { Operand: LambdaExpression lambdaPredicate })
+                {
+                    var predicateFilter = TranslateNode(lambdaPredicate.Body);
+                    if (predicateFilter is null)
+                    {
+                        return null;
+                    }
+                    return new FilterCollectionCondition(path, FilterOperator.Any, predicateFilter);
+                }
+                break;
+
+            case nameof(Enumerable.All):
+                // All(predicate) - check if all elements match the predicate
+                if (call.Arguments.Count == 2 && call.Arguments[1] is UnaryExpression { Operand: LambdaExpression lambdaPredicate })
+                {
+                    var predicateFilter = TranslateNode(lambdaPredicate.Body);
+                    if (predicateFilter is null)
+                    {
+                        return null;
+                    }
+                    return new FilterCollectionCondition(path, FilterOperator.All, predicateFilter);
+                }
+                break;
+
+            case nameof(Enumerable.Contains):
+                // Contains(value) - check if collection contains a specific value
+                if (call.Arguments.Count == 2)
+                {
+                    var value = EvaluateToString(call.Arguments[1]);
+                    return new FilterCondition(path, FilterOperator.Contains, value);
+                }
+                break;
+        }
+
+        return null;
+    }
+
+    static bool IsCollectionType(Type type)
+    {
+        if (type == typeof(string))
+        {
+            return false;
+        }
+
+        return type.IsArray ||
+               type.GetInterfaces().Any(i =>
+                   i.IsGenericType &&
+                   (i.GetGenericTypeDefinition() == typeof(IEnumerable<>) ||
+                    i.GetGenericTypeDefinition() == typeof(ICollection<>) ||
+                    i.GetGenericTypeDefinition() == typeof(IList<>)));
     }
 
     static string? EvaluateToString(Expression expression)
