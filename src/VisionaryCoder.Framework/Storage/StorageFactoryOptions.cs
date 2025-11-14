@@ -5,11 +5,14 @@ namespace VisionaryCoder.Framework.Storage;
 /// </summary>
 public sealed class StorageFactoryOptions
 {
+    
     private readonly Dictionary<string, StorageImplementation> implementations = new();
+
     /// <summary>
     /// Gets the registered storage implementations.
     /// </summary>
     public IReadOnlyDictionary<string, StorageImplementation> Implementations => implementations;
+
     /// <summary>
     /// Registers a storage implementation.
     /// </summary>
@@ -20,4 +23,5 @@ public sealed class StorageFactoryOptions
     {
         implementations[name] = new StorageImplementation(implementationType, options);
     }
+
 }

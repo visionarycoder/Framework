@@ -9,6 +9,7 @@ namespace VisionaryCoder.Framework.Extensions;
 /// </summary>
 public static class DataConfigurationServiceCollectionExtensions
 {
+
     /// <summary>
     /// Adds a connection string from configuration to the service collection.
     /// </summary>
@@ -52,9 +53,7 @@ public static class DataConfigurationServiceCollectionExtensions
     /// Adds a connection string from a secret provider to the service collection.
     /// <param name="services">The service collection to add the connection string to.</param>
     /// <param name="secretName">The name of the secret containing the connection string.</param>
-    public static IServiceCollection AddConnectionStringFromSecret(
-        this IServiceCollection services,
-        string secretName)
+    public static IServiceCollection AddConnectionStringFromSecret(this IServiceCollection services, string secretName)
     {
         services.AddSingleton<string>(provider =>
         {

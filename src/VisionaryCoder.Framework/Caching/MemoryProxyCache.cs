@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using VisionaryCoder.Framework.Proxy;
 
 namespace VisionaryCoder.Framework.Caching;
@@ -13,8 +14,9 @@ namespace VisionaryCoder.Framework.Caching;
 /// </summary>
 public sealed class MemoryProxyCache(IMemoryCache cache, ILogger<MemoryProxyCache>? logger = null) : IProxyCache
 {
+
     private readonly IMemoryCache cache = cache ?? throw new ArgumentNullException(nameof(cache));
-    private readonly ILogger<MemoryProxyCache>? logger = logger;
+    private readonly ILogger<MemoryProxyCache> logger = logger ?? new NullLogger<MemoryProxyCache>();
 
     /// <summary>
     /// Gets a cached proxy response for the given key.
@@ -125,9 +127,9 @@ public sealed class MemoryProxyCache(IMemoryCache cache, ILogger<MemoryProxyCach
     public Task ClearAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        
+
         logger?.LogWarning("ClearAsync called on MemoryProxyCache. IMemoryCache does not support clearing all entries.");
-        
+
         // IMemoryCache doesn't have a Clear method, so we can't implement this fully
         // This would require tracking all keys or using a different cache implementation
         return Task.CompletedTask;

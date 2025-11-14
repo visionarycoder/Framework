@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using VisionaryCoder.Framework.Storage.Azure;
 using VisionaryCoder.Framework.Storage.Ftp;
 using VisionaryCoder.Framework.Storage.Local;
 
@@ -10,6 +11,7 @@ namespace VisionaryCoder.Framework.Storage;
 /// </summary>
 public static class StorageServiceCollectionExtensions
 {
+
     /// <summary>
     /// Registers the local storage implementation.
     /// </summary>
@@ -28,7 +30,7 @@ public static class StorageServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(options);
         services.AddSingleton(options);
-        services.AddTransient<IStorageProvider, FtpStorageProvider>();
+        services.TryAddTransient<IStorageProvider, FtpStorageProvider>();
         return services;
     }
 
@@ -41,7 +43,28 @@ public static class StorageServiceCollectionExtensions
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentNullException.ThrowIfNull(options);
         services.AddSingleton(options);
-        services.AddKeyedTransient<IStorageProvider, FtpStorageProvider>(name);
+        services.TryAddKeyedTransient<IStorageProvider, FtpStorageProvider>(name);
         return services;
     }
+
+    /// <summary>
+    /// Registers the Azure Blob storage provider implementation.
+    /// </summary>
+    public static IServiceCollection AddAzureBlobStorage(this IServiceCollection services, AzureBlobStorageOptions options)
+    {
+        services.AddSingleton(options);
+        services.TryAddTransient<IStorageProvider, AzureBlobStorageProvider>();
+        return services;
+    }
+
+        /// <summary>
+    /// Registers the Azure Blob storage provider implementation.
+    /// </summary>
+    public static IServiceCollection AddAzureBlobStorage(this IServiceCollection services, string name, AzureBlobStorageOptions options)
+    {
+        services.AddSingleton(options);
+        services.TryAddKeyedTransient<IStorageProvider, AzureBlobStorageProvider>(name);
+        return services;
+    }
+
 }
