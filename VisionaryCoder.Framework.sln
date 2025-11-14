@@ -53,7 +53,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".copilot", ".copilot", "{97
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{15F01A9A-90BF-4E18-B3DF-5F5E6DE97C39}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{CB6260C4-9E72-4283-96F2-7D671B9CCB2C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{CB6260C4-9E72-4283-96F2-7D671B9CCB2C}"
 	ProjectSection(SolutionItems) = preProject
 		docs\index.md = docs\index.md
 		docs\onboarding.md = docs\onboarding.md
