@@ -1,8 +1,3 @@
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-
 using VisionaryCoder.Framework.Proxy.Caching;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Caching;
@@ -18,11 +13,11 @@ public static class CachingInterceptorServiceCollectionExtensions
     /// <param name="configure">Optional configuration action for caching options.</param>
     /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddCachingInterceptor(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         Action<CachingOptions>? configure = null)
     {
         services.AddMemoryCache();
-        
+
         if (configure != null)
         {
             services.Configure(configure);
@@ -32,10 +27,10 @@ public static class CachingInterceptorServiceCollectionExtensions
             ILogger<CachingInterceptor> logger = provider.GetRequiredService<ILogger<CachingInterceptor>>();
             IMemoryCache cache = provider.GetRequiredService<IMemoryCache>();
             CachingOptions options = provider.GetService<IOptions<CachingOptions>>()?.Value ?? new CachingOptions();
-            
+
             return new CachingInterceptor(
-                logger, 
-                cache, 
+                logger,
+                cache,
                 options);
         });
         return services;

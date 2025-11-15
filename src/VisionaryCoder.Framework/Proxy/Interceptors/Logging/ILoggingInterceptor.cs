@@ -1,5 +1,3 @@
-using VisionaryCoder.Framework.Proxy.Interceptors;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Logging;
 
 /// Interface for logging interceptors.

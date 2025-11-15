@@ -3,10 +3,6 @@
 
 using System.Diagnostics;
 
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-
 using VisionaryCoder.Framework.Proxy.Interceptors.Auditing;
 using VisionaryCoder.Framework.Proxy.Interceptors.Caching;
 using VisionaryCoder.Framework.Proxy.Interceptors.Correlation;
@@ -16,8 +12,6 @@ using VisionaryCoder.Framework.Proxy.Interceptors.Retries;
 using VisionaryCoder.Framework.Proxy.Interceptors.Security;
 using VisionaryCoder.Framework.Proxy.Interceptors.Security.Web;
 using VisionaryCoder.Framework.Proxy.Interceptors.Telemetry;
-
-using IProxyCache = VisionaryCoder.Framework.Proxy.IProxyCache;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors;
 /// <summary>

@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace VisionaryCoder.Framework;
 
 /// <summary>
@@ -8,7 +6,7 @@ namespace VisionaryCoder.Framework;
 /// <typeparam name="T">The concrete service type for typed logging.</typeparam>
 public abstract class ServiceBase<T>(ILogger<T> logger) : IDisposable where T : class
 {
-    
+
     private bool disposed = false;
 
     /// <summary>

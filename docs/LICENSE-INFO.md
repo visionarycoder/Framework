@@ -22,12 +22,15 @@ When creating new source files, include this header at the top:
 - ✅ **Patent Use** - The license provides an express grant of patent rights from contributors
 
 ### Requirements
+
 - 📄 **License and Copyright Notice** - Include the license and copyright notice in all copies
 
 ### Limitations  
+
 - ❌ **Liability** - The license includes a limitation of liability
 - ❌ **Warranty** - The software is provided without warranty
 
 ---
 
 For the complete license terms, see the [LICENSE](LICENSE) file in the root of this repository.
+

@@ -1,4 +1,3 @@
-using FluentAssertions;
 using VisionaryCoder.Framework.Extensions;
 
 namespace VisionaryCoder.Framework.Tests.Extensions;
@@ -524,7 +523,7 @@ public class DivideByZeroExtensionsTests
         int intResult = DivideByZeroExtensions.SafeDivide(10, 0, -1);
         intResult.Should().Be(-1);
 
-        // Test with double  
+        // Test with double
         double doubleResult = DivideByZeroExtensions.SafeDivide(10.0, 0.0, -1.0);
         doubleResult.Should().Be(-1.0);
 

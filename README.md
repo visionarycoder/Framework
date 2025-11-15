@@ -4,8 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/v/VisionaryCoder.Framework.Core.svg)](https://www.nuget.org/packages/VisionaryCoder.Framework.Core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A collection of enterprise-grade libraries and infrastructure components designed for **clean, reproducible, and automated development**.  
-This framework is built with **multi‑targeting (.NET 8 + .NET 10)**, **Nerdbank.GitVersioning (NBGV)**, and a **CI/CD pipeline** that publishes prereleases to GitHub Packages and stable releases to NuGet.org.
+A modular, enterprise-grade framework starting with a single foundational library (`VisionaryCoder.Framework`) and accompanying test project. The repository emphasizes **clean, reproducible, and automated development** with .NET 8 (ready for forward compatibility to .NET 10). Future packages will evolve incrementally via ADRs.
 
 ---
 
@@ -26,70 +25,64 @@ dotnet test VisionaryCoder.Framework.sln --configuration Release
 
 ---
 
-## 📦 Framework Components
+## 📦 Current Solution Contents
 
-The VisionaryCoder Framework includes the following components:
+| Project | Type | Description |
+|---------|------|-------------|
+| `VisionaryCoder.Framework` | Library | Core framework primitives (configuration, results, options, providers, proxy abstractions). |
+| `VisionaryCoder.Framework.Tests` | Test Project | Unit tests validating core behaviors (results, request/correlation IDs, options). |
 
-### Core Libraries
+Planned future packages (tracked via ADRs) will be introduced gradually rather than pre-listed. See ADR index for roadmap context.
 
-- **VisionaryCoder.Framework.Core** - Base entity classes and core abstractions
-- **VisionaryCoder.Framework.Abstractions** - Core interfaces and contracts
+## 🗃️ Repository Structure (High-Level)
 
-### Extensions
-
-- **VisionaryCoder.Framework.Extensions** - General utility extensions
-- **VisionaryCoder.Framework.Extensions.Configuration** - Configuration helpers and providers
-- **VisionaryCoder.Framework.Extensions.Logging** - Enhanced logging capabilities
-- **VisionaryCoder.Framework.Extensions.Pagination** - Pagination support for collections
-- **VisionaryCoder.Framework.Extensions.Querying** - Advanced querying capabilities
-- **VisionaryCoder.Framework.Extensions.Security** - Security utilities and helpers
-
-### Platform-Specific Extensions
-
-- **VisionaryCoder.Framework.Extensions.Primitives** - Primitive type extensions
-- **VisionaryCoder.Framework.Extensions.Primitives.AspNetCore** - ASP.NET Core integration
-- **VisionaryCoder.Framework.Extensions.Primitives.EFCore** - Entity Framework Core integration
-
-### Proxy & Service Architecture
-
-- **VisionaryCoder.Framework.Proxy** - Proxy pattern implementations
-- **VisionaryCoder.Framework.Proxy.Abstractions** - Proxy abstractions and contracts
-- **VisionaryCoder.Framework.Proxy.Caching** - Caching proxy implementations
-- **VisionaryCoder.Framework.Proxy.DependencyInjection** - DI container integration
-- **VisionaryCoder.Framework.Proxy.Interceptors** - Method interception capabilities
-
-### Data Access
-
-- **VisionaryCoder.Framework.Data.Abstractions** - Data access abstractions
-- **VisionaryCoder.Framework.Services.Abstractions** - Service layer abstractions
-- **VisionaryCoder.Framework.Services.FileSystem** - File system services
-
-### Examples
-
-- **VisionaryCoder.Framework.Example** - Usage examples and demonstrations
+```text
+/.copilot                # Modular AI assistant instruction set (base + C# + patterns + standards)
+/docs                    # Documentation (ADRs, best-practices capsules, diagrams, reviews, onboarding)
+/src/VisionaryCoder.Framework  # Core library source
+/tests/VisionaryCoder.Framework.Tests # Unit tests
+/.github                 # Global Copilot instructions & workflows
+```
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Architecture Overview
 
-The VisionaryCoder Framework follows **Volatility-Based Decomposition (VBD)** principles:
+The framework follows **Volatility-Based Decomposition (VBD)** principles. While the current library aggregates foundational concerns, future decomposition will create distinct Manager, Engine, and Accessor component packages as volatility boundaries emerge.
 
-- **Managers**: Workflow orchestration and business process coordination
-- **Engines**: Core business logic and domain operations  
-- **Accessors**: Data access and external service integration
+Core library already enforces:
 
-All components communicate through contract interfaces and proxy implementations, enabling clean separation of concerns and excellent testability.
+- Contract-first abstractions for providers & proxies
+- Structured result + request/correlation context handling
+- Dependency injection integration & options binding
+- Early extensibility points for caching, security, querying
 
 ---
+
+## 📚 Documentation & Guidance
+
+- **ADRs**: `docs/adr/index.md` (recent: ADR-0004 modular Copilot instructions)
+- **Best Practices Capsules**: `docs/best-practices/*/readme.md` (architecture, security, observability, etc.)
+- **Copilot Instructions**: `.github/copilot-instructions.md` (enterprise baseline) and `.copilot/copilot-instructions.md` (modular hub)
+- **Design Patterns Guidance**: `.copilot/design-patterns.instructions.md`
+- **C# Generation Heuristics**: `.copilot/csharp.instructions.md`
+- **Repository Standards**: `.copilot/repo-standards.md`
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read our contributing guidelines and submit pull requests for any improvements.
+Contributions are welcome—please open an issue or ADR proposal before large architectural changes. Align new code with:
+
+1. Naming & layering rules (see global Copilot instructions)
+2. Volatility boundaries (introduce new packages only when volatility justifies extraction)
+3. Modular instruction consistency (update domain index + ADR when extending guidance)
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License – see [LICENSE](LICENSE).
 
 Copyright (c) 2025 VisionaryCoder
+
+---
+Last synchronized with solution structure: 2025-11-14

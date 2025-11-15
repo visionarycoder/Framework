@@ -1,5 +1,3 @@
-using ISecurityEnricher = VisionaryCoder.Framework.Proxy.Interceptors.Security.ISecurityEnricher;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
 /// <summary>
 /// Security enricher that adds tenant information to the proxy context.

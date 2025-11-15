@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+
 using VisionaryCoder.Framework.Authentication.Interceptors;
 using VisionaryCoder.Framework.Authentication.Jwt;
 using VisionaryCoder.Framework.Authentication.Providers;
@@ -24,10 +25,8 @@ public static class AuthenticationServiceCollectionExtensions
     /// <returns>The service collection for method chaining.</returns>
     /// <exception cref="ArgumentNullException">Thrown when services is null.</exception>
     /// <exception cref="ArgumentException">Thrown when JWT options are invalid.</exception>
-    public static IServiceCollection AddJwtAuthentication(
-        this IServiceCollection services,
-        Action<JwtOptions> configureOptions)
-    {
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, Action<JwtOptions> configureOptions)
+       {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configureOptions);
 
@@ -66,11 +65,11 @@ public static class AuthenticationServiceCollectionExtensions
         where T : class, IUserContextProvider
     {
         ArgumentNullException.ThrowIfNull(services);
-        
+
         // Replace any existing implementation with explicit provider
         services.RemoveAll<IUserContextProvider>();
         services.AddScoped<IUserContextProvider, T>();
-        
+
         return services;
     }
 
@@ -86,11 +85,11 @@ public static class AuthenticationServiceCollectionExtensions
         where T : class, ITenantContextProvider
     {
         ArgumentNullException.ThrowIfNull(services);
-        
+
         // Replace any existing implementation with explicit provider
         services.RemoveAll<ITenantContextProvider>();
         services.AddScoped<ITenantContextProvider, T>();
-        
+
         return services;
     }
 
@@ -106,11 +105,11 @@ public static class AuthenticationServiceCollectionExtensions
         where T : class, ITokenProvider
     {
         ArgumentNullException.ThrowIfNull(services);
-        
+
         // Replace any existing implementation with explicit provider
         services.RemoveAll<ITokenProvider>();
         services.AddScoped<ITokenProvider, T>();
-        
+
         return services;
     }
 
@@ -124,11 +123,11 @@ public static class AuthenticationServiceCollectionExtensions
     public static IServiceCollection UseDefaultAuthenticationProviders(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
-        
+
         services.ReplaceUserContextProvider<DefaultUserContextProvider>();
         services.ReplaceTenantContextProvider<DefaultTenantContextProvider>();
         services.ReplaceTokenProvider<DefaultTokenProvider>();
-        
+
         return services;
     }
 

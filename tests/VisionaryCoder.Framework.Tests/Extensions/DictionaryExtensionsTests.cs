@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
-using FluentAssertions;
 using VisionaryCoder.Framework.Extensions;
 
 namespace VisionaryCoder.Framework.Tests.Extensions;
@@ -121,7 +120,7 @@ public class DictionaryExtensionsTests
         var updateValueFactory = new Func<string, int, int>((k, v) => v + 1);
 
         // Act & Assert
-        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => 
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() =>
             dictionary!.AddOrUpdate("key", addValueFactory, updateValueFactory));
         exception.ParamName.Should().Be("dictionary");
     }
@@ -135,7 +134,7 @@ public class DictionaryExtensionsTests
         var updateValueFactory = new Func<string, int, int>((k, v) => v + 1);
 
         // Act & Assert
-        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => 
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() =>
             dictionary.AddOrUpdate("key", addValueFactory!, updateValueFactory));
         exception.ParamName.Should().Be("addValueFactory");
     }
@@ -149,7 +148,7 @@ public class DictionaryExtensionsTests
         Func<string, int, int>? updateValueFactory = null;
 
         // Act & Assert
-        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() => 
+        ArgumentNullException? exception = Assert.ThrowsExactly<ArgumentNullException>(() =>
             dictionary.AddOrUpdate("key", addValueFactory, updateValueFactory!));
         exception.ParamName.Should().Be("updateValueFactory");
     }

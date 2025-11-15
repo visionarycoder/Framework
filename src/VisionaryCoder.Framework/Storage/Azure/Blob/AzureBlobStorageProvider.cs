@@ -1,13 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 
-using Azure;
-using Azure.Identity;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
-
-using Microsoft.Extensions.Logging;
-
 namespace VisionaryCoder.Framework.Storage.Azure;
 
 /// <summary>
@@ -19,7 +12,7 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
 {
 
     private static readonly Encoding defaultEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-    
+
     private readonly AzureBlobStorageOptions options;
     private readonly BlobServiceClient blobServiceClient;
     private readonly BlobContainerClient containerClient;
@@ -66,13 +59,13 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     public bool FileExists(string path)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        
+
         try
         {
             string blobName = NormalizeBlobName(path);
             BlobClient? blobClient = containerClient.GetBlobClient(blobName);
             Response<bool>? response = blobClient.Exists();
-            
+
             Logger.LogTrace("Blob existence check for '{BlobName}': {Exists}", blobName, response.Value);
             return response.Value;
         }
@@ -98,14 +91,14 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     public byte[] ReadAllBytes(string path)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        
+
         try
         {
             string blobName = NormalizeBlobName(path);
             BlobClient? blobClient = containerClient.GetBlobClient(blobName);
-            
+
             Logger.LogDebug("Reading all bytes from blob '{BlobName}'", blobName);
-            
+
             if (!blobClient.Exists())
             {
                 throw new FileNotFoundException($"The blob '{blobName}' does not exist in container '{options.ContainerName}'.", path);
@@ -114,7 +107,7 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
             using var memoryStream = new MemoryStream();
             blobClient.DownloadTo(memoryStream);
             byte[] bytes = memoryStream.ToArray();
-            
+
             Logger.LogTrace("Successfully read {Length} bytes from blob '{BlobName}'", bytes.Length, blobName);
             return bytes;
         }
@@ -128,14 +121,14 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     public async Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        
+
         try
         {
             string blobName = NormalizeBlobName(path);
             BlobClient? blobClient = containerClient.GetBlobClient(blobName);
-            
+
             Logger.LogDebug("Reading all bytes async from blob '{BlobName}'", blobName);
-            
+
             Response<bool>? existsResponse = await blobClient.ExistsAsync(cancellationToken);
             if (!existsResponse.Value)
             {
@@ -145,7 +138,7 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
             using var memoryStream = new MemoryStream();
             await blobClient.DownloadToAsync(memoryStream, cancellationToken);
             byte[] bytes = memoryStream.ToArray();
-            
+
             Logger.LogTrace("Successfully read {Length} bytes async from blob '{BlobName}'", bytes.Length, blobName);
             return bytes;
         }
@@ -174,20 +167,20 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
         ArgumentNullException.ThrowIfNull(bytes);
-        
+
         try
         {
             string blobName = NormalizeBlobName(path);
             BlobClient? blobClient = containerClient.GetBlobClient(blobName);
-            
+
             Logger.LogDebug("Writing {Length} bytes to blob '{BlobName}'", bytes.Length, blobName);
-            
+
             using var memoryStream = new MemoryStream(bytes);
             var uploadOptions = new BlobUploadOptions
             {
                 AccessTier = options.DefaultAccessTier
             };
-            
+
             blobClient.Upload(memoryStream, uploadOptions);
             Logger.LogTrace("Successfully wrote bytes to blob '{BlobName}'", blobName);
         }
@@ -202,20 +195,20 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
         ArgumentNullException.ThrowIfNull(bytes);
-        
+
         try
         {
             string blobName = NormalizeBlobName(path);
             BlobClient? blobClient = containerClient.GetBlobClient(blobName);
-            
+
             Logger.LogDebug("Writing {Length} bytes async to blob '{BlobName}'", bytes.Length, blobName);
-            
+
             using var memoryStream = new MemoryStream(bytes);
             var uploadOptions = new BlobUploadOptions
             {
                 AccessTier = options.DefaultAccessTier
             };
-            
+
             await blobClient.UploadAsync(memoryStream, uploadOptions, cancellationToken);
             Logger.LogTrace("Successfully wrote bytes async to blob '{BlobName}'", blobName);
         }
@@ -229,12 +222,12 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     public void DeleteFile(string path)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        
+
         try
         {
             string blobName = NormalizeBlobName(path);
             BlobClient? blobClient = containerClient.GetBlobClient(blobName);
-            
+
             Logger.LogDebug("Deleting blob '{BlobName}'", blobName);
             blobClient.DeleteIfExists();
             Logger.LogTrace("Successfully deleted blob '{BlobName}'", blobName);
@@ -249,12 +242,12 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     public async Task DeleteFileAsync(string path, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        
+
         try
         {
             string blobName = NormalizeBlobName(path);
             BlobClient? blobClient = containerClient.GetBlobClient(blobName);
-            
+
             Logger.LogDebug("Deleting blob async '{BlobName}'", blobName);
             await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken);
             Logger.LogTrace("Successfully deleted blob async '{BlobName}'", blobName);
@@ -269,16 +262,16 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     public bool DirectoryExists(string path)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        
+
         try
         {
             string prefix = NormalizeDirectoryPrefix(path);
             Logger.LogTrace("Checking directory existence for prefix '{Prefix}'", prefix);
-            
+
             // In blob storage, directories are virtual - check if any blobs start with the prefix
             IEnumerable<BlobItem> blobs = containerClient.GetBlobs(prefix: prefix).Take(1);
             bool exists = blobs.Any();
-            
+
             Logger.LogTrace("Directory existence check for '{Path}': {Exists}", path, exists);
             return exists;
         }
@@ -292,20 +285,20 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     public DirectoryInfo CreateDirectory(string path)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        
+
         try
         {
             Logger.LogDebug("Creating directory '{Path}'", path);
-            
+
             // In blob storage, directories are virtual and created implicitly when blobs are added
             // We'll create a placeholder blob to represent the directory
             string directoryMarkerPath = Path.Combine(path, ".directory");
             string blobName = NormalizeBlobName(directoryMarkerPath);
             BlobClient? blobClient = containerClient.GetBlobClient(blobName);
-            
+
             using var emptyStream = new MemoryStream(Array.Empty<byte>());
             blobClient.Upload(emptyStream, overwrite: true);
-            
+
             Logger.LogTrace("Successfully created directory '{Path}'", path);
             return new DirectoryInfo(path);
         }
@@ -319,19 +312,19 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     public async Task<DirectoryInfo> CreateDirectoryAsync(string path, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        
+
         try
         {
             Logger.LogDebug("Creating directory async '{Path}'", path);
-            
+
             // Create directory marker blob
             string directoryMarkerPath = Path.Combine(path, ".directory");
             string blobName = NormalizeBlobName(directoryMarkerPath);
             BlobClient? blobClient = containerClient.GetBlobClient(blobName);
-            
+
             using var emptyStream = new MemoryStream(Array.Empty<byte>());
             await blobClient.UploadAsync(emptyStream, overwrite: true, cancellationToken: cancellationToken);
-            
+
             Logger.LogTrace("Successfully created directory async '{Path}'", path);
             return new DirectoryInfo(path);
         }
@@ -345,14 +338,14 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     public void DeleteDirectory(string path, bool recursive = true)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        
+
         try
         {
             string prefix = NormalizeDirectoryPrefix(path);
             Logger.LogDebug("Deleting directory '{Path}' (recursive: {Recursive})", path, recursive);
-            
+
             var blobs = containerClient.GetBlobs(prefix: prefix).ToList();
-            
+
             if (!recursive && blobs.Count > 1)
             {
                 // Check if there are any blobs other than the directory marker
@@ -362,13 +355,13 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
                     throw new IOException($"The directory '{path}' is not empty.");
                 }
             }
-            
+
             foreach (BlobItem? blob in blobs)
             {
                 BlobClient? blobClient = containerClient.GetBlobClient(blob.Name);
                 blobClient.DeleteIfExists();
             }
-            
+
             Logger.LogTrace("Successfully deleted directory '{Path}'", path);
         }
         catch (Exception ex)
@@ -381,18 +374,18 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     public async Task DeleteDirectoryAsync(string path, bool recursive = true, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        
+
         try
         {
             string prefix = NormalizeDirectoryPrefix(path);
             Logger.LogDebug("Deleting directory async '{Path}' (recursive: {Recursive})", path, recursive);
-            
+
             var blobs = new List<BlobItem>();
             await foreach (BlobItem? blob in containerClient.GetBlobsAsync(prefix: prefix, cancellationToken: cancellationToken))
             {
                 blobs.Add(blob);
             }
-            
+
             if (!recursive && blobs.Count > 1)
             {
                 var nonMarkerBlobs = blobs.Where(b => !b.Name.EndsWith("/.directory")).ToList();
@@ -401,13 +394,13 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
                     throw new IOException($"The directory '{path}' is not empty.");
                 }
             }
-            
+
             foreach (BlobItem blob in blobs)
             {
                 BlobClient? blobClient = containerClient.GetBlobClient(blob.Name);
                 await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken);
             }
-            
+
             Logger.LogTrace("Successfully deleted directory async '{Path}'", path);
         }
         catch (Exception ex)
@@ -421,18 +414,18 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
         ArgumentException.ThrowIfNullOrWhiteSpace(searchPattern);
-        
+
         try
         {
             string prefix = NormalizeDirectoryPrefix(path);
             Logger.LogDebug("Getting files from '{Path}' with pattern '{Pattern}'", path, searchPattern);
-            
+
             string[] blobs = containerClient.GetBlobs(prefix: prefix)
                 .Where(b => !b.Name.EndsWith("/.directory"))
                 .Where(b => MatchesPattern(Path.GetFileName(b.Name), searchPattern))
                 .Select(b => b.Name)
                 .ToArray();
-            
+
             Logger.LogTrace("Found {Count} files in '{Path}'", blobs.Length, path);
             return blobs;
         }
@@ -447,18 +440,18 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
         ArgumentException.ThrowIfNullOrWhiteSpace(searchPattern);
-        
+
         try
         {
             string prefix = NormalizeDirectoryPrefix(path);
             Logger.LogDebug("Getting directories from '{Path}' with pattern '{Pattern}'", path, searchPattern);
-            
+
             string[] directories = containerClient.GetBlobsByHierarchy(prefix: prefix, delimiter: "/")
                 .Where(item => item.IsPrefix)
                 .Select(item => item.Prefix.TrimEnd('/'))
                 .Where(dir => MatchesPattern(Path.GetFileName(dir), searchPattern))
                 .ToArray();
-            
+
             Logger.LogTrace("Found {Count} directories in '{Path}'", directories.Length, path);
             return directories;
         }
@@ -469,20 +462,20 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
         }
     }
 
-    public async IAsyncEnumerable<string> EnumerateFilesAsync(string path, string searchPattern = "*", 
+    public async IAsyncEnumerable<string> EnumerateFilesAsync(string path, string searchPattern = "*",
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
         ArgumentException.ThrowIfNullOrWhiteSpace(searchPattern);
-        
+
         Logger.LogDebug("Enumerating files async from '{Path}' with pattern '{Pattern}'", path, searchPattern);
-        
+
         string prefix = NormalizeDirectoryPrefix(path);
-        
+
         await foreach (BlobItem? blob in containerClient.GetBlobsAsync(prefix: prefix, cancellationToken: cancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            
+
             if (!blob.Name.EndsWith("/.directory") && MatchesPattern(Path.GetFileName(blob.Name), searchPattern))
             {
                 yield return blob.Name;
@@ -493,7 +486,7 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     public string GetFullPath(string path)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        
+
         try
         {
             string blobName = NormalizeBlobName(path);
@@ -511,7 +504,7 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     public string? GetDirectoryName(string path)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        
+
         try
         {
             string normalized = NormalizeBlobName(path);
@@ -529,7 +522,7 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
     public string GetFileName(string path)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        
+
         try
         {
             string normalized = NormalizeBlobName(path);
@@ -551,13 +544,13 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
 
         // Replace backslashes with forward slashes and remove leading slashes
         string normalized = path.Replace('\\', '/').TrimStart('/');
-        
+
         // Remove duplicate slashes
         while (normalized.Contains("//"))
         {
             normalized = normalized.Replace("//", "/");
         }
-        
+
         return normalized;
     }
 

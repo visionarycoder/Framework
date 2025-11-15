@@ -1,6 +1,5 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FluentAssertions;
 using VisionaryCoder.Framework.Primitives;
 
 namespace VisionaryCoder.Framework.Tests.Primitives;

@@ -1,5 +1,3 @@
-using FluentAssertions;
-
 using VisionaryCoder.Framework.Secrets;
 
 namespace VisionaryCoder.Framework.Tests.Secrets;

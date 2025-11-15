@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Reflection;
-using FluentAssertions;
 using VisionaryCoder.Framework.Extensions;
 
 namespace VisionaryCoder.Framework.Tests.Extensions;

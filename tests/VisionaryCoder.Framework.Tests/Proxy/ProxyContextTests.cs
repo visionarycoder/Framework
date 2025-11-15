@@ -1,4 +1,3 @@
-using FluentAssertions;
 using VisionaryCoder.Framework.Proxy;
 
 namespace VisionaryCoder.Framework.Tests.Proxy;

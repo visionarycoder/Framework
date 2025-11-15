@@ -1,8 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VisionaryCoder.Framework.Authorization.Results;
 
 namespace VisionaryCoder.Framework.Tests.Authorization.Results;
@@ -372,7 +370,7 @@ public class AuthorizationResultTests
 
         // Assert
         result.Context.Should().HaveCount(50, "Should handle concurrent modifications");
-        
+
         // Check that all values are present (some might have been overwritten due to concurrency)
         for (int i = 0; i < 50; i++)
         {

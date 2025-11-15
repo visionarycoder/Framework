@@ -1,5 +1,4 @@
 using System.Reflection;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace VisionaryCoder.Framework.Primitives.Web.AspNetCore;
 public sealed class EntityIdModelBinder : IModelBinder

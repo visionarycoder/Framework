@@ -1,9 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using VisionaryCoder.Framework.Caching.Interceptors;
 using VisionaryCoder.Framework.Caching.Providers;
 using VisionaryCoder.Framework.Proxy;
@@ -161,11 +158,11 @@ public static class CachingServiceCollectionExtensions
         where T : class, ICacheKeyProvider
     {
         ArgumentNullException.ThrowIfNull(services);
-        
+
         // Replace any existing implementation with explicit provider
         services.RemoveAll<ICacheKeyProvider>();
         services.AddSingleton<ICacheKeyProvider, T>();
-        
+
         return services;
     }
 
@@ -181,11 +178,11 @@ public static class CachingServiceCollectionExtensions
         where T : class, ICachePolicyProvider
     {
         ArgumentNullException.ThrowIfNull(services);
-        
+
         // Replace any existing implementation with explicit provider
         services.RemoveAll<ICachePolicyProvider>();
         services.AddSingleton<ICachePolicyProvider, T>();
-        
+
         return services;
     }
 
@@ -201,11 +198,11 @@ public static class CachingServiceCollectionExtensions
         where T : class, IProxyCache
     {
         ArgumentNullException.ThrowIfNull(services);
-        
+
         // Replace any existing implementation with explicit cache
         services.RemoveAll<IProxyCache>();
         services.AddSingleton<IProxyCache, T>();
-        
+
         return services;
     }
 
@@ -219,11 +216,11 @@ public static class CachingServiceCollectionExtensions
     public static IServiceCollection UseDefaultCachingProviders(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
-        
+
         services.ReplaceCacheKeyProvider<DefaultCacheKeyProvider>();
         services.ReplaceCachePolicyProvider<DefaultCachePolicyProvider>();
         services.ReplaceProxyCache<MemoryProxyCache>();
-        
+
         return services;
     }
 }

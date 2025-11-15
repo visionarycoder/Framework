@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-
 namespace VisionaryCoder.Framework.Primitives.Web.AspNetCore;
 public sealed class EntityIdModelBinderProvider : IModelBinderProvider
 {

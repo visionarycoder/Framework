@@ -1,5 +1,3 @@
-using FluentAssertions;
-
 using VisionaryCoder.Framework.Proxy;
 
 namespace VisionaryCoder.Framework.Tests.Proxy;
@@ -175,7 +173,7 @@ public class ProxyResponseTests
         response1.Data.Should().Be("data1");
         response1.IsSuccess.Should().BeTrue();
         response1.StatusCode.Should().Be(200);
-        
+
         response2.Data.Should().Be(0);
         response2.IsSuccess.Should().BeFalse();
         response2.ErrorMessage.Should().Be("error2");

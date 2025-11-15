@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Configuration;
-
 using VisionaryCoder.Framework.Secrets.Azure.KeyVault;
 
 namespace VisionaryCoder.Framework.Secrets.Local;
@@ -24,8 +22,8 @@ public sealed class LocalSecretProvider(IConfiguration configuration, KeyVaultOp
         }
         // Try configuration with prefix first
         string prefixedKey = $"{options.LocalSecretsPrefix}:{name}";
-        string? value = configuration[prefixedKey] 
-                        ?? configuration[name] 
+        string? value = configuration[prefixedKey]
+                        ?? configuration[name]
                         ?? Environment.GetEnvironmentVariable(name);
         return Task.FromResult(value);
     }

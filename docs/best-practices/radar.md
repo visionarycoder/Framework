@@ -8,6 +8,7 @@ Use it to guide adoption, trials, and assessments, while avoiding outdated pract
 ## Quadrant View
 
 ### ADOPT
+
 - **Software Architecture**: VBD, DDD, Clean/Hexagonal Architecture, ADRs
 - **Security**: Zero Trust, OWASP Top 10, centralized secrets management
 - **Cloud**: Managed services, IaC (Terraform/Bicep)
@@ -17,6 +18,7 @@ Use it to guide adoption, trials, and assessments, while avoiding outdated pract
 - **Observability**: OpenTelemetry, SRE golden signals
 
 ### TRIAL
+
 - **Software Architecture**: Event Sourcing, CQRS
 - **Security**: Confidential computing, automated threat modeling
 - **Cloud**: Serverless-first, multi-cloud portability frameworks
@@ -26,6 +28,7 @@ Use it to guide adoption, trials, and assessments, while avoiding outdated pract
 - **Observability**: Observability-as-code, continuous profiling
 
 ### ASSESS
+
 - **Software Architecture**: AI-assisted validation, WASM backends
 - **Security**: Post-quantum cryptography, AI-driven anomaly detection
 - **Cloud**: Sustainability-aware workload placement
@@ -35,6 +38,7 @@ Use it to guide adoption, trials, and assessments, while avoiding outdated pract
 - **Observability**: AIOps-driven remediation, business KPI observability
 
 ### HOLD
+
 - **Software Architecture**: Big Ball of Mud, God classes
 - **Security**: Hardcoded secrets, perimeter-only defenses
 - **Cloud**: Lift-and-shift without modernization
@@ -100,22 +104,24 @@ flowchart LR
 
     class Q4 hold;
     classDef hold fill='#ffc2c2',stroke='#f55',stroke-width='1px',color='#000';
-
 ```
+
 ---
+
 ## Related Governance Docs
+
 - [Branching Strategy Playbook](branching-strategy.md)
 - [Quarterly Radar Review Checklist](quarterly-radar-review.md)
 - [ADR Index](../architecture-decision-records/index.md)
 
-
 ## Capsules
+
 Each specialty has a dedicated capsule with detailed best practices:
 
-- [Software Architecture](./software-architecture/README.md)  
-- [Security](./security/README.md)  
-- [Cloud Architecture](./cloud-architecture/README.md)  
-- [DevOps & Platform Engineering](./devops/README.md)  
-- [Data & Analytics](./data-analytics/README.md)  
-- [Integration & APIs](./integration/README.md)  
-- [Observability](./observability/README.md)  
+- [Software Architecture](./software-architecture/readme.md)  
+- [Security](./security/readme.md)  
+- [Cloud Architecture](./cloud-architecture/readme.md)  
+- [DevOps & Platform Engineering](./devops/readme.md)  
+- [Data & Analytics](./data-analytics/readme.md)  
+- [Integration & APIs](./integration/readme.md)  
+- [Observability](./observability/readme.md)  

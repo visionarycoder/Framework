@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Caching.Memory;
-
 namespace VisionaryCoder.Framework.Proxy.Caching;
 /// <summary>
 /// Represents a cache policy for proxy operations.

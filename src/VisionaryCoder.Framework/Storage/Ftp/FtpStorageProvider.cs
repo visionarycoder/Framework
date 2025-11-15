@@ -3,10 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using FluentFTP;
-
-using Microsoft.Extensions.Logging;
-
 namespace VisionaryCoder.Framework.Storage.Ftp;
 
 /// <summary>

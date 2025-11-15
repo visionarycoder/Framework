@@ -1,5 +1,3 @@
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq.Expressions;
 using VisionaryCoder.Framework.Querying;
 
@@ -59,7 +57,7 @@ public class QueryFilterTests
     public void Constructor_WithComplexPredicate_ShouldAccept()
     {
         // Arrange
-        Expression<Func<TestUser, bool>> predicate = u => 
+        Expression<Func<TestUser, bool>> predicate = u =>
             u.Age > 18 && u.Name.StartsWith("A") && !u.IsDeleted;
 
         // Act

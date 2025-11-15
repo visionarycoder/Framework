@@ -3,8 +3,6 @@
 
 using System.Diagnostics;
 
-using Microsoft.Extensions.Logging;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Logging;
 /// <summary>
 /// Interceptor that measures and logs the execution time of proxy operations.
@@ -30,17 +28,17 @@ public sealed class TimingInterceptor(ILogger<TimingInterceptor> logger) : IProx
             ProxyResponse<T> proxyResponse = await next(context, cancellationToken);
             stopwatch.Stop();
             long elapsedMs = stopwatch.ElapsedMilliseconds;
-            
+
             // Store timing in context metadata for other interceptors
             context.Metadata["ExecutionTimeMs"] = elapsedMs;
             if (elapsedMs > 1000) // Log warning if operation takes more than 1 second
             {
-                logger.LogWarning("Slow proxy operation '{OperationName}' completed in {ElapsedMs}ms. Correlation ID: '{CorrelationId}'", 
+                logger.LogWarning("Slow proxy operation '{OperationName}' completed in {ElapsedMs}ms. Correlation ID: '{CorrelationId}'",
                     operationName, elapsedMs, correlationId);
             }
             else
             {
-                logger.LogDebug("Proxy operation '{OperationName}' completed in {ElapsedMs}ms. Correlation ID: '{CorrelationId}'", 
+                logger.LogDebug("Proxy operation '{OperationName}' completed in {ElapsedMs}ms. Correlation ID: '{CorrelationId}'",
                     operationName, elapsedMs, correlationId);
             }
             return proxyResponse;
@@ -48,7 +46,7 @@ public sealed class TimingInterceptor(ILogger<TimingInterceptor> logger) : IProx
         catch (Exception ex)
         {
             stopwatch.Stop();
-            logger.LogError(ex, "Proxy operation '{OperationName}' failed after {ElapsedMs}ms. Correlation ID: '{CorrelationId}'", 
+            logger.LogError(ex, "Proxy operation '{OperationName}' failed after {ElapsedMs}ms. Correlation ID: '{CorrelationId}'",
                 operationName, stopwatch.ElapsedMilliseconds, correlationId);
             throw;
         }

@@ -1,8 +1,5 @@
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq.Expressions;
 using VisionaryCoder.Framework.Filtering;
-using VisionaryCoder.Framework.Filtering.Serialization;
 
 namespace VisionaryCoder.Framework.Tests.Filtering;
 
@@ -244,7 +241,7 @@ public sealed class ExpressionToFilterNodeTests
         condition.Operator.Should().Be(FilterOperator.Any);
         condition.Predicate.Should().NotBeNull();
         condition.Predicate.Should().BeOfType<FilterCondition>();
-        
+
         var predicateCondition = (FilterCondition)condition.Predicate!;
         predicateCondition.Path.Should().Be("Value");
         predicateCondition.Operator.Should().Be(FilterOperator.GreaterThan);
@@ -267,7 +264,7 @@ public sealed class ExpressionToFilterNodeTests
         condition.Operator.Should().Be(FilterOperator.Any);
         condition.Predicate.Should().NotBeNull();
         condition.Predicate.Should().BeOfType<FilterCondition>();
-        
+
         var predicateCondition = (FilterCondition)condition.Predicate!;
         predicateCondition.Path.Should().Be("Name");
         predicateCondition.Operator.Should().Be(FilterOperator.Contains);
@@ -290,7 +287,7 @@ public sealed class ExpressionToFilterNodeTests
         condition.Operator.Should().Be(FilterOperator.Any);
         condition.Predicate.Should().NotBeNull();
         condition.Predicate.Should().BeOfType<FilterGroup>();
-        
+
         var predicateGroup = (FilterGroup)condition.Predicate!;
         predicateGroup.Combination.Should().Be(FilterCombination.And);
         predicateGroup.Children.Should().HaveCount(2);
@@ -316,7 +313,7 @@ public sealed class ExpressionToFilterNodeTests
         condition.Operator.Should().Be(FilterOperator.All);
         condition.Predicate.Should().NotBeNull();
         condition.Predicate.Should().BeOfType<FilterCondition>();
-        
+
         var predicateCondition = (FilterCondition)condition.Predicate!;
         predicateCondition.Path.Should().Be("Value");
         predicateCondition.Operator.Should().Be(FilterOperator.GreaterThan);
@@ -388,7 +385,7 @@ public sealed class ExpressionToFilterNodeTests
     public void Translate_WithMultipleAnyConditions_ShouldCreateFilterGroup()
     {
         // Arrange
-        Expression<Func<TestEntity, bool>> expression = e => 
+        Expression<Func<TestEntity, bool>> expression = e =>
             e.Children.Any(c => c.Value > 10) || e.Children.Any(c => c.Name.StartsWith("A"));
 
         // Act
@@ -406,9 +403,9 @@ public sealed class ExpressionToFilterNodeTests
     public void Translate_WithNestedCollectionOperations_ShouldCreateComplexStructure()
     {
         // Arrange
-        Expression<Func<TestEntity, bool>> expression = e => 
-            e.Name.Contains("test") && 
-            e.Tags.Any() && 
+        Expression<Func<TestEntity, bool>> expression = e =>
+            e.Name.Contains("test") &&
+            e.Tags.Any() &&
             e.Children.All(c => c.Value >= 0);
 
         // Act

@@ -1,4 +1,3 @@
-using FluentAssertions;
 using VisionaryCoder.Framework.Extensions;
 using VisionaryCoder.Framework.Models;
 
@@ -31,7 +30,7 @@ public class MonthExtensionsTests
         // Act
         Month result = month.Next();
 
-        // Assert  
+        // Assert
         result.Name.Should().Be(Month.January.Name);
     }
 
@@ -101,7 +100,7 @@ public class MonthExtensionsTests
         Month result = month.Previous();
 
         // Assert
-        // NOTE: Bug in implementation - January.Previous() returns Unknown (Ordinal 0) instead of December (Ordinal 12)  
+        // NOTE: Bug in implementation - January.Previous() returns Unknown (Ordinal 0) instead of December (Ordinal 12)
         result.Name.Should().Be(Month.Unknown.Name);
     }
 

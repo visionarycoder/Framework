@@ -1,4 +1,3 @@
-using FluentAssertions;
 using VisionaryCoder.Framework.Proxy.Interceptors.Correlation;
 
 namespace VisionaryCoder.Framework.Tests.Proxy.Interceptors.Correlation;

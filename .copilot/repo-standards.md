@@ -1,6 +1,7 @@
 # Copilot Instructions: Repository Standards
 
 ## Purpose
+
 Ensure that all generated code, documentation, and automation in this repository:
 - Remains **clean, consistent, and maintainable**.
 - Supports **isolated, reproducible development environments**.
@@ -10,6 +11,7 @@ Ensure that all generated code, documentation, and automation in this repository
 ---
 
 ## General Repo Hygiene
+
 - Always respect `.copilotignore` and `.editorconfig` rules.
 - Follow **conventional commit messages** (`feat:`, `fix:`, `docs:`, `chore:`).
 - Keep PRs small, focused, and linked to an ADR or issue.
@@ -18,6 +20,7 @@ Ensure that all generated code, documentation, and automation in this repository
 ---
 
 ## Project Structure
+
 - **Source code** lives under `/src/`.
 - **Tests** live under `/tests/` with mirrored structure.
 - **Docs** live under `/docs/` (onboarding, ADRs, contributing).
@@ -27,6 +30,7 @@ Ensure that all generated code, documentation, and automation in this repository
 ---
 
 ## Development Environments
+
 - Prefer **isolated, reproducible setups**:
   - WSL2, Docker, Dev Containers, or VMs.
   - No global dependencies—use local manifests (`global.json`, `requirements.txt`, `package.json`).
@@ -36,6 +40,7 @@ Ensure that all generated code, documentation, and automation in this repository
 ---
 
 ## Coding Standards
+
 - Follow **.editorconfig** for formatting.
 - Enforce **linting and static analysis** (e.g., Roslyn analyzers, ESLint).
 - Write **unit tests** for new features; aim for meaningful coverage.
@@ -45,6 +50,7 @@ Ensure that all generated code, documentation, and automation in this repository
 ---
 
 ## Documentation Standards
+
 - Every module/service must have a `README.md` with:
   - Purpose
   - Setup instructions
@@ -55,6 +61,7 @@ Ensure that all generated code, documentation, and automation in this repository
 ---
 
 ## CI/CD Standards
+
 - All code must pass:
   - Build
   - Linting
@@ -66,7 +73,8 @@ Ensure that all generated code, documentation, and automation in this repository
 ---
 
 ## Collaboration Standards
-- Use **feature branches** (`feature/xyz`), **bugfix branches** (`fix/xyz`).
+
+- Use **feature branches** (`feat/xyz`), **bugfix branches** (`fix/xyz`).
 - Require **code reviews** before merging.
 - Encourage **pairing/mobbing** for complex changes.
 - Keep discussions and decisions documented (issues, ADRs, or capsules).
@@ -74,16 +82,26 @@ Ensure that all generated code, documentation, and automation in this repository
 ---
 
 ## Copilot Guidance
+
 When generating code or docs:
+
 - Respect repo structure and standards above.
 - Prefer **modern, maintainable solutions** over hacks.
 - Provide **contextual explanations** (why, not just how).
 - Suggest **tests and documentation** alongside code.
 - Align examples with **current .NET/C# versions** and **Solution Architect Radar** maturity levels.
 
+
+### Extended Instruction References
+
+- Base aggregation & domain index: `.copilot/copilot-instructions.md`
+- Core C# heuristics: `.copilot/csharp.instructions.md`
+- Pattern examples: `.copilot/design-patterns.instructions.md`
+
 ---
 
 ## Anti-Patterns to Avoid
+
 - Committing machine-specific configs (e.g., `.vs/`, `.idea/`, `bin/`, `obj/`).
 - Hardcoding secrets or environment-specific values.
 - Copy-pasting without attribution or context.
@@ -93,6 +111,7 @@ When generating code or docs:
 ---
 
 ## References
+
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [EditorConfig](https://editorconfig.org/)
 - [ADR GitHub Repo](https://github.com/joelparkerhenderson/architecture_decision_record)

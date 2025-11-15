@@ -1,13 +1,5 @@
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
-
-using Azure;
-using Azure.Identity;
-using Azure.Storage.Queues;
-using Azure.Storage.Queues.Models;
-
-using Microsoft.Extensions.Logging;
 
 namespace VisionaryCoder.Framework.Storage.Azure;
 

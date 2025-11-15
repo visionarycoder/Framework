@@ -1,4 +1,3 @@
-using FluentAssertions;
 using VisionaryCoder.Framework.Querying.Serialization;
 
 namespace VisionaryCoder.Framework.Tests.Querying.Serialization;

@@ -5,6 +5,7 @@ This checklist ensures every production release is consistent, traceable, and au
 ---
 
 ## Pre‑Release
+
 - [ ] All feature branches merged into `main`.
 - [ ] `main` build is green (CI passes on all platforms).
 - [ ] ADRs updated for any new decisions.
@@ -15,8 +16,10 @@ This checklist ensures every production release is consistent, traceable, and au
 ---
 
 ## Tagging
+
 - [ ] Decide release version (e.g., `v1.2.0`).
 - [ ] Create annotated tag:
+
   ```bash
   git checkout main
   git pull origin main

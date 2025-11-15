@@ -1,4 +1,3 @@
-using FluentAssertions;
 using VisionaryCoder.Framework.Providers;
 
 namespace VisionaryCoder.Framework.Tests;
@@ -216,7 +215,7 @@ public class RequestIdProviderTests
 
         // Act & Assert
         Task.WaitAll(tasks.ToArray());
-        
+
         for (int i = 0; i < tasks.Count; i++)
         {
             string expectedId = $"REQ{i:D2}ID";

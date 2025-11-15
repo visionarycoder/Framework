@@ -1,10 +1,5 @@
-using FluentAssertions;
-
-using Microsoft.Extensions.Caching.Memory;
-
 using VisionaryCoder.Framework.Proxy;
 using VisionaryCoder.Framework.Proxy.Caching;
-using VisionaryCoder.Framework.Proxy.Interceptors.Caching;
 
 namespace VisionaryCoder.Framework.Tests.Proxy.Interceptors.Caching;
 

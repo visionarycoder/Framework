@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -20,14 +17,14 @@ namespace VisionaryCoder.Framework.Querying;
 /// <code>
 /// // Given an entity
 /// public sealed record User(int Id, string Name, string Email);
-/// 
+///
 /// // Build filters
 /// var hasAnn   = QueryFilterExtensions.ContainsIgnoreCase&lt;User&gt;(u =&gt; u.Name, "ann");
 /// var endsWith = QueryFilterExtensions.EndsWithIgnoreCase&lt;User&gt;(u =&gt; u.Email, ".org");
-/// 
+///
 /// // Compose
 /// var filter = hasAnn.And(endsWith);
-/// 
+///
 /// // Apply
 /// IQueryable&lt;User&gt; users = db.Users; // any IQueryable provider
 /// var result = users.Apply(filter).ToList();
@@ -69,7 +66,7 @@ public static class QueryFilterExtensions
     /// </example>
     public static QueryFilter<T> Or<T>(this QueryFilter<T> left, QueryFilter<T> right)
     {
-        
+
         ArgumentNullException.ThrowIfNull(left);
         ArgumentNullException.ThrowIfNull(right);
 
@@ -78,7 +75,7 @@ public static class QueryFilterExtensions
         BinaryExpression body = Expression.OrElse(left.Predicate.Body, rightBody);
 
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, parameter));
-        
+
     }
 
     /// <summary>
@@ -99,7 +96,7 @@ public static class QueryFilterExtensions
         UnaryExpression body = Expression.Not(filter.Predicate.Body);
 
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, parameter));
-        
+
     }
 
     /// <summary>
@@ -127,7 +124,7 @@ public static class QueryFilterExtensions
         MethodCallExpression body = Expression.Call(selector.Body, nameof(string.Contains), Type.EmptyTypes, constant);
 
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
-        
+
     }
 
     /// <summary>
@@ -155,7 +152,7 @@ public static class QueryFilterExtensions
         MethodCallExpression body = Expression.Call(selector.Body, nameof(string.StartsWith), Type.EmptyTypes, constant);
 
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
-        
+
     }
 
     /// <summary>
@@ -172,7 +169,7 @@ public static class QueryFilterExtensions
     {
 
         ArgumentNullException.ThrowIfNull(selector);
-        
+
         if (string.IsNullOrWhiteSpace(value))
         {
             return True<T>();
@@ -183,7 +180,7 @@ public static class QueryFilterExtensions
         MethodCallExpression body = Expression.Call(selector.Body, nameof(string.EndsWith), Type.EmptyTypes, constant);
 
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
-        
+
     }
 
     /// <summary>
@@ -204,7 +201,7 @@ public static class QueryFilterExtensions
     {
 
         ArgumentNullException.ThrowIfNull(filters);
-        
+
         using IEnumerator<QueryFilter<T>> e = filters.GetEnumerator();
         if (!e.MoveNext())
         {
@@ -218,7 +215,7 @@ public static class QueryFilterExtensions
             current = useAnd ? current.And(next) : current.Or(next);
         }
         return current;
-        
+
     }
 
     /// <summary>
@@ -251,7 +248,7 @@ public static class QueryFilterExtensions
     /// </example>
     public static QueryFilter<T> ContainsIgnoreCase<T>(Expression<Func<T, string>> selector, string? value)
     {
-        
+
         ArgumentNullException.ThrowIfNull(selector);
 
         if (string.IsNullOrWhiteSpace(value))
@@ -267,9 +264,9 @@ public static class QueryFilterExtensions
         ConstantExpression right = Expression.Constant(value.ToLowerInvariant());
         MethodCallExpression containsCall = Expression.Call(left, contains, right);
         BinaryExpression body = Expression.AndAlso(notNull, containsCall);
-        
+
         return new QueryFilter<T>(Expression.Lambda<Func<T, bool>>(body, param));
-        
+
     }
 
     /// <summary>

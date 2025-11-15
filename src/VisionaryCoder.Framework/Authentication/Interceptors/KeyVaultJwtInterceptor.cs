@@ -1,7 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy;
 using VisionaryCoder.Framework.Secrets;
 
@@ -54,21 +53,21 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
         try
         {
             logger.LogDebug("Retrieving JWT token from Key Vault for secret: {SecretName}", options.SecretName);
-            
+
             // Create timeout for Key Vault operations
             using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeoutCts.CancelAfter(options.RequestTimeout);
 
             // Retrieve token from Key Vault
             string? jwtToken = await secretProvider.GetAsync(options.SecretName, timeoutCts.Token);
-            
+
             if (!string.IsNullOrEmpty(jwtToken))
             {
                 // Validate token if validation is enabled
                 if (options.ValidateToken && !IsTokenValid(jwtToken))
                 {
                     logger.LogWarning("JWT token from Key Vault is invalid or expired for secret: {SecretName}", options.SecretName);
-                    
+
                     // Attempt to refresh token if configured
                     if (options.AutoRefresh && !string.IsNullOrEmpty(options.RefreshSecretName))
                     {
@@ -81,8 +80,8 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
                     // Format token based on header type
                     string tokenValue = FormatTokenForHeader(jwtToken);
                     context.Headers[options.HeaderName] = tokenValue;
-                    
-                    logger.LogDebug("JWT token added to {HeaderName} header from Key Vault secret: {SecretName}", 
+
+                    logger.LogDebug("JWT token added to {HeaderName} header from Key Vault secret: {SecretName}",
                         options.HeaderName, options.SecretName);
 
                     // Add additional metadata headers
@@ -107,9 +106,9 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
         }
         catch (TimeoutException)
         {
-            logger.LogError("JWT token retrieval timed out after {Timeout} for Key Vault secret: {SecretName}", 
+            logger.LogError("JWT token retrieval timed out after {Timeout} for Key Vault secret: {SecretName}",
                 options.RequestTimeout, options.SecretName);
-            
+
             if (options.FailOnTimeout)
             {
                 throw;
@@ -118,7 +117,7 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to retrieve JWT token from Key Vault for secret: {SecretName}", options.SecretName);
-            
+
             if (options.FailOnError)
             {
                 throw;
@@ -169,7 +168,7 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
                 return null;
 
             logger.LogDebug("Attempting to refresh JWT token using refresh secret: {RefreshSecretName}", options.RefreshSecretName);
-            
+
             string? refreshToken = await secretProvider.GetAsync(options.RefreshSecretName, cancellationToken);
             if (string.IsNullOrEmpty(refreshToken))
             {
@@ -199,8 +198,8 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
         // For Authorization header, ensure Bearer prefix
         if (options.HeaderName.Equals("Authorization", StringComparison.OrdinalIgnoreCase))
         {
-            return token.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) 
-                ? token 
+            return token.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
+                ? token
                 : $"Bearer {token}";
         }
 
@@ -218,7 +217,7 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
         {
             context.Headers["X-Token-Source"] = "KeyVault";
             context.Headers["X-Token-Secret"] = options.SecretName;
-            
+
             if (!string.IsNullOrEmpty(options.CorrelationId))
             {
                 context.Headers["X-Correlation-ID"] = options.CorrelationId;

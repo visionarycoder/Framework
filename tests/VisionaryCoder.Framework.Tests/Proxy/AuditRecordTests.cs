@@ -1,5 +1,3 @@
-using FluentAssertions;
-
 using VisionaryCoder.Framework.Proxy.Interceptors.Auditing;
 
 namespace VisionaryCoder.Framework.Tests.Proxy;

@@ -1,12 +1,3 @@
-using Azure;
-using Azure.Core;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
-
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-
 using VisionaryCoder.Framework.Secrets.Local;
 
 namespace VisionaryCoder.Framework.Secrets.Azure.KeyVault;

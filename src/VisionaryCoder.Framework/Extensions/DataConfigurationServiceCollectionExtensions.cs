@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
 using VisionaryCoder.Framework.Secrets;
 
 namespace VisionaryCoder.Framework.Extensions;

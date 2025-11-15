@@ -1,8 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
-
 using VisionaryCoder.Framework.Proxy.Exceptions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security.Web;
@@ -37,26 +35,26 @@ public sealed class JwtBearerInterceptor : IProxyInterceptor
         {
             // Get the JWT token
             string? token = await tokenProvider(cancellationToken);
-            
+
             if (string.IsNullOrEmpty(token))
             {
-                logger.LogWarning("No JWT token available for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
+                logger.LogWarning("No JWT token available for operation '{OperationName}'. Correlation ID: '{CorrelationId}'",
                     operationName, correlationId);
-                
+
                 throw new TransientProxyException($"Authentication failed: No JWT token available for operation '{operationName}'");
             }
             // Add the Authorization header to the context
             if (!context.Metadata.ContainsKey("Authorization"))
             {
                 context.Metadata["Authorization"] = $"Bearer {token}";
-                logger.LogDebug("Added JWT Bearer token to operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
+                logger.LogDebug("Added JWT Bearer token to operation '{OperationName}'. Correlation ID: '{CorrelationId}'",
                     operationName, correlationId);
             }
             return await next(context, cancellationToken);
         }
         catch (Exception ex) when (!(ex is ProxyException))
         {
-            logger.LogError(ex, "Authentication failed for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
+            logger.LogError(ex, "Authentication failed for operation '{OperationName}'. Correlation ID: '{CorrelationId}'",
                 operationName, correlationId);
             throw new TransientProxyException($"Authentication failed for operation '{operationName}': {ex.Message}", ex);
         }

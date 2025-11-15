@@ -1,7 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Correlation;
 /// <summary>
 /// Correlation interceptor that manages correlation IDs for proxy operations.
@@ -50,7 +49,7 @@ public sealed class CorrelationInterceptor : IOrderedProxyInterceptor
         context.Items["CorrelationId"] = correlationId;
         // Add correlation ID to logging scope
         using IDisposable? scope = logger.BeginScope("CorrelationId: {CorrelationId}", correlationId);
-        
+
         try
         {
             return await next(context, cancellationToken);

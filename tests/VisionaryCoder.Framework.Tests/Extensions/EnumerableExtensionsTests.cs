@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using FluentAssertions;
 using VisionaryCoder.Framework.Extensions;
 
 namespace VisionaryCoder.Framework.Tests.Extensions;

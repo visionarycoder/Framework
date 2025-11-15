@@ -13,7 +13,7 @@ The `VisionaryCoder.Framework` project serves as the foundational library for th
 - **Framework Information Provider**: Provides metadata about the framework version, compilation time, and description
 - **Correlation ID Provider**: Manages correlation IDs for distributed request tracking
 - **Request ID Provider**: Manages request IDs for individual request tracking
-- **Result Wrapper**: Consistent success/failure handling with `FrameworkResult<T>` and `FrameworkResult`
+- **Response Wrapper**: Consistent success/failure handling with `Response<T>` and `Response`
 
 ### Configuration
 
@@ -45,13 +45,13 @@ services.AddVisionaryCoderFramework(options =>
 });
 ```
 
-#### FrameworkResult<T>
+#### Response<T>
 
 Consistent result wrapper for operations:
 
 ```csharp
-var result = FrameworkResult<string>.Success("Hello World");
-result.Match(
+var response = Response<string>.Success("Hello World");
+response.Match(
     onSuccess: value => Console.WriteLine(value),
     onFailure: (error, ex) => Console.WriteLine($"Error: {error}")
 );
@@ -59,7 +59,7 @@ result.Match(
 
 ## Project Structure
 
-```
+``` text
 VisionaryCoder.Framework/
 ├── Abstractions.cs              # Core interfaces
 ├── FrameworkConstants.cs        # Framework constants

@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Caching.Memory;
-
 namespace VisionaryCoder.Framework.Proxy.Caching;
 /// <summary>
 /// Configuration options for the caching interceptor.

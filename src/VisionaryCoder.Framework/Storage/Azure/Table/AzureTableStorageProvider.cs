@@ -1,11 +1,5 @@
 using System.Runtime.CompilerServices;
 
-using Azure;
-using Azure.Data.Tables;
-using Azure.Identity;
-
-using Microsoft.Extensions.Logging;
-
 namespace VisionaryCoder.Framework.Storage.Azure;
 
 /// <summary>

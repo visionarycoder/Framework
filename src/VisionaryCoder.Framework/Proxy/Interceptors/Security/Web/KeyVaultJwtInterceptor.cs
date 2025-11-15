@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 using VisionaryCoder.Framework.Secrets;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security.Web;
@@ -42,12 +40,12 @@ public class KeyVaultJwtInterceptor : IProxyInterceptor
         try
         {
             logger.LogDebug("Retrieving JWT token from Key Vault for secret: {SecretName}", secretName);
-            
+
             string? jwtToken = await secretProvider.GetAsync(secretName, cancellationToken);
             if (!string.IsNullOrEmpty(jwtToken))
             {
                 // Ensure the token has the Bearer prefix if it's for Authorization header
-                string? tokenValue = headerName.Equals("Authorization", StringComparison.OrdinalIgnoreCase) && 
+                string? tokenValue = headerName.Equals("Authorization", StringComparison.OrdinalIgnoreCase) &&
                                      !jwtToken.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
                     ? $"Bearer {jwtToken}"
                     : jwtToken;

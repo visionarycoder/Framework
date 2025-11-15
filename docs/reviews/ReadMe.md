@@ -25,6 +25,7 @@ This folder contains the **governance playbooks and review guides** that keep ou
 ## 🎯 Purpose
 
 This folder is the **operational heart of governance**:
+
 - Ensures every release is **traceable**.  
 - Keeps practices **validated and current**.  
 - Provides **visuals and checklists** so contributors can follow the process without guesswork.  
@@ -42,3 +43,4 @@ flowchart TD
     Quarterly --> SystemMap[🗺️ System Map]
     Release --> SystemMap
     SystemMap --> Branching
+```

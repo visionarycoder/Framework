@@ -1,11 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using VisionaryCoder.Framework.Authorization;
 using VisionaryCoder.Framework.Authorization.Policies;
 
 namespace VisionaryCoder.Framework.Tests.Authorization;
@@ -75,7 +70,7 @@ public class AuthorizationServiceCollectionExtensionsTests
         services.AddScoped<IAuthorizationPolicy, RoleBasedAuthorizationPolicy>();
 
         // Assert
-        var descriptor = services.FirstOrDefault(s => s.ServiceType == typeof(IAuthorizationPolicy) 
+        var descriptor = services.FirstOrDefault(s => s.ServiceType == typeof(IAuthorizationPolicy)
             && s.ImplementationType == typeof(RoleBasedAuthorizationPolicy));
         descriptor.Should().NotBeNull();
         descriptor!.Lifetime.Should().Be(ServiceLifetime.Scoped);

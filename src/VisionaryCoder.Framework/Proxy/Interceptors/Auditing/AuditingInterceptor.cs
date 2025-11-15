@@ -1,7 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Auditing;
 /// <summary>
 /// Auditing interceptor that emits audit records for proxy operations.
@@ -18,16 +17,16 @@ public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEn
     public async Task<ProxyResponse<T>> InvokeAsync<T>(ProxyContext context, ProxyDelegate<T> next, CancellationToken cancellationToken = default)
     {
         string requestType = context.Request?.GetType().Name ?? "Unknown";
-        string correlationId = context.Items.TryGetValue("CorrelationId", out object? corrId) ? 
-            corrId?.ToString() ?? Guid.NewGuid().ToString("D") : 
+        string correlationId = context.Items.TryGetValue("CorrelationId", out object? corrId) ?
+            corrId?.ToString() ?? Guid.NewGuid().ToString("D") :
             Guid.NewGuid().ToString("D");
-        
+
         DateTime startTime = DateTime.UtcNow;
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
         try
         {
             ProxyResponse<T> result = await next(context, cancellationToken);
-            
+
             stopwatch.Stop();
             // Create audit record
             var auditRecord = new AuditRecord
@@ -86,8 +85,8 @@ public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEn
         }
     }
     private static Dictionary<string, object?> CreateMetadata(
-        ProxyContext context, 
-        object? result = null, 
+        ProxyContext context,
+        object? result = null,
         Exception? exception = null)
     {
         var metadata = new Dictionary<string, object?>
@@ -109,7 +108,7 @@ public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEn
     private static bool IsSensitiveKey(string key)
     {
         string[] sensitiveKeys = new[] { "Authorization", "Password", "Secret", "Token", "Key" };
-        return sensitiveKeys.Any(sensitive => 
+        return sensitiveKeys.Any(sensitive =>
             key.Contains(sensitive, StringComparison.OrdinalIgnoreCase));
     }
 }

@@ -1,7 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Proxy;
 using VisionaryCoder.Framework.Proxy.Exceptions;
 
@@ -32,70 +31,70 @@ public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IOr
         var operationName = context.OperationName ?? "Unknown";
         var correlationId = context.CorrelationId ?? "None";
         var startTime = DateTimeOffset.UtcNow;
-        
-        logger.LogDebug("Starting proxy operation '{OperationName}' with correlation ID '{CorrelationId}' at {StartTime}", 
+
+        logger.LogDebug("Starting proxy operation '{OperationName}' with correlation ID '{CorrelationId}' at {StartTime}",
             operationName, correlationId, startTime);
 
         try
         {
             var response = await next(context, cancellationToken);
             var duration = DateTimeOffset.UtcNow - startTime;
-            
+
             if (response.IsSuccess)
             {
-                logger.LogInformation("Proxy operation '{OperationName}' completed successfully in {Duration}ms. Correlation ID: '{CorrelationId}'", 
+                logger.LogInformation("Proxy operation '{OperationName}' completed successfully in {Duration}ms. Correlation ID: '{CorrelationId}'",
                     operationName, duration.TotalMilliseconds, correlationId);
-                
+
                 // Add success metrics to context
                 context.Metadata["LoggedAt"] = DateTimeOffset.UtcNow;
                 context.Metadata["LogLevel"] = "Information";
             }
             else
             {
-                logger.LogWarning("Proxy operation '{OperationName}' completed with failure in {Duration}ms. Error: '{ErrorMessage}'. Correlation ID: '{CorrelationId}'", 
+                logger.LogWarning("Proxy operation '{OperationName}' completed with failure in {Duration}ms. Error: '{ErrorMessage}'. Correlation ID: '{CorrelationId}'",
                     operationName, duration.TotalMilliseconds, response.ErrorMessage, correlationId);
-                    
+
                 // Add failure metrics to context
                 context.Metadata["LoggedAt"] = DateTimeOffset.UtcNow;
                 context.Metadata["LogLevel"] = "Warning";
             }
-            
+
             return response;
         }
         catch (ProxyException ex)
         {
             var duration = DateTimeOffset.UtcNow - startTime;
-            logger.LogError(ex, "Proxy operation '{OperationName}' failed with proxy exception in {Duration}ms. Correlation ID: '{CorrelationId}'", 
+            logger.LogError(ex, "Proxy operation '{OperationName}' failed with proxy exception in {Duration}ms. Correlation ID: '{CorrelationId}'",
                 operationName, duration.TotalMilliseconds, correlationId);
-                
+
             context.Metadata["LoggedAt"] = DateTimeOffset.UtcNow;
             context.Metadata["LogLevel"] = "Error";
             context.Metadata["ExceptionType"] = "ProxyException";
-            
+
             throw;
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             var duration = DateTimeOffset.UtcNow - startTime;
-            logger.LogWarning("Proxy operation '{OperationName}' was cancelled after {Duration}ms. Correlation ID: '{CorrelationId}'", 
+            logger.LogWarning("Proxy operation '{OperationName}' was cancelled after {Duration}ms. Correlation ID: '{CorrelationId}'",
                 operationName, duration.TotalMilliseconds, correlationId);
-                
+
             context.Metadata["LoggedAt"] = DateTimeOffset.UtcNow;
             context.Metadata["LogLevel"] = "Warning";
             context.Metadata["ExceptionType"] = "OperationCanceled";
-            
+
             throw;
         }
         catch (Exception ex)
         {
             var duration = DateTimeOffset.UtcNow - startTime;
-            logger.LogError(ex, "Proxy operation '{OperationName}' failed with unexpected exception in {Duration}ms. Correlation ID: '{CorrelationId}'", 
+            logger.LogError(ex, "Proxy operation '{OperationName}' failed with unexpected exception in {Duration}ms. Correlation ID: '{CorrelationId}'",
                 operationName, duration.TotalMilliseconds, correlationId);
-                
+
             context.Metadata["LoggedAt"] = DateTimeOffset.UtcNow;
             context.Metadata["LogLevel"] = "Error";
             context.Metadata["ExceptionType"] = ex.GetType().Name;
-            
+
             throw;
         }
     }

@@ -1,8 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using VisionaryCoder.Framework.Logging.Interceptors;
 using VisionaryCoder.Framework.Proxy;
 
@@ -25,7 +23,7 @@ public static class LoggingServiceCollectionExtensions
         // Register NULL OBJECT implementation as fallback (SOLID principle)
         // This will be used if no explicit logging interceptors are registered
         services.TryAddSingleton<IOrderedProxyInterceptor, NullLoggingInterceptor>();
-        
+
         return services;
     }
 
@@ -50,7 +48,7 @@ public static class LoggingServiceCollectionExtensions
     /// <param name="criticalThresholdMs">Threshold in milliseconds for critical operation errors.</param>
     /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddTimingInterceptor(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         long slowThresholdMs = 1000,
         long criticalThresholdMs = 5000)
     {
@@ -63,7 +61,7 @@ public static class LoggingServiceCollectionExtensions
                 CriticalOperationThresholdMs = criticalThresholdMs
             };
         });
-        
+
         return services;
     }
 
@@ -138,10 +136,10 @@ public static class LoggingServiceCollectionExtensions
     public static IServiceCollection UseLoggingInterceptor(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
-        
+
         // Add logging interceptor (multiple interceptors can coexist)
         services.AddSingleton<IOrderedProxyInterceptor, LoggingInterceptor>();
-        
+
         return services;
     }
 
@@ -155,12 +153,12 @@ public static class LoggingServiceCollectionExtensions
     /// <returns>The service collection for method chaining.</returns>
     /// <exception cref="ArgumentNullException">Thrown when services is null.</exception>
     public static IServiceCollection UseTimingInterceptor(
-        this IServiceCollection services, 
-        long slowThresholdMs = 1000, 
+        this IServiceCollection services,
+        long slowThresholdMs = 1000,
         long criticalThresholdMs = 5000)
     {
         ArgumentNullException.ThrowIfNull(services);
-        
+
         // Add timing interceptor with explicit configuration
         services.AddSingleton<IOrderedProxyInterceptor>(provider =>
         {
@@ -171,7 +169,7 @@ public static class LoggingServiceCollectionExtensions
                 CriticalOperationThresholdMs = criticalThresholdMs
             };
         });
-        
+
         return services;
     }
 
@@ -185,10 +183,10 @@ public static class LoggingServiceCollectionExtensions
     public static IServiceCollection UseDefaultLoggingInterceptors(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
-        
+
         services.UseLoggingInterceptor();
         services.UseTimingInterceptor();
-        
+
         return services;
     }
 }
