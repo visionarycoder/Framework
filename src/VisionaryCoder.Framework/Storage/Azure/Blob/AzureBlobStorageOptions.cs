@@ -1,5 +1,3 @@
-using Azure.Storage.Blobs.Models;
-
 namespace VisionaryCoder.Framework.Storage.Azure;
 
 /// <summary>
@@ -92,10 +90,10 @@ public sealed class AzureBlobStorageOptions
 
     private static bool IsValidContainerName(string containerName)
     {
-        if (string.IsNullOrWhiteSpace(containerName) || 
-            containerName.Length < 3 || 
+        if (string.IsNullOrWhiteSpace(containerName) ||
+            containerName.Length < 3 ||
             containerName.Length > 63 ||
-            containerName.StartsWith('-') || 
+            containerName.StartsWith('-') ||
             containerName.EndsWith('-') ||
             containerName.Contains("--"))
         {

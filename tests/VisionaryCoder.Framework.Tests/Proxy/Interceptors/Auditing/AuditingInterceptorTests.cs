@@ -1,9 +1,3 @@
-using FluentAssertions;
-
-using Microsoft.Extensions.Logging;
-
-using Moq;
-
 using VisionaryCoder.Framework.Proxy;
 using VisionaryCoder.Framework.Proxy.Interceptors.Auditing;
 
@@ -176,7 +170,7 @@ public class AuditingInterceptorTests
     {
         // Arrange
         var context = new ProxyContext { Request = new { Id = 1 } };
-        
+
         mockAuditSink.Setup(s => s.WriteAsync(It.IsAny<AuditRecord>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Audit sink failed"));
 
@@ -189,7 +183,7 @@ public class AuditingInterceptorTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().Be(42);
-        
+
         mockLogger.Verify(
             x => x.Log(
                 LogLevel.Error,

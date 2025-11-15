@@ -1,5 +1,3 @@
-using FluentAssertions;
-
 using VisionaryCoder.Framework.Models;
 
 namespace VisionaryCoder.Framework.Tests.Extensions;

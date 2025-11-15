@@ -1,9 +1,3 @@
-using FluentAssertions;
-
-using Microsoft.Extensions.Logging;
-
-using Moq;
-
 using VisionaryCoder.Framework.Proxy;
 using VisionaryCoder.Framework.Proxy.Exceptions;
 using VisionaryCoder.Framework.Proxy.Interceptors.Logging;
@@ -44,7 +38,7 @@ public class LoggingInterceptorTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        
+
         // Verify debug log at start
         mockLogger.Verify(
             x => x.Log(
@@ -81,7 +75,7 @@ public class LoggingInterceptorTests
 
         // Assert
         result.IsSuccess.Should().BeFalse();
-        
+
         mockLogger.Verify(
             x => x.Log(
                 LogLevel.Warning,

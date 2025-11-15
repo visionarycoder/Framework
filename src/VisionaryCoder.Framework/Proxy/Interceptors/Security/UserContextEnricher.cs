@@ -1,5 +1,3 @@
-using ISecurityEnricher = VisionaryCoder.Framework.Proxy.Interceptors.Security.ISecurityEnricher;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
 /// <summary>
 /// Security enricher that adds user information to the proxy context.
@@ -22,7 +20,7 @@ public class UserContextEnricher(IUserContextProvider userProvider) : ISecurityE
     {
         // TODO: Add user context enrichment when user provider interface is available
         await Task.CompletedTask;
-        
+
         // For now, add placeholder user information
         context.Metadata["UserId"] = "system";
         context.Metadata["UserName"] = "System User";

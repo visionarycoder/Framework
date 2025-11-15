@@ -1,7 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using FluentAssertions;
 using VisionaryCoder.Framework.Providers;
 
 namespace VisionaryCoder.Framework.Tests.Providers;

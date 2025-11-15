@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Auditing;
 /// <summary>
 /// Default audit sink that logs audit records.

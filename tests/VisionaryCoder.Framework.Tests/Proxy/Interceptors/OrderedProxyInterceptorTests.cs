@@ -1,7 +1,3 @@
-using FluentAssertions;
-
-using Moq;
-
 using VisionaryCoder.Framework.Proxy;
 using VisionaryCoder.Framework.Proxy.Interceptors;
 

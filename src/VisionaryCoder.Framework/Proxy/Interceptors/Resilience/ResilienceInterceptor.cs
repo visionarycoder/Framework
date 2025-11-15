@@ -1,10 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
-
-using Polly;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Resilience;
 
 /// <summary>
@@ -12,7 +8,7 @@ namespace VisionaryCoder.Framework.Proxy.Interceptors.Resilience;
 /// </summary>
 public sealed class ResilienceInterceptor(ILogger<ResilienceInterceptor> logger, ResiliencePipeline? resiliencePipeline = null) : IOrderedProxyInterceptor
 {
-    
+
     private readonly ILogger<ResilienceInterceptor> logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly ResiliencePipeline resiliencePipeline = resiliencePipeline ?? CreateDefaultPipeline();
 
@@ -20,7 +16,7 @@ public sealed class ResilienceInterceptor(ILogger<ResilienceInterceptor> logger,
     /// Gets the execution order for this interceptor.
     /// </summary>
     public int Order => 10; // Resilience typically runs early in the pipeline
-    
+
     /// Invokes the interceptor with resilience protection.
     /// <typeparam name="T">The type of the response data.</typeparam>
     /// <param name="context">The proxy context.</param>
@@ -46,7 +42,7 @@ public sealed class ResilienceInterceptor(ILogger<ResilienceInterceptor> logger,
             throw;
         }
     }
-    
+
     /// Creates a default resilience pipeline with retry and circuit breaker.
     /// <returns>A configured resilience pipeline.</returns>
     private static ResiliencePipeline CreateDefaultPipeline()

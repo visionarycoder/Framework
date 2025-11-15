@@ -1,5 +1,3 @@
-using FluentAssertions;
-
 using VisionaryCoder.Framework.Proxy;
 using VisionaryCoder.Framework.Proxy.Interceptors.Resilience;
 

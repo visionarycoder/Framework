@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace VisionaryCoder.Framework.Filtering.Serialization;
@@ -172,7 +171,7 @@ public static class ExpressionToFilterNode
         }
 
         // Collection instance methods: Contains() on List/ICollection
-        if (call.Object is not null && 
+        if (call.Object is not null &&
             IsCollectionType(call.Object.Type) &&
             call.Method.Name == nameof(List<object>.Contains) &&
             call.Arguments.Count == 1)

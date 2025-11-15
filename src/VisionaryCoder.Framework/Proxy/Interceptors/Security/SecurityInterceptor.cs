@@ -1,8 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
-
 using VisionaryCoder.Framework.Proxy.Exceptions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security;
@@ -38,7 +36,7 @@ public sealed class SecurityInterceptor : IOrderedProxyInterceptor
         CancellationToken cancellationToken = default)
     {
         using IDisposable? _ = logger.BeginScope("SecurityInterceptor for {RequestType}", context.Request?.GetType().Name ?? "Unknown");
-        
+
         try
         {
             // Enrich security context

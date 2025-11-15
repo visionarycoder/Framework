@@ -1,4 +1,3 @@
-using FluentAssertions;
 using VisionaryCoder.Framework.Extensions;
 
 namespace VisionaryCoder.Framework.Tests.Extensions;
@@ -457,7 +456,7 @@ public class HashSetExtensionsTests
         var person1 = new { Name = "Alice", Age = 30 };
         var person2 = new { Name = "Bob", Age = 25 };
         var person3 = new { Name = "Charlie", Age = 35 };
-        
+
         var target = new HashSet<object> { person1, person2 };
         var newPeople = new List<object> { person3 };
         var searchPeople = new List<object> { person1, person3 };

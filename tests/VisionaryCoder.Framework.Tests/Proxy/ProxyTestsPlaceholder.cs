@@ -1,5 +1,3 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace VisionaryCoder.Framework.Tests.Proxy;
 
 /// <summary>

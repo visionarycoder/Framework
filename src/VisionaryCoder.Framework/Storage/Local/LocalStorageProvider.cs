@@ -1,10 +1,8 @@
-using Microsoft.Extensions.Logging;
-
 namespace VisionaryCoder.Framework.Storage.Local;
 
 public class LocalStorageProvider(ILogger<LocalStorageProvider> logger) : IStorageProvider
 {
-    
+
     private readonly ILogger<LocalStorageProvider> logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     public bool FileExists(FileInfo fileInfo)

@@ -1,10 +1,3 @@
-using FluentAssertions;
-
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
-
-using Moq;
-
 using VisionaryCoder.Framework.Proxy;
 using VisionaryCoder.Framework.Proxy.Caching;
 using VisionaryCoder.Framework.Proxy.Interceptors.Caching;
@@ -174,7 +167,7 @@ public class CachingInterceptorTests
         var cachedContext = new ProxyContext { OperationName = "CustomDurationOp" };
         cachedContext.Metadata["CacheDurationSeconds"] = 60;
         ProxyResponse<bool> result = await interceptor.InvokeAsync(cachedContext, Next, CancellationToken.None);
-        
+
         cachedContext.Metadata["CacheHit"].Should().Be(true);
     }
 
@@ -188,7 +181,7 @@ public class CachingInterceptorTests
             KeyGenerator = ctx => $"custom_{ctx.OperationName}"
         };
         var customInterceptor = new CachingInterceptor(mockLogger.Object, cache, customOptions);
-        
+
         var context1 = new ProxyContext { OperationName = "TestOp" };
         var context2 = new ProxyContext { OperationName = "TestOp" };
         int callCount = 0;

@@ -1,9 +1,3 @@
-using FluentAssertions;
-
-using Microsoft.Extensions.Logging;
-
-using Moq;
-
 using VisionaryCoder.Framework.Proxy;
 using VisionaryCoder.Framework.Proxy.Interceptors.Correlation;
 
@@ -26,7 +20,7 @@ public class CorrelationInterceptorTests
         mockLogger = new Mock<ILogger<CorrelationInterceptor>>();
         mockCorrelationContext = new Mock<ICorrelationContext>();
         mockIdGenerator = new Mock<ICorrelationIdGenerator>();
-        
+
         interceptor = new CorrelationInterceptor(
             mockLogger.Object,
             mockCorrelationContext.Object,
@@ -70,7 +64,7 @@ public class CorrelationInterceptorTests
         // Arrange
         string existingCorrelationId = "existing-123";
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns(existingCorrelationId);
-        
+
         var context = new ProxyContext { MethodName = "TestMethod" };
         bool wasCalled = false;
 
@@ -98,7 +92,7 @@ public class CorrelationInterceptorTests
         string generatedId = "generated-456";
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns(null as string);
         mockIdGenerator.Setup(g => g.GenerateId()).Returns(generatedId);
-        
+
         var context = new ProxyContext();
 
         Task<ProxyResponse<int>> Next(ProxyContext ctx, CancellationToken ct) =>
@@ -121,7 +115,7 @@ public class CorrelationInterceptorTests
         string generatedId = "new-789";
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns(string.Empty);
         mockIdGenerator.Setup(g => g.GenerateId()).Returns(generatedId);
-        
+
         var context = new ProxyContext();
 
         Task<ProxyResponse<bool>> Next(ProxyContext ctx, CancellationToken ct) =>
@@ -142,7 +136,7 @@ public class CorrelationInterceptorTests
         string generatedId = "new-corr-id";
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns(null as string);
         mockIdGenerator.Setup(g => g.GenerateId()).Returns(generatedId);
-        
+
         var context = new ProxyContext();
 
         Task<ProxyResponse<string>> Next(ProxyContext ctx, CancellationToken ct) =>
@@ -168,7 +162,7 @@ public class CorrelationInterceptorTests
         // Arrange
         string existingId = "existing-corr-id";
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns(existingId);
-        
+
         var context = new ProxyContext();
 
         Task<ProxyResponse<string>> Next(ProxyContext ctx, CancellationToken ct) =>
@@ -194,7 +188,7 @@ public class CorrelationInterceptorTests
         // Arrange
         string correlationId = "error-corr-id";
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns(correlationId);
-        
+
         var context = new ProxyContext();
         var expectedException = new InvalidOperationException("Test error");
 
@@ -220,7 +214,7 @@ public class CorrelationInterceptorTests
     {
         // Arrange
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns("test-id");
-        
+
         var context = new ProxyContext();
         var expectedData = new { Value = 100 };
 
@@ -240,7 +234,7 @@ public class CorrelationInterceptorTests
     {
         // Arrange
         mockCorrelationContext.Setup(c => c.CorrelationId).Returns("test-id");
-        
+
         var context = new ProxyContext();
         var cts = new CancellationTokenSource();
         CancellationToken receivedToken = default;

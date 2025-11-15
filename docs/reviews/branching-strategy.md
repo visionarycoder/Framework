@@ -1,6 +1,7 @@
 # Branching Strategy Playbook
 
 ## Purpose
+
 Define a clear, reproducible branching model aligned with Nerdbank.GitVersioning (NBGV) and our CI/CD pipelines.
 
 ---
@@ -8,6 +9,7 @@ Define a clear, reproducible branching model aligned with Nerdbank.GitVersioning
 ## Branch Types
 
 ### `main`
+
 - **Purpose:** Integration branch for stable development.
 - **Versioning:** `-preview.{height}` prereleases.
 - **Publishing:** Nightly/previews to GitHub Packages.
@@ -16,6 +18,7 @@ Define a clear, reproducible branching model aligned with Nerdbank.GitVersioning
   - No direct commits; always via PR.
 
 ### `feature/*`
+
 - **Purpose:** Experimental or short-lived work.
 - **Versioning:** `-alpha.{height}` prereleases.
 - **Publishing:** GitHub Packages only (optional).
@@ -24,6 +27,7 @@ Define a clear, reproducible branching model aligned with Nerdbank.GitVersioning
   - Merge back via PR with review.
 
 ### `release/vX.Y`
+
 - **Purpose:** Stabilization branch for upcoming release.
 - **Versioning:** `-rc.{height}` prereleases.
 - **Publishing:** GitHub Packages (release candidates).
@@ -33,6 +37,7 @@ Define a clear, reproducible branching model aligned with Nerdbank.GitVersioning
   - Cut from `main` when feature set is frozen.
 
 ### Tags `vX.Y.Z`
+
 - **Purpose:** Production-ready releases.
 - **Versioning:** Clean semantic version (no suffix).
 - **Publishing:** NuGet.org (stable) + GitHub Packages.
@@ -70,7 +75,10 @@ gitGraph
    checkout main
    merge release/v1.1 id: "Release v1.1.0"
 ```
+
 ---
+
 ## Related Visuals
+
 - [Quarterly Review Timeline](quarterly-radar-review.md#quarterly-architecture-governance-cycle)
 - [Radar Quadrants](../../best-practices/radar.md#visual-radar-mermaid)

@@ -2,8 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
 using System.Diagnostics;
-
-using Microsoft.Extensions.Logging;
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Telemetry;
 /// <summary>
 /// Telemetry interceptor that creates activities and tracks proxy operations.
@@ -33,7 +31,7 @@ public sealed class TelemetryInterceptor : IOrderedProxyInterceptor
         string requestType = context.Request?.GetType().Name ?? "Unknown";
         string operationName = $"Proxy.{requestType}";
         using Activity? activity = activitySource.StartActivity(operationName);
-        
+
         // Enrich activity with context information
         activity?.SetTag("proxy.request_type", requestType);
         activity?.SetTag("proxy.result_type", context.ResultType?.Name);
@@ -45,12 +43,12 @@ public sealed class TelemetryInterceptor : IOrderedProxyInterceptor
         try
         {
             logger.LogDebug("Starting telemetry for {RequestType}", requestType);
-            
+
             ProxyResponse<T> result = await next(context, cancellationToken);
             stopwatch.Stop();
             activity?.SetTag("proxy.duration_ms", stopwatch.ElapsedMilliseconds);
             activity?.SetTag("proxy.success", true);
-            logger.LogDebug("Telemetry completed successfully for {RequestType} in {ElapsedMs}ms", 
+            logger.LogDebug("Telemetry completed successfully for {RequestType} in {ElapsedMs}ms",
                 requestType, stopwatch.ElapsedMilliseconds);
             return result;
         }
@@ -59,7 +57,7 @@ public sealed class TelemetryInterceptor : IOrderedProxyInterceptor
             activity?.SetTag("proxy.success", false);
             activity?.SetTag("proxy.error", ex.Message);
             activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            logger.LogError(ex, "Telemetry interceptor caught exception for {RequestType} after {ElapsedMs}ms", 
+            logger.LogError(ex, "Telemetry interceptor caught exception for {RequestType} after {ElapsedMs}ms",
                 requestType, stopwatch.ElapsedMilliseconds);
             throw;
         }

@@ -1,8 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VisionaryCoder.Framework.Caching.Providers;
 using VisionaryCoder.Framework.Proxy;
 
@@ -264,7 +262,7 @@ public class NullCacheKeyProviderTests
 
         // Act & Assert
         Action act = () => provider.GenerateKey(context);
-        
+
         // The method should handle null context gracefully or throw appropriate exception
         // Based on implementation, adjust this assertion
         act.Should().NotThrow("NullCacheKeyProvider should handle null context gracefully");
@@ -278,7 +276,7 @@ public class NullCacheKeyProviderTests
 
         // Act & Assert
         Action act = () => provider.CanGenerateKey(context);
-        
+
         // The method should handle null context gracefully or throw appropriate exception
         act.Should().NotThrow("NullCacheKeyProvider should handle null context gracefully");
     }
@@ -299,7 +297,7 @@ public class NullCacheKeyProviderTests
         // Act
         for (int i = 0; i < 10; i++)
         {
-            tasks.Add(Task.Run(() => 
+            tasks.Add(Task.Run(() =>
             {
                 var key = provider.GenerateKey(context);
                 var canGenerate = provider.CanGenerateKey(context);

@@ -3,10 +3,6 @@
 
 using System.Reflection;
 
-using FluentAssertions;
-
-using Moq;
-
 using VisionaryCoder.Framework.Providers;
 
 namespace VisionaryCoder.Framework.Tests;
@@ -70,7 +66,7 @@ public sealed class IRequestIdProviderTests
         var mockProvider = new Mock<IRequestIdProvider>();
         string id1 = Guid.NewGuid().ToString();
         string id2 = Guid.NewGuid().ToString();
-        
+
         mockProvider.SetupSequence(p => p.GenerateNew())
                     .Returns(id1)
                     .Returns(id2);
@@ -121,8 +117,8 @@ public sealed class IRequestIdProviderTests
         var mockProvider = new Mock<IRequestIdProvider>();
         string oldId = "old-request-id";
         string newId = "new-request-id";
-        
-        mockProvider.Setup(p => p.GenerateNew()).Returns(newId).Callback(() => 
+
+        mockProvider.Setup(p => p.GenerateNew()).Returns(newId).Callback(() =>
         {
             mockProvider.Setup(p => p.RequestId).Returns(newId);
         });
@@ -157,10 +153,10 @@ public sealed class IRequestIdProviderTests
         // Arrange
         var mockRequestProvider = new Mock<IRequestIdProvider>();
         var mockCorrelationProvider = new Mock<ICorrelationIdProvider>();
-        
+
         string requestId = "request-123";
         string correlationId = "correlation-456";
-        
+
         mockRequestProvider.Setup(p => p.RequestId).Returns(requestId);
         mockCorrelationProvider.Setup(p => p.CorrelationId).Returns(correlationId);
 

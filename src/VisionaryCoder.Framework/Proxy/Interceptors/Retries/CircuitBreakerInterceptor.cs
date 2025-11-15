@@ -1,8 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
-
 using VisionaryCoder.Framework.Proxy.Exceptions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Retries;
@@ -15,7 +13,7 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
     private readonly int failureThreshold;
     private readonly TimeSpan timeout;
     private readonly object lockObject = new();
-    
+
     private CircuitBreakerState state = CircuitBreakerState.Closed;
     private int failureCount;
     private DateTimeOffset lastFailureTime;
@@ -59,16 +57,16 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
                 case CircuitBreakerState.Open:
                     if (DateTimeOffset.UtcNow - lastFailureTime < timeout)
                     {
-                        logger.LogWarning("Circuit breaker is OPEN for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
+                        logger.LogWarning("Circuit breaker is OPEN for operation '{OperationName}'. Correlation ID: '{CorrelationId}'",
                             operationName, correlationId);
-                        
+
                         context.Metadata["CircuitBreakerState"] = state.ToString();
                         throw new TransientProxyException($"Circuit breaker is open for operation '{operationName}'");
                     }
-                    
+
                     // Timeout elapsed, try half-open
                     state = CircuitBreakerState.HalfOpen;
-                    logger.LogInformation("Circuit breaker transitioning to HALF-OPEN for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
+                    logger.LogInformation("Circuit breaker transitioning to HALF-OPEN for operation '{OperationName}'. Correlation ID: '{CorrelationId}'",
                         operationName, correlationId);
                     break;
                 case CircuitBreakerState.HalfOpen:
@@ -88,7 +86,7 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
                 if (state == CircuitBreakerState.HalfOpen)
                 {
                     state = CircuitBreakerState.Closed;
-                    logger.LogInformation("Circuit breaker closing after successful operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
+                    logger.LogInformation("Circuit breaker closing after successful operation '{OperationName}'. Correlation ID: '{CorrelationId}'",
                         operationName, correlationId);
                 }
                 failureCount = 0;
@@ -106,14 +104,14 @@ public sealed class CircuitBreakerInterceptor : IProxyInterceptor
                 {
                     // Failed during half-open, go back to open
                     state = CircuitBreakerState.Open;
-                    logger.LogWarning("Circuit breaker opening after failed test during HALF-OPEN state for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
+                    logger.LogWarning("Circuit breaker opening after failed test during HALF-OPEN state for operation '{OperationName}'. Correlation ID: '{CorrelationId}'",
                         operationName, correlationId);
                 }
                 else if (failureCount >= failureThreshold && state == CircuitBreakerState.Closed)
                 {
                     state = CircuitBreakerState.Open;
                     // Threshold reached, open the circuit
-                    logger.LogError("Circuit breaker opening after {FailureCount} failures for operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
+                    logger.LogError("Circuit breaker opening after {FailureCount} failures for operation '{OperationName}'. Correlation ID: '{CorrelationId}'",
                         failureCount, operationName, correlationId);
                 }
                 context.Metadata["CircuitBreakerFailureCount"] = failureCount.ToString();

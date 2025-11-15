@@ -1,10 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace VisionaryCoder.Framework.Tests;
 
 /// <summary>
@@ -29,10 +25,10 @@ public class BasicTests
     {
         // Arrange
         var services = new ServiceCollection();
-        
+
         // Act
         services.AddTransient<IServiceCollection, ServiceCollection>();
-        
+
         // Assert
         services.Should().HaveCount(1);
     }

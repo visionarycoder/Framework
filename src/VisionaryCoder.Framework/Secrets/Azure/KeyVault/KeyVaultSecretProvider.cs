@@ -1,10 +1,3 @@
-using Azure;
-using Azure.Security.KeyVault.Secrets;
-
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-
 namespace VisionaryCoder.Framework.Secrets.Azure.KeyVault;
     /// <summary>
     /// Azure Key Vault implementation of ISecretProvider with caching support.

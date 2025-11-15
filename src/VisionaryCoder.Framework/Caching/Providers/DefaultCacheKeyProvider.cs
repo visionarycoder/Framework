@@ -3,7 +3,6 @@
 
 using System.Security.Cryptography;
 using System.Text;
-using VisionaryCoder.Framework.Caching.Providers;
 using VisionaryCoder.Framework.Proxy;
 
 namespace VisionaryCoder.Framework.Caching.Providers;
@@ -18,7 +17,7 @@ public class DefaultCacheKeyProvider : ICacheKeyProvider
     private static readonly string[] relevantHeaders =
     [
         "Accept",
-        "Accept-Language", 
+        "Accept-Language",
         "Content-Type",
         "X-API-Version",
         "Authorization"
@@ -35,13 +34,13 @@ public class DefaultCacheKeyProvider : ICacheKeyProvider
         var keyComponents = new List<string>
         {
             context.OperationName ?? "Unknown",
-            context.Method ?? "GET", 
+            context.Method ?? "GET",
             context.Url ?? string.Empty
         };
-        
+
         // Include relevant headers in the key for context-sensitive caching
         AddRelevantHeaders(context, keyComponents);
-        
+
         return HashKey(string.Join("|", keyComponents));
     }
 
@@ -60,9 +59,9 @@ public class DefaultCacheKeyProvider : ICacheKeyProvider
             context.Url ?? string.Empty,
             typeof(T).FullName ?? typeof(T).Name
         };
-        
+
         AddRelevantHeaders(context, keyComponents);
-        
+
         return HashKey(string.Join("|", keyComponents));
     }
 
@@ -79,7 +78,7 @@ public class DefaultCacheKeyProvider : ICacheKeyProvider
                 .Where(h => IsRelevantHeader(h.Key))
                 .OrderBy(h => h.Key, StringComparer.OrdinalIgnoreCase)
                 .Select(h => $"{h.Key}={h.Value}"));
-                
+
             if (!string.IsNullOrEmpty(headerString))
             {
                 keyComponents.Add(headerString);

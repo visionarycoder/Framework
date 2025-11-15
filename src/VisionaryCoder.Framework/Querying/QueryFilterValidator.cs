@@ -1,13 +1,11 @@
 using System.Text.Json;
-using NJsonSchema;
-using NJsonSchema.Validation;
 
 namespace VisionaryCoder.Framework.Querying.Serialization;
 
 /// <summary>
 /// Validates QueryFilter JSON against the JSON Schema.
 /// </summary>
-public static class QueryFilterSchemaValidator      
+public static class QueryFilterSchemaValidator
 {
     private static readonly Lazy<JsonSchema> schema = new(LoadSchema);
 

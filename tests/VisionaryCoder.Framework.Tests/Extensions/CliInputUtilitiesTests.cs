@@ -1,6 +1,3 @@
-using FluentAssertions;
-using VisionaryCoder.Framework.Extensions.CLI;
-
 namespace VisionaryCoder.Framework.Tests.Extensions;
 
 [TestClass]
@@ -21,7 +18,7 @@ public class CliInputUtilitiesTests
     {
         consoleOutput?.Dispose();
         consoleInput?.Dispose();
-        
+
         // Restore original console
         Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
         Console.SetIn(new StreamReader(Console.OpenStandardInput()));

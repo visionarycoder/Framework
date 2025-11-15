@@ -1,5 +1,4 @@
 using System.Reflection;
-using FluentAssertions;
 
 namespace VisionaryCoder.Framework.Tests;
 
@@ -460,7 +459,7 @@ public class FrameworkResultTests
             Type resultType = typeof(ServiceResult);
             ConstructorInfo constructor = resultType.GetConstructors(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)[0];
             var result = (ServiceResult)constructor.Invoke(new object?[] { false, null, null });
-            
+
             string? capturedError = null;
 
             // Act

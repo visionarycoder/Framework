@@ -1,5 +1,3 @@
-using FluentAssertions;
-
 using System.Net.Sockets;
 
 using VisionaryCoder.Framework.Proxy.Exceptions;

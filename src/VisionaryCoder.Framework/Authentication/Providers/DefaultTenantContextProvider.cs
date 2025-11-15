@@ -1,8 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
 namespace VisionaryCoder.Framework.Authentication.Providers;
@@ -122,10 +120,10 @@ public class DefaultTenantContextProvider : ITenantContextProvider
         try
         {
             await Task.CompletedTask; // Placeholder for async validation operations
-            
+
             // Basic validation - check if tenant ID is valid and tenant is active
-            return !string.IsNullOrWhiteSpace(tenantContext.TenantId) && 
-                   tenantContext.IsActive && 
+            return !string.IsNullOrWhiteSpace(tenantContext.TenantId) &&
+                   tenantContext.IsActive &&
                    IsTenantValid(tenantContext.TenantId);
         }
         catch (Exception ex)
@@ -160,7 +158,7 @@ public class DefaultTenantContextProvider : ITenantContextProvider
             // Enrich with additional context
             EnrichTenantContext(tenantContext, httpContext);
 
-            logger.LogDebug("Tenant context extracted: {TenantId} ({TenantName})", 
+            logger.LogDebug("Tenant context extracted: {TenantId} ({TenantName})",
                 tenantContext.TenantId, tenantContext.TenantName);
 
             return tenantContext;
@@ -183,10 +181,10 @@ public class DefaultTenantContextProvider : ITenantContextProvider
         try
         {
             var tenantContext = GetCurrentTenant();
-            
+
             // Perform additional async enrichment (e.g., database lookups)
             await EnrichTenantContextAsync(tenantContext, cancellationToken);
-            
+
             return tenantContext;
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -257,7 +255,7 @@ public class DefaultTenantContextProvider : ITenantContextProvider
 
             // Store the new tenant ID in the HTTP context items for this request
             httpContext.Items["CurrentTenantId"] = tenantId;
-            
+
             // Add tenant header for downstream services
             httpContext.Response.Headers["X-Current-Tenant"] = tenantId;
 
@@ -282,16 +280,16 @@ public class DefaultTenantContextProvider : ITenantContextProvider
             return null;
 
         var principal = httpContext.User;
-        
-        var tenantId = GetClaimValue(principal, "tenant_id") ?? 
-                      GetClaimValue(principal, "tid") ?? 
+
+        var tenantId = GetClaimValue(principal, "tenant_id") ??
+                      GetClaimValue(principal, "tid") ??
                       GetClaimValue(principal, "tenantid");
 
         if (string.IsNullOrEmpty(tenantId))
             return null;
 
-        var tenantName = GetClaimValue(principal, "tenant_name") ?? 
-                        GetClaimValue(principal, "tenant") ?? 
+        var tenantName = GetClaimValue(principal, "tenant_name") ??
+                        GetClaimValue(principal, "tenant") ??
                         tenantId;
 
         return CreateTenantContext(tenantId, tenantName, "Claims");
@@ -312,10 +310,10 @@ public class DefaultTenantContextProvider : ITenantContextProvider
             var tenantId = tenantIdHeader.ToString();
             if (!string.IsNullOrEmpty(tenantId))
             {
-                var tenantName = headers.TryGetValue("X-Tenant-Name", out var nameHeader) 
-                    ? nameHeader.ToString() 
+                var tenantName = headers.TryGetValue("X-Tenant-Name", out var nameHeader)
+                    ? nameHeader.ToString()
                     : tenantId;
-                
+
                 return CreateTenantContext(tenantId, tenantName, "Header");
             }
         }
@@ -351,7 +349,7 @@ public class DefaultTenantContextProvider : ITenantContextProvider
         if (hostParts.Length >= 3)
         {
             var subdomain = hostParts[0];
-            
+
             // Skip common subdomains that aren't tenants
             var commonSubdomains = new[] { "www", "api", "admin", "app", "mail", "ftp" };
             if (!commonSubdomains.Contains(subdomain, StringComparer.OrdinalIgnoreCase))
@@ -376,11 +374,11 @@ public class DefaultTenantContextProvider : ITenantContextProvider
 
         // Check for path patterns like /tenant/{tenantId}/... or /t/{tenantId}/...
         var pathSegments = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
-        
+
         for (int i = 0; i < pathSegments.Length - 1; i++)
         {
             var segment = pathSegments[i];
-            if (segment.Equals("tenant", StringComparison.OrdinalIgnoreCase) || 
+            if (segment.Equals("tenant", StringComparison.OrdinalIgnoreCase) ||
                 segment.Equals("t", StringComparison.OrdinalIgnoreCase))
             {
                 var tenantId = pathSegments[i + 1];
@@ -430,9 +428,9 @@ public class DefaultTenantContextProvider : ITenantContextProvider
         // Add request information
         tenantContext.Settings["RequestPath"] = httpContext.Request.Path.Value ?? string.Empty;
         tenantContext.Settings["RequestMethod"] = httpContext.Request.Method;
-        
+
         // Add any tenant context override from HTTP items
-        if (httpContext.Items.TryGetValue("CurrentTenantId", out var overrideTenantId) && 
+        if (httpContext.Items.TryGetValue("CurrentTenantId", out var overrideTenantId) &&
             overrideTenantId is string overrideId)
         {
             tenantContext.TenantId = overrideId;
@@ -495,8 +493,8 @@ public class DefaultTenantContextProvider : ITenantContextProvider
             return true;
 
         // Check for reasonable tenant ID patterns
-        return value.Length >= 2 && 
-               value.Length <= 50 && 
+        return value.Length >= 2 &&
+               value.Length <= 50 &&
                value.All(c => char.IsLetterOrDigit(c) || c == '-' || c == '_');
     }
 

@@ -1,7 +1,5 @@
 // VisionaryCoder.Framework.Proxy.Caching
 
-using Microsoft.Extensions.Caching.Memory;
-
 namespace VisionaryCoder.Framework.Proxy.Caching;
 
 public sealed class MemoryProxyCache(IMemoryCache cache) : IProxyCache

@@ -1,8 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
 namespace VisionaryCoder.Framework.Authentication.Providers;
@@ -45,7 +43,7 @@ public class DefaultUserContextProvider : IUserContextProvider
         try
         {
             await Task.CompletedTask; // Placeholder for async user lookup operations
-            
+
             // In a real implementation, this would load user details from a database or directory service
             // For now, return null to indicate user not found
             logger.LogDebug("User lookup not implemented for user: {UserId}", userId);
@@ -72,7 +70,7 @@ public class DefaultUserContextProvider : IUserContextProvider
         try
         {
             await Task.CompletedTask; // Placeholder for async validation operations
-            
+
             // Use the built-in validation logic
             return userContext.IsValid;
         }
@@ -105,7 +103,7 @@ public class DefaultUserContextProvider : IUserContextProvider
             // Add additional context from HTTP headers if available
             EnrichFromHttpHeaders(userContext, httpContext);
 
-            logger.LogDebug("User context extracted for user: {UserId} ({UserName})", 
+            logger.LogDebug("User context extracted for user: {UserId} ({UserName})",
                 userContext.UserId, userContext.UserName);
 
             return userContext;
@@ -128,10 +126,10 @@ public class DefaultUserContextProvider : IUserContextProvider
         try
         {
             var userContext = GetCurrentUser();
-            
+
             // Perform any additional async enrichment here
             await EnrichUserContextAsync(userContext, cancellationToken);
-            
+
             return userContext;
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -164,9 +162,9 @@ public class DefaultUserContextProvider : IUserContextProvider
                 return false;
 
             var principal = httpContext.User;
-            
+
             // Check for permission claim
-            if (principal.HasClaim("permission", permission) || 
+            if (principal.HasClaim("permission", permission) ||
                 principal.HasClaim("permissions", permission))
             {
                 return true;
@@ -215,18 +213,18 @@ public class DefaultUserContextProvider : IUserContextProvider
     /// <returns>A UserContext extracted from the principal's claims.</returns>
     protected virtual UserContext ExtractUserContextFromPrincipal(ClaimsPrincipal principal)
     {
-        var userId = GetClaimValue(principal, ClaimTypes.NameIdentifier) ?? 
-                    GetClaimValue(principal, "sub") ?? 
-                    GetClaimValue(principal, "user_id") ?? 
+        var userId = GetClaimValue(principal, ClaimTypes.NameIdentifier) ??
+                    GetClaimValue(principal, "sub") ??
+                    GetClaimValue(principal, "user_id") ??
                     string.Empty;
 
-        var userName = GetClaimValue(principal, ClaimTypes.Name) ?? 
-                      GetClaimValue(principal, "name") ?? 
-                      GetClaimValue(principal, "preferred_username") ?? 
+        var userName = GetClaimValue(principal, ClaimTypes.Name) ??
+                      GetClaimValue(principal, "name") ??
+                      GetClaimValue(principal, "preferred_username") ??
                       string.Empty;
 
-        var email = GetClaimValue(principal, ClaimTypes.Email) ?? 
-                   GetClaimValue(principal, "email") ?? 
+        var email = GetClaimValue(principal, ClaimTypes.Email) ??
+                   GetClaimValue(principal, "email") ??
                    string.Empty;
 
         var roles = GetClaimValues(principal, ClaimTypes.Role)
@@ -242,7 +240,7 @@ public class DefaultUserContextProvider : IUserContextProvider
 
         // Extract additional attributes
         var attributes = new Dictionary<string, object>();
-        
+
         var firstName = GetClaimValue(principal, ClaimTypes.GivenName) ?? GetClaimValue(principal, "given_name");
         if (!string.IsNullOrEmpty(firstName))
             attributes["FirstName"] = firstName;
@@ -287,7 +285,7 @@ public class DefaultUserContextProvider : IUserContextProvider
         var headers = httpContext.Request.Headers;
 
         // Add correlation ID from header if not already present
-        if (!userContext.Claims.ContainsKey("CorrelationId") && 
+        if (!userContext.Claims.ContainsKey("CorrelationId") &&
             headers.TryGetValue("X-Correlation-ID", out var correlationId))
         {
             userContext.Claims["CorrelationId"] = correlationId.ToString();

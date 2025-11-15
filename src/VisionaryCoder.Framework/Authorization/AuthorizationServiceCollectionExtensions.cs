@@ -1,8 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using VisionaryCoder.Framework.Authorization.Policies;
 
 namespace VisionaryCoder.Framework.Authorization;
@@ -46,10 +44,10 @@ public static class AuthorizationServiceCollectionExtensions
         where T : class, IAuthorizationPolicy
     {
         ArgumentNullException.ThrowIfNull(services);
-        
+
         // Add authorization policy (multiple policies can coexist)
         services.AddSingleton<IAuthorizationPolicy, T>();
-        
+
         return services;
     }
 
@@ -65,11 +63,11 @@ public static class AuthorizationServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(requiredRoles);
-        
+
         // Add role-based authorization policy with explicit configuration
         services.AddSingleton<IAuthorizationPolicy>(provider =>
             new RoleBasedAuthorizationPolicy(requiredRoles));
-        
+
         return services;
     }
 
@@ -85,10 +83,10 @@ public static class AuthorizationServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(policy);
-        
+
         // Add specific policy instance
         services.AddSingleton<IAuthorizationPolicy>(policy);
-        
+
         return services;
     }
 
@@ -104,11 +102,11 @@ public static class AuthorizationServiceCollectionExtensions
         where T : class, IAuthorizationPolicy
     {
         ArgumentNullException.ThrowIfNull(services);
-        
+
         // Remove existing authorization policies and replace with explicit type
         services.RemoveAll<IAuthorizationPolicy>();
         services.AddSingleton<IAuthorizationPolicy, T>();
-        
+
         return services;
     }
 
@@ -124,12 +122,12 @@ public static class AuthorizationServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(defaultRoles);
-        
+
         // Remove null policy and replace with role-based authorization
         services.RemoveAll<IAuthorizationPolicy>();
         services.AddSingleton<IAuthorizationPolicy>(provider =>
             new RoleBasedAuthorizationPolicy(defaultRoles));
-        
+
         return services;
     }
 }

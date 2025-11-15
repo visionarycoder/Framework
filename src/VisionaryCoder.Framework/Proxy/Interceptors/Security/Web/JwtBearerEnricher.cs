@@ -1,8 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security.Web;
 /// <summary>
 /// Helper class for enriching proxy context with JWT Bearer authentication.

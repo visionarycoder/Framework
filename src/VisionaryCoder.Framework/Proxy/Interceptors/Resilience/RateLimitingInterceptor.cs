@@ -3,8 +3,6 @@
 
 using System.Collections.Concurrent;
 
-using Microsoft.Extensions.Logging;
-
 using VisionaryCoder.Framework.Proxy.Exceptions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Resilience;
@@ -44,7 +42,7 @@ public sealed class RateLimitingInterceptor : IProxyInterceptor
         // Check rate limit
         if (!IsRequestAllowed(rateLimitKey))
         {
-            logger.LogWarning("Rate limit exceeded for key '{RateLimitKey}' on operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
+            logger.LogWarning("Rate limit exceeded for key '{RateLimitKey}' on operation '{OperationName}'. Correlation ID: '{CorrelationId}'",
                 rateLimitKey, operationName, correlationId);
             context.Metadata["RateLimited"] = true;
             throw new TransientProxyException($"Rate limit exceeded for operation '{operationName}'. Max {config.MaxRequests} requests per {config.TimeWindow}.");
@@ -55,7 +53,7 @@ public sealed class RateLimitingInterceptor : IProxyInterceptor
         PerformCleanupIfNeeded();
         context.Metadata["RateLimited"] = false;
         context.Metadata["RateLimitKey"] = rateLimitKey;
-        logger.LogDebug("Rate limit check passed for key '{RateLimitKey}' on operation '{OperationName}'. Correlation ID: '{CorrelationId}'", 
+        logger.LogDebug("Rate limit check passed for key '{RateLimitKey}' on operation '{OperationName}'. Correlation ID: '{CorrelationId}'",
             rateLimitKey, operationName, correlationId);
         return await next(context, cancellationToken);
     }

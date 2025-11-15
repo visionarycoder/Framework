@@ -1,6 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-
 using VisionaryCoder.Framework.Proxy.Interceptors.Security.Web;
 using VisionaryCoder.Framework.Secrets;
 

@@ -1,8 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VisionaryCoder.Framework.Caching.Providers;
 using VisionaryCoder.Framework.Proxy;
 
@@ -430,9 +428,9 @@ public class DefaultCacheKeyProviderTests
     public void GenerateKey_WithVeryLongUrl_ShouldHandleGracefully()
     {
         // Arrange
-        var longUrl = "https://api.example.com/" + new string('a', 2000) + "?" + string.Join("&", 
+        var longUrl = "https://api.example.com/" + new string('a', 2000) + "?" + string.Join("&",
             Enumerable.Range(1, 100).Select(i => $"param{i}=value{i}"));
-        
+
         var context = new ProxyContext
         {
             OperationName = "TestOperation",
@@ -495,7 +493,7 @@ public class DefaultCacheKeyProviderTests
         // Arrange
         var provider1 = new DefaultCacheKeyProvider();
         var provider2 = new DefaultCacheKeyProvider();
-        
+
         var context = new ProxyContext
         {
             OperationName = "TestOperation",

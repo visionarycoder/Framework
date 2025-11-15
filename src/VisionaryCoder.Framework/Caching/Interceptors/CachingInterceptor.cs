@@ -1,7 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Caching.Providers;
 using VisionaryCoder.Framework.Proxy;
 
@@ -60,21 +59,21 @@ public sealed class CachingInterceptor(
         var cacheKey = keyProvider.GenerateKey(context);
         if (cacheKey == null)
         {
-            logger.LogDebug("No cache key generated for operation '{OperationName}', bypassing cache. Correlation ID: '{CorrelationId}'", 
+            logger.LogDebug("No cache key generated for operation '{OperationName}', bypassing cache. Correlation ID: '{CorrelationId}'",
                 operationName, correlationId);
             return await next(context, cancellationToken);
         }
-        
+
         var cachedResponse = await proxyCache.GetAsync<T>(cacheKey, cancellationToken);
 
         if (cachedResponse != null)
         {
             logger.LogDebug("Cache hit for operation '{OperationName}' with key '{CacheKey}'. Correlation ID: '{CorrelationId}'",
                 operationName, cacheKey, correlationId);
-            
+
             context.Metadata["CacheHit"] = true;
             context.Metadata["CacheKey"] = cacheKey;
-            
+
             return cachedResponse;
         }
 
@@ -88,16 +87,16 @@ public sealed class CachingInterceptor(
         if (ShouldCacheResponse(response, cachePolicy))
         {
             var expiration = policyProvider.GetExpiration(context) ?? cachePolicy.Duration;
-            
+
             await proxyCache.SetAsync(cacheKey, response, expiration, cancellationToken);
-            
+
             logger.LogDebug("Cached successful response for operation '{OperationName}' with key '{CacheKey}' for {Duration}. Correlation ID: '{CorrelationId}'",
                 operationName, cacheKey, expiration, correlationId);
         }
 
         context.Metadata["CacheHit"] = false;
         context.Metadata["CacheKey"] = cacheKey;
-        
+
         return response;
     }
 
@@ -119,7 +118,7 @@ public sealed class CachingInterceptor(
         if (context.Headers.TryGetValue("Cache-Control", out var cacheControl))
         {
             var cacheControlValue = cacheControl?.ToString()?.ToLowerInvariant();
-            if (cacheControlValue?.Contains("no-cache") == true || 
+            if (cacheControlValue?.Contains("no-cache") == true ||
                 cacheControlValue?.Contains("no-store") == true)
             {
                 return true;

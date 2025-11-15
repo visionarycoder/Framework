@@ -1,8 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
-
 using VisionaryCoder.Framework.Proxy.Exceptions;
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Logging;
 /// <summary>
@@ -24,21 +22,21 @@ public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IOr
     {
         string operationName = context.OperationName ?? "Unknown";
         string correlationId = context.CorrelationId ?? "None";
-        
-        logger.LogDebug("Starting proxy operation '{OperationName}' with correlation ID '{CorrelationId}'", 
+
+        logger.LogDebug("Starting proxy operation '{OperationName}' with correlation ID '{CorrelationId}'",
             operationName, correlationId);
         try
         {
             ProxyResponse<T> proxyResponse = await next(context, cancellationToken);
-            
+
             if (proxyResponse.IsSuccess)
             {
-                logger.LogInformation("Proxy operation '{OperationName}' completed successfully. Correlation ID: '{CorrelationId}'", 
+                logger.LogInformation("Proxy operation '{OperationName}' completed successfully. Correlation ID: '{CorrelationId}'",
                     operationName, correlationId);
             }
             else
             {
-                logger.LogWarning("Proxy operation '{OperationName}' completed with failure. Error: '{ErrorMessage}'. Correlation ID: '{CorrelationId}'", 
+                logger.LogWarning("Proxy operation '{OperationName}' completed with failure. Error: '{ErrorMessage}'. Correlation ID: '{CorrelationId}'",
                     operationName, proxyResponse.ErrorMessage, correlationId);
             }
             return proxyResponse;
@@ -50,7 +48,7 @@ public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IOr
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Proxy operation '{OperationName}' failed with unexpected exception. Correlation ID: '{CorrelationId}'", 
+            logger.LogError(ex, "Proxy operation '{OperationName}' failed with unexpected exception. Correlation ID: '{CorrelationId}'",
                 operationName, correlationId);
             throw;
         }

@@ -1,4 +1,3 @@
-using FluentAssertions;
 using VisionaryCoder.Framework.Logging;
 
 namespace VisionaryCoder.Framework.Tests.Logging;

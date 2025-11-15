@@ -1,7 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Authentication.Jwt;
 using VisionaryCoder.Framework.Proxy;
 
@@ -54,7 +53,7 @@ public class JwtAuthenticationInterceptor : IProxyInterceptor
         try
         {
             logger.LogDebug("Acquiring JWT token for audience: {Audience}", options.Audience);
-            
+
             // Create token request based on configuration
             var tokenRequest = new TokenRequest
             {
@@ -82,9 +81,9 @@ public class JwtAuthenticationInterceptor : IProxyInterceptor
             {
                 // Add Authorization header
                 context.Headers[options.HeaderName] = $"{tokenResult.TokenType} {tokenResult.AccessToken}";
-                logger.LogDebug("JWT token added to {HeaderName} header. Expires in {ExpiresIn}s", 
+                logger.LogDebug("JWT token added to {HeaderName} header. Expires in {ExpiresIn}s",
                     options.HeaderName, tokenResult.ExpiresIn);
-                
+
                 // Add correlation ID for request tracing
                 if (!string.IsNullOrEmpty(tokenResult.CorrelationId))
                 {
@@ -100,11 +99,11 @@ public class JwtAuthenticationInterceptor : IProxyInterceptor
             }
             else
             {
-                logger.LogWarning("Failed to obtain JWT token for audience {Audience}: {Error} - {ErrorDescription}", 
+                logger.LogWarning("Failed to obtain JWT token for audience {Audience}: {Error} - {ErrorDescription}",
                     options.Audience, tokenResult.Error, tokenResult.ErrorDescription);
 
                 // Optionally fail the request based on configuration
-                if (options.CustomProperties.TryGetValue("FailOnTokenError", out var failOnError) && 
+                if (options.CustomProperties.TryGetValue("FailOnTokenError", out var failOnError) &&
                     failOnError is bool fail && fail)
                 {
                     throw new InvalidOperationException($"JWT token acquisition failed: {tokenResult.Error}");
@@ -118,11 +117,11 @@ public class JwtAuthenticationInterceptor : IProxyInterceptor
         }
         catch (TimeoutException)
         {
-            logger.LogError("JWT token acquisition timed out after {Timeout} for audience: {Audience}", 
+            logger.LogError("JWT token acquisition timed out after {Timeout} for audience: {Audience}",
                 options.RequestTimeout, options.Audience);
-            
+
             // Continue with request without token based on configuration
-            if (options.CustomProperties.TryGetValue("FailOnTimeout", out var failOnTimeout) && 
+            if (options.CustomProperties.TryGetValue("FailOnTimeout", out var failOnTimeout) &&
                 failOnTimeout is bool fail && fail)
             {
                 throw;
@@ -131,10 +130,10 @@ public class JwtAuthenticationInterceptor : IProxyInterceptor
         catch (Exception ex)
         {
             logger.LogError(ex, "Unexpected error during JWT token acquisition for audience: {Audience}", options.Audience);
-            
+
             // Continue with request without token to avoid breaking the flow
             // unless configured to fail on errors
-            if (options.CustomProperties.TryGetValue("FailOnError", out var failOnError) && 
+            if (options.CustomProperties.TryGetValue("FailOnError", out var failOnError) &&
                 failOnError is bool fail && fail)
             {
                 throw;

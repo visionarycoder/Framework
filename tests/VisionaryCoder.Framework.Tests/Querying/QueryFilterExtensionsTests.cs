@@ -1,10 +1,5 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FluentAssertions;
 using VisionaryCoder.Framework.Querying;
-using System;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Collections.Generic;
 
 namespace VisionaryCoder.Framework.Tests.Querying;
 

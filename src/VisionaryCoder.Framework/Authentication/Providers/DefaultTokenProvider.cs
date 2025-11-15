@@ -1,11 +1,7 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using Microsoft.Extensions.Logging;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Json;
 using System.Security.Claims;
-using System.Text;
 using System.Text.Json;
 using VisionaryCoder.Framework.Authentication.Jwt;
 
@@ -58,7 +54,7 @@ public class DefaultTokenProvider : ITokenProvider
             options.Audience);
 
         var result = await GetTokenAsync(defaultRequest, cancellationToken);
-        
+
         if (result.IsSuccess && !string.IsNullOrEmpty(result.AccessToken))
         {
             return result.AccessToken;
@@ -85,7 +81,7 @@ public class DefaultTokenProvider : ITokenProvider
 
         try
         {
-            logger.LogDebug("Requesting JWT token for audience: {Audience}, grant type: {GrantType}", 
+            logger.LogDebug("Requesting JWT token for audience: {Audience}, grant type: {GrantType}",
                 request.Audience, request.GrantType);
 
             using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -113,7 +109,7 @@ public class DefaultTokenProvider : ITokenProvider
                 }
             }
 
-            logger.LogWarning("Token request failed with status {StatusCode}: {ResponseContent}", 
+            logger.LogWarning("Token request failed with status {StatusCode}: {ResponseContent}",
                 response.StatusCode, responseContent);
 
             return ParseErrorResponse(responseContent);
@@ -146,10 +142,10 @@ public class DefaultTokenProvider : ITokenProvider
         {
             var validationParameters = await GetValidationParametersAsync(cancellationToken);
             var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
-            
-            logger.LogDebug("JWT token validation successful for subject: {Subject}", 
+
+            logger.LogDebug("JWT token validation successful for subject: {Subject}",
                 principal.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "unknown");
-            
+
             return true;
         }
         catch (Exception ex)
@@ -173,7 +169,7 @@ public class DefaultTokenProvider : ITokenProvider
         try
         {
             var jsonToken = tokenHandler.ReadJwtToken(token);
-            
+
             // Check expiration
             if (options.ValidateLifetime && jsonToken.ValidTo < DateTime.UtcNow)
             {
@@ -186,7 +182,7 @@ public class DefaultTokenProvider : ITokenProvider
             {
                 if (!jsonToken.Audiences.Contains(options.Audience))
                 {
-                    logger.LogDebug("JWT token audience mismatch. Expected: {ExpectedAudience}, Actual: {ActualAudiences}", 
+                    logger.LogDebug("JWT token audience mismatch. Expected: {ExpectedAudience}, Actual: {ActualAudiences}",
                         options.Audience, string.Join(", ", jsonToken.Audiences));
                     return false;
                 }
@@ -197,7 +193,7 @@ public class DefaultTokenProvider : ITokenProvider
             {
                 if (!string.Equals(jsonToken.Issuer, options.Issuer, StringComparison.OrdinalIgnoreCase))
                 {
-                    logger.LogDebug("JWT token issuer mismatch. Expected: {ExpectedIssuer}, Actual: {ActualIssuer}", 
+                    logger.LogDebug("JWT token issuer mismatch. Expected: {ExpectedIssuer}, Actual: {ActualIssuer}",
                         options.Issuer, jsonToken.Issuer);
                     return false;
                 }
@@ -261,7 +257,7 @@ public class DefaultTokenProvider : ITokenProvider
         try
         {
             var jsonToken = tokenHandler.ReadJwtToken(token);
-            
+
             foreach (var claim in jsonToken.Claims)
             {
                 if (claims.ContainsKey(claim.Type))
@@ -306,7 +302,7 @@ public class DefaultTokenProvider : ITokenProvider
     {
         httpClient.Timeout = options.RequestTimeout;
         httpClient.DefaultRequestHeaders.Add("User-Agent", "VisionaryCoder.Framework.Authentication/1.0");
-        
+
         if (!httpClient.DefaultRequestHeaders.Contains("Accept"))
         {
             httpClient.DefaultRequestHeaders.Add("Accept", "application/json");

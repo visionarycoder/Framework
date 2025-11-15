@@ -1,11 +1,4 @@
-using FluentAssertions;
-
-using Microsoft.Extensions.Logging;
-
-using Moq;
-
 using VisionaryCoder.Framework.Proxy;
-using VisionaryCoder.Framework.Proxy.Interceptors;
 using VisionaryCoder.Framework.Proxy.Interceptors.Logging;
 
 namespace VisionaryCoder.Framework.Tests.Proxy.Interceptors.Logging;

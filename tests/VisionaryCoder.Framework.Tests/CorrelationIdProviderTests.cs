@@ -1,5 +1,3 @@
-using FluentAssertions;
-using Moq;
 using VisionaryCoder.Framework.Providers;
 
 namespace VisionaryCoder.Framework.Tests;
@@ -217,7 +215,7 @@ public class CorrelationIdProviderTests
 
         // Act & Assert
         Task.WaitAll(tasks.ToArray());
-        
+
         for (int i = 0; i < tasks.Count; i++)
         {
             string expectedId = $"TASK{i:D2}ID12";

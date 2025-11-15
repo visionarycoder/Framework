@@ -1,10 +1,6 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using VisionaryCoder.Framework.Caching;
 using VisionaryCoder.Framework.Caching.Providers;
 
@@ -35,7 +31,7 @@ public class CachingServiceCollectionExtensionsTests
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
-        
+
         var keyProvider = serviceProvider.GetService<ICacheKeyProvider>();
         keyProvider.Should().NotBeNull();
         keyProvider.Should().BeOfType<NullCacheKeyProvider>();
@@ -90,7 +86,7 @@ public class CachingServiceCollectionExtensionsTests
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
-        
+
         var cache = serviceProvider.GetService<IProxyCache>();
         cache.Should().NotBeNull();
         cache.Should().BeOfType<MemoryProxyCache>();
@@ -110,7 +106,7 @@ public class CachingServiceCollectionExtensionsTests
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
-        
+
         var keyProvider = serviceProvider.GetService<ICacheKeyProvider>();
         keyProvider.Should().BeOfType<DefaultCacheKeyProvider>();
 

@@ -14,7 +14,6 @@ public sealed class NullSecretProvider : ISecretProvider
     private NullSecretProvider() { }
 
     /// Always returns null.
-    public Task<string?> GetAsync(string name, CancellationToken cancellationToken = default)
-        => Task.FromResult<string?>(null);
-        
+    public Task<string?> GetAsync(string name, CancellationToken cancellationToken = default) => Task.FromResult<string?>(null);
+
 }

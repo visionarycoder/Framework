@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security.Web;
 /// <summary>
 /// JWT interceptor for web-based authentication scenarios.
@@ -36,7 +34,7 @@ public class WebJwtInterceptor : IProxyInterceptor
         try
         {
             logger.LogDebug("Retrieving JWT token for audience: {Audience}", options.Audience);
-            
+
             TokenResult tokenResult = await tokenProvider.GetTokenAsync(new TokenRequest
             {
                 Audience = options.Audience,
@@ -47,7 +45,7 @@ public class WebJwtInterceptor : IProxyInterceptor
             {
                 context.Headers[options.HeaderName] = $"Bearer {tokenResult.AccessToken}";
                 logger.LogDebug("JWT token added to {HeaderName} header", options.HeaderName);
-                
+
                 // Add correlation ID if available
                 if (!string.IsNullOrEmpty(tokenResult.CorrelationId))
                 {
