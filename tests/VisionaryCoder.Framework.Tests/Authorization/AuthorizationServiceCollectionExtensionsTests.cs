@@ -1,7 +1,8 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using VisionaryCoder.Framework.Authorization.Policies;
+using Microsoft.Extensions.DependencyInjection;
+using VisionaryCoder.Framework.Proxy.Interceptors.Authorization.Policies;
 
 namespace VisionaryCoder.Framework.Tests.Authorization;
 
@@ -29,8 +30,8 @@ public class AuthorizationServiceCollectionExtensionsTests
         services.AddScoped<IAuthorizationPolicy, RoleBasedAuthorizationPolicy>();
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
-        var policy = serviceProvider.GetService<IAuthorizationPolicy>();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+        IAuthorizationPolicy? policy = serviceProvider.GetService<IAuthorizationPolicy>();
         policy.Should().NotBeNull();
         policy.Should().BeOfType<RoleBasedAuthorizationPolicy>();
     }
@@ -42,8 +43,8 @@ public class AuthorizationServiceCollectionExtensionsTests
         services.AddScoped<IAuthorizationPolicy, NullAuthorizationPolicy>();
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
-        var policy = serviceProvider.GetService<IAuthorizationPolicy>();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+        IAuthorizationPolicy? policy = serviceProvider.GetService<IAuthorizationPolicy>();
         policy.Should().NotBeNull();
         policy.Should().BeOfType<NullAuthorizationPolicy>();
     }
@@ -56,8 +57,8 @@ public class AuthorizationServiceCollectionExtensionsTests
         services.AddScoped<IAuthorizationPolicy, NullAuthorizationPolicy>();
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
-        var policies = serviceProvider.GetServices<IAuthorizationPolicy>();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+        IEnumerable<IAuthorizationPolicy> policies = serviceProvider.GetServices<IAuthorizationPolicy>();
         policies.Should().HaveCount(2);
         policies.Should().ContainSingle(p => p.GetType() == typeof(RoleBasedAuthorizationPolicy));
         policies.Should().ContainSingle(p => p.GetType() == typeof(NullAuthorizationPolicy));
@@ -70,8 +71,8 @@ public class AuthorizationServiceCollectionExtensionsTests
         services.AddScoped<IAuthorizationPolicy, RoleBasedAuthorizationPolicy>();
 
         // Assert
-        var descriptor = services.FirstOrDefault(s => s.ServiceType == typeof(IAuthorizationPolicy)
-            && s.ImplementationType == typeof(RoleBasedAuthorizationPolicy));
+        ServiceDescriptor? descriptor = services.FirstOrDefault(s => s.ServiceType == typeof(IAuthorizationPolicy)
+                                                                     && s.ImplementationType == typeof(RoleBasedAuthorizationPolicy));
         descriptor.Should().NotBeNull();
         descriptor!.Lifetime.Should().Be(ServiceLifetime.Scoped);
     }

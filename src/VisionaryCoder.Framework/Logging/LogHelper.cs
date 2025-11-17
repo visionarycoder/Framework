@@ -1,10 +1,12 @@
+using Microsoft.Extensions.Logging;
+
 namespace VisionaryCoder.Framework.Logging;
 
 public static class LogHelper
 {
 
     // Synchronous Methods
-     public static void LogTraceMessage(ILogger logger, string logMessage, Exception? exception = null)
+    public static void LogTraceMessage(ILogger logger, string logMessage, Exception? exception = null)
     {
         LogTrace(logger, logMessage, exception);
     }

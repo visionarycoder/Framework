@@ -1,7 +1,9 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Telemetry;
 /// <summary>
 /// Telemetry interceptor that creates activities and tracks proxy operations.

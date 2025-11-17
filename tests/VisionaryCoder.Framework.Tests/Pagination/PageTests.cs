@@ -99,9 +99,9 @@ public class PageTests
     public void Items_WithDifferentTypes_ShouldWork()
     {
         // Arrange & Act
-        var stringPage = new Page<string>(new[] { "a", "b" }, 2, 1, 10);
-        var intPage = new Page<int>(new[] { 1, 2, 3 }, 3, 1, 10);
-        var objectPage = new Page<object>(new object[] { 1, "test", 3.14 }, 3, 1, 10);
+        var stringPage = new Page<string>(["a", "b"], 2, 1, 10);
+        var intPage = new Page<int>([1, 2, 3], 3, 1, 10);
+        var objectPage = new Page<object>([1, "test", 3.14], 3, 1, 10);
 
         // Assert
         stringPage.Items.Should().AllBeOfType<string>();
@@ -357,9 +357,9 @@ public class PageTests
     public void Page_WithValueTypes_ShouldWork()
     {
         // Act
-        var intPage = new Page<int>(new[] { 1, 2, 3 }, 3, 1, 10);
-        var doublePage = new Page<double>(new[] { 1.1, 2.2 }, 2, 1, 10);
-        var boolPage = new Page<bool>(new[] { true, false, true }, 3, 1, 10);
+        var intPage = new Page<int>([1, 2, 3], 3, 1, 10);
+        var doublePage = new Page<double>([1.1, 2.2], 2, 1, 10);
+        var boolPage = new Page<bool>([true, false, true], 3, 1, 10);
 
         // Assert
         intPage.Items.Should().AllBeOfType<int>();
@@ -371,8 +371,8 @@ public class PageTests
     public void Page_WithReferenceTypes_ShouldWork()
     {
         // Act
-        var stringPage = new Page<string>(new[] { "a", "b" }, 2, 1, 10);
-        var objectPage = new Page<object>(new object[] { new(), new() }, 2, 1, 10);
+        var stringPage = new Page<string>(["a", "b"], 2, 1, 10);
+        var objectPage = new Page<object>([new(), new()], 2, 1, 10);
 
         // Assert
         stringPage.Items.Should().AllBeOfType<string>();

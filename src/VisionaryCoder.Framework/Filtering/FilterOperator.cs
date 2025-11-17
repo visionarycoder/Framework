@@ -1,3 +1,5 @@
+namespace VisionaryCoder.Framework.Filtering;
+
 public enum FilterOperator
 {
     Equals,

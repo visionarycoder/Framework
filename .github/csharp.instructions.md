@@ -1,4 +1,4 @@
-﻿---
+---
 # 🔧 Copilot Instruction Metadata
 version: 1.0.0
 schema: 1
@@ -36,10 +36,10 @@ Applies to `.cs`, `.razor`, `.csproj`, and `.sln` files.
 - Address nullable reference warnings (CS8602) with proper null checks.
 
 ## Project Structure
-- **Central Package Management**: Currently disabled (`ManagePackageVersionsCentrally=false`).
+- **Central Package Management**: Currently enabled (`ManagePackageVersionsCentrally=true`).
 - **Solution structure**: Standard .sln file excludes WinUI packaging project (.wapproj).
 - **Dependencies**: `Directory.Build.props` defines common properties and version variables.
-- **Package versions**: Orleans 9.2.1, Aspire 9.5.2, MSTest 4.0.1, FluentAssertions 8.8.0.
+- **Package versions**: Orleans (latest), Aspire (latest), MSTest (latest), FluentAssertions (latest).
 
 ## Extension Methods Pattern
 - Create static extension classes in dedicated `Model.Extensions/` project.
@@ -49,9 +49,9 @@ Applies to `.cs`, `.razor`, `.csproj`, and `.sln` files.
 - Extension methods enable testability without modifying core models.
 
 ## Testing
-- Use MSTest 4.0.1 for all unit and integration tests.
+- Use MSTest (latest) for all unit and integration tests.
 - Use `[TestMethod]` with `[DataRow(...)]` for data-driven tests.
-- Use FluentAssertions 8.8.0 for readable assertions.
+- Use FluentAssertions (latest) for readable assertions.
 - Use `[TestInitialize]` and `[TestCleanup]` for setup/teardown.
 - Follow Arrange-Act-Assert structure.
 - Organize tests with `#region` blocks for logical grouping.
@@ -60,3 +60,7 @@ Applies to `.cs`, `.razor`, `.csproj`, and `.sln` files.
 ## 📝 Changelog
 ### 1.0.0 (2025-10-03)
 - Added metadata header (initial versioning schema).
+
+### 1.1.0 (2025-10-10)
+- Established C#/.NET coding standards and best practices.
+- Improved project structure and organization.

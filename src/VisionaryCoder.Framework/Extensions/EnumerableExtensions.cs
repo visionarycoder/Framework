@@ -21,7 +21,7 @@ public static class EnumerableExtensions
         {
             return false;
         }
-        HashSet<T> set = comparer == null ? new HashSet<T>() : new HashSet<T>(comparer);
+        HashSet<T> set = comparer == null ? [] : new HashSet<T>(comparer);
         return instance.Any(item => !set.Add(item));
     }
     /// Determines whether the sequence is null or empty.

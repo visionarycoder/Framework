@@ -1,3 +1,4 @@
+using VisionaryCoder.Framework.Querying;
 using VisionaryCoder.Framework.Querying.Serialization;
 
 namespace VisionaryCoder.Framework.Tests.Querying.Serialization;

@@ -104,7 +104,7 @@ public sealed class CorrelationIdProviderTests
     {
         // Arrange
         var provider = new CorrelationIdProvider();
-        string[] ids = new[] { "corr-1", "corr-2", "corr-3", "corr-4" };
+        string[] ids = ["corr-1", "corr-2", "corr-3", "corr-4"];
 
         // Act & Assert
         foreach (string id in ids)

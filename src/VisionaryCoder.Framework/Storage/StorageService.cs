@@ -1,23 +1,17 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
+using Microsoft.Extensions.Logging;
+
 namespace VisionaryCoder.Framework.Storage;
 
 /// <summary>
 /// Provides storage operations for files and data.
 /// </summary>
-public class StorageService
+public class StorageService(ILogger<StorageService> logger) : ServiceBase<StorageService>(logger)
 {
-    private readonly ILogger<StorageService> logger;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="StorageService"/> class.
-    /// </summary>
-    /// <param name="logger">The logger instance.</param>
-    public StorageService(ILogger<StorageService> logger)
-    {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
+    private readonly ILogger<StorageService> logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     // File operations
     public bool FileExists(string path)
@@ -136,7 +130,7 @@ public class StorageService
     public async IAsyncEnumerable<string> EnumerateFilesAsync(string path)
     {
         await Task.Yield();
-        foreach (var file in Directory.EnumerateFiles(path))
+        foreach (string file in Directory.EnumerateFiles(path))
         {
             yield return file;
         }
@@ -145,7 +139,7 @@ public class StorageService
     public async IAsyncEnumerable<string> EnumerateFilesAsync(string path, string searchPattern)
     {
         await Task.Yield();
-        foreach (var file in Directory.EnumerateFiles(path, searchPattern))
+        foreach (string file in Directory.EnumerateFiles(path, searchPattern))
         {
             yield return file;
         }
@@ -154,7 +148,7 @@ public class StorageService
     public async IAsyncEnumerable<string> EnumerateFilesAsync(string path, string searchPattern, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         await Task.Yield();
-        foreach (var file in Directory.EnumerateFiles(path, searchPattern))
+        foreach (string file in Directory.EnumerateFiles(path, searchPattern))
         {
             cancellationToken.ThrowIfCancellationRequested();
             yield return file;

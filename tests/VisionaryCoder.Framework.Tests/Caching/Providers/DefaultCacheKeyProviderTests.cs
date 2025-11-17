@@ -1,8 +1,8 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using VisionaryCoder.Framework.Caching.Providers;
 using VisionaryCoder.Framework.Proxy;
+using VisionaryCoder.Framework.Proxy.Interceptors.Caching.Providers;
 
 namespace VisionaryCoder.Framework.Tests.Caching.Providers;
 
@@ -35,7 +35,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.GenerateKey(context);
+        string result = provider.GenerateKey(context);
 
         // Assert
         result.Should().NotBeNullOrEmpty("Should generate a valid cache key");
@@ -59,7 +59,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.GenerateKey(context);
+        string result = provider.GenerateKey(context);
 
         // Assert
         result.Should().NotBeNullOrEmpty($"Should generate key for method: {method}");
@@ -78,8 +78,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var result1 = provider.GenerateKey(context);
-        var result2 = provider.GenerateKey(context);
+        string result1 = provider.GenerateKey(context);
+        string result2 = provider.GenerateKey(context);
 
         // Assert
         result1.Should().Be(result2, "Same context should generate identical keys");
@@ -104,8 +104,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var result1 = provider.GenerateKey(context1);
-        var result2 = provider.GenerateKey(context2);
+        string result1 = provider.GenerateKey(context1);
+        string result2 = provider.GenerateKey(context2);
 
         // Assert
         result1.Should().NotBe(result2, "Different contexts should generate different keys");
@@ -135,8 +135,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var keyWithoutHeaders = provider.GenerateKey(contextWithoutHeaders);
-        var keyWithHeaders = provider.GenerateKey(contextWithHeaders);
+        string keyWithoutHeaders = provider.GenerateKey(contextWithoutHeaders);
+        string keyWithHeaders = provider.GenerateKey(contextWithHeaders);
 
         // Assert
         keyWithoutHeaders.Should().NotBe(keyWithHeaders, "Keys should differ when relevant headers are present");
@@ -167,8 +167,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var keyWithoutHeader = provider.GenerateKey(contextWithoutHeader);
-        var keyWithHeader = provider.GenerateKey(contextWithHeader);
+        string keyWithoutHeader = provider.GenerateKey(contextWithoutHeader);
+        string keyWithHeader = provider.GenerateKey(contextWithHeader);
 
         // Assert
         keyWithoutHeader.Should().NotBe(keyWithHeader, $"Key should change when {headerName} header is present");
@@ -199,8 +199,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var keyWithoutHeaders = provider.GenerateKey(contextWithoutHeaders);
-        var keyWithIrrelevantHeaders = provider.GenerateKey(contextWithIrrelevantHeaders);
+        string keyWithoutHeaders = provider.GenerateKey(contextWithoutHeaders);
+        string keyWithIrrelevantHeaders = provider.GenerateKey(contextWithIrrelevantHeaders);
 
         // Assert
         keyWithoutHeaders.Should().Be(keyWithIrrelevantHeaders, "Irrelevant headers should not affect the cache key");
@@ -222,7 +222,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.GenerateKey<string>(context);
+        string result = provider.GenerateKey<string>(context);
 
         // Assert
         result.Should().NotBeNullOrEmpty("Should generate a valid cache key");
@@ -241,9 +241,9 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var stringKey = provider.GenerateKey<string>(context);
-        var intKey = provider.GenerateKey<int>(context);
-        var listKey = provider.GenerateKey<List<string>>(context);
+        string stringKey = provider.GenerateKey<string>(context);
+        string intKey = provider.GenerateKey<int>(context);
+        string listKey = provider.GenerateKey<List<string>>(context);
 
         // Assert
         stringKey.Should().NotBe(intKey, "Different generic types should generate different keys");
@@ -263,8 +263,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var result1 = provider.GenerateKey<string>(context);
-        var result2 = provider.GenerateKey<string>(context);
+        string result1 = provider.GenerateKey<string>(context);
+        string result2 = provider.GenerateKey<string>(context);
 
         // Assert
         result1.Should().Be(result2, "Same generic type and context should generate identical keys");
@@ -282,8 +282,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var nonGenericKey = provider.GenerateKey(context);
-        var genericKey = provider.GenerateKey<string>(context);
+        string nonGenericKey = provider.GenerateKey(context);
+        string genericKey = provider.GenerateKey<string>(context);
 
         // Assert
         nonGenericKey.Should().NotBe(genericKey, "Generic and non-generic methods should generate different keys");
@@ -297,19 +297,19 @@ public class DefaultCacheKeyProviderTests
     public void GenerateKey_ShouldAlwaysReturnValidKey()
     {
         // Arrange
-        var contexts = new[]
-        {
+        ProxyContext[] contexts =
+        [
             new ProxyContext { OperationName = "GetUsers", Method = "GET", Url = "https://api.example.com/users" },
             new ProxyContext { OperationName = "CreateUser", Method = "POST", Url = "https://api.example.com/users" },
             new ProxyContext { OperationName = "UpdateUser", Method = "PUT", Url = "https://api.example.com/users/123" },
             new ProxyContext { OperationName = "DeleteUser", Method = "DELETE", Url = "https://api.example.com/users/123" },
             new ProxyContext { OperationName = "PatchUser", Method = "PATCH", Url = "https://api.example.com/users/123" }
-        };
+        ];
 
         // Act & Assert
-        foreach (var context in contexts)
+        foreach (ProxyContext context in contexts)
         {
-            var result = provider.GenerateKey(context);
+            string result = provider.GenerateKey(context);
             result.Should().NotBeNullOrEmpty($"Should always generate valid key for {context.Method} method");
             result.Should().MatchRegex("^[0-9a-fA-F]{64}$", $"Should be valid SHA256 hash for {context.Method}");
         }
@@ -332,7 +332,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.GenerateKey(complexContext);
+        string result = provider.GenerateKey(complexContext);
 
         // Assert
         result.Should().NotBeNullOrEmpty("Should generate keys for complex contexts");
@@ -361,7 +361,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.GenerateKey(context);
+        string result = provider.GenerateKey(context);
 
         // Assert
         result.Should().NotBeNullOrEmpty("Should generate key even with null/empty values by using defaults");
@@ -398,7 +398,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.GenerateKey(context);
+        string result = provider.GenerateKey(context);
 
         // Assert
         result.Should().NotBeNullOrEmpty("Should generate key with empty headers");
@@ -417,7 +417,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.GenerateKey(context);
+        string result = provider.GenerateKey(context);
 
         // Assert
         result.Should().NotBeNullOrEmpty("Should handle special characters in URL");
@@ -428,7 +428,7 @@ public class DefaultCacheKeyProviderTests
     public void GenerateKey_WithVeryLongUrl_ShouldHandleGracefully()
     {
         // Arrange
-        var longUrl = "https://api.example.com/" + new string('a', 2000) + "?" + string.Join("&",
+        string longUrl = "https://api.example.com/" + new string('a', 2000) + "?" + string.Join("&",
             Enumerable.Range(1, 100).Select(i => $"param{i}=value{i}"));
 
         var context = new ProxyContext
@@ -439,7 +439,7 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.GenerateKey(context);
+        string result = provider.GenerateKey(context);
 
         // Assert
         result.Should().NotBeNullOrEmpty("Should handle very long URLs");
@@ -470,7 +470,7 @@ public class DefaultCacheKeyProviderTests
             tasks.Add(Task.Run(() => provider.GenerateKey(context)));
         }
 
-        var results = Task.WhenAll(tasks).Result;
+        string[] results = Task.WhenAll(tasks).Result;
 
         // Assert
         results.Should().AllSatisfy(result =>
@@ -502,8 +502,8 @@ public class DefaultCacheKeyProviderTests
         };
 
         // Act
-        var key1 = provider1.GenerateKey(context);
-        var key2 = provider2.GenerateKey(context);
+        string key1 = provider1.GenerateKey(context);
+        string key2 = provider2.GenerateKey(context);
 
         // Assert
         key1.Should().Be(key2, "Different instances should generate same key for same context");
@@ -528,9 +528,9 @@ public class DefaultCacheKeyProviderTests
         }
 
         // Act
-        foreach (var context in contexts)
+        foreach (ProxyContext context in contexts)
         {
-            var key = provider.GenerateKey(context);
+            string key = provider.GenerateKey(context);
             keys.Add(key);
         }
 

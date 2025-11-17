@@ -16,12 +16,12 @@ public sealed class QueryFilterInterceptor : IProxyInterceptor
         if (context.Body is string json)
         {
             // Validate against schema
-            var validationErrors = QueryFilterSchemaValidator.Validate(json);
+            IReadOnlyList<string> validationErrors = QueryFilterSchemaValidator.Validate(json);
             if (validationErrors.Count > 0)
             {
                 throw new ArgumentException($"Invalid query filter JSON: {string.Join(", ", validationErrors)}");
             }
-            
+
             // Deserialize and rehydrate
             FilterNode? node = QueryFilterSerializer.Deserialize(json);
             if (node != null && typeof(T).IsGenericType &&
@@ -33,7 +33,7 @@ public sealed class QueryFilterInterceptor : IProxyInterceptor
                     .GetMethod(nameof(QueryFilterRehydrator.ToQueryFilter))!
                     .MakeGenericMethod(innerType);
 
-                object rehydrated = method.Invoke(null, new object[] { node })!;
+                object rehydrated = method.Invoke(null, [node])!;
                 return ProxyResponse<T>.Success((T)rehydrated, 200);
             }
         }

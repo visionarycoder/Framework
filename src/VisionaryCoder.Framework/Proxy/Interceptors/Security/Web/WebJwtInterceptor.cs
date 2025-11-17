@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security.Web;
 /// <summary>
 /// JWT interceptor for web-based authentication scenarios.

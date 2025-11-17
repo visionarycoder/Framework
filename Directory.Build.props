@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <!-- <TargetFrameworks>net8.0;net10.0</TargetFrameworks> -->
+        <TargetFramework>net8.0</TargetFramework>
         <OutputType>Library</OutputType>
         <LangVersion>latest</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -13,8 +13,8 @@
 
         <!-- NuGet Package Settings -->
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Authors>Ivan Jones</Authors>
-        <Company>Visionary Coder LLC</Company>
+        <Authors>Visionary Coder</Authors>
+        <Company>Visionary Coder</Company>
         <Copyright>Copyright © $([System.DateTime]::Now.Year)</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -59,9 +59,5 @@
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />
-  </ItemGroup>
 
 </Project>

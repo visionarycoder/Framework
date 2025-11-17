@@ -1,8 +1,8 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using VisionaryCoder.Framework.Caching.Providers;
 using VisionaryCoder.Framework.Proxy;
+using VisionaryCoder.Framework.Proxy.Interceptors.Caching.Providers;
 
 namespace VisionaryCoder.Framework.Tests.Caching.Providers;
 
@@ -35,7 +35,7 @@ public class NullCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.GenerateKey(context);
+        string? result = provider.GenerateKey(context);
 
         // Assert
         result.Should().BeNull("NullCacheKeyProvider should always return null to bypass caching");
@@ -58,7 +58,7 @@ public class NullCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.GenerateKey(context);
+        string? result = provider.GenerateKey(context);
 
         // Assert
         result.Should().BeNull($"NullCacheKeyProvider should return null regardless of HTTP method: {method}");
@@ -81,7 +81,7 @@ public class NullCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.GenerateKey(context);
+        string? result = provider.GenerateKey(context);
 
         // Assert
         result.Should().BeNull("NullCacheKeyProvider should return null even with null/empty context values");
@@ -106,7 +106,7 @@ public class NullCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.GenerateKey(context);
+        string? result = provider.GenerateKey(context);
 
         // Assert
         result.Should().BeNull("NullCacheKeyProvider should return null regardless of context complexity");
@@ -124,9 +124,9 @@ public class NullCacheKeyProviderTests
         };
 
         // Act
-        var result1 = provider.GenerateKey(context);
-        var result2 = provider.GenerateKey(context);
-        var result3 = provider.GenerateKey(context);
+        string? result1 = provider.GenerateKey(context);
+        string? result2 = provider.GenerateKey(context);
+        string? result3 = provider.GenerateKey(context);
 
         // Assert
         result1.Should().BeNull();
@@ -151,7 +151,7 @@ public class NullCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.CanGenerateKey(context);
+        bool result = provider.CanGenerateKey(context);
 
         // Assert
         result.Should().BeFalse("NullCacheKeyProvider should always return false to indicate caching is not available");
@@ -174,7 +174,7 @@ public class NullCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.CanGenerateKey(context);
+        bool result = provider.CanGenerateKey(context);
 
         // Assert
         result.Should().BeFalse($"NullCacheKeyProvider should return false regardless of HTTP method: {method}");
@@ -197,7 +197,7 @@ public class NullCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.CanGenerateKey(context);
+        bool result = provider.CanGenerateKey(context);
 
         // Assert
         result.Should().BeFalse("NullCacheKeyProvider should return false even with null/empty context values");
@@ -221,7 +221,7 @@ public class NullCacheKeyProviderTests
         };
 
         // Act
-        var result = provider.CanGenerateKey(context);
+        bool result = provider.CanGenerateKey(context);
 
         // Assert
         result.Should().BeFalse("NullCacheKeyProvider should return false regardless of context complexity");
@@ -239,9 +239,9 @@ public class NullCacheKeyProviderTests
         };
 
         // Act
-        var result1 = provider.CanGenerateKey(context);
-        var result2 = provider.CanGenerateKey(context);
-        var result3 = provider.CanGenerateKey(context);
+        bool result1 = provider.CanGenerateKey(context);
+        bool result2 = provider.CanGenerateKey(context);
+        bool result3 = provider.CanGenerateKey(context);
 
         // Assert
         result1.Should().BeFalse();
@@ -299,13 +299,13 @@ public class NullCacheKeyProviderTests
         {
             tasks.Add(Task.Run(() =>
             {
-                var key = provider.GenerateKey(context);
-                var canGenerate = provider.CanGenerateKey(context);
+                string? key = provider.GenerateKey(context);
+                bool canGenerate = provider.CanGenerateKey(context);
                 return (key, canGenerate);
             }));
         }
 
-        var results = Task.WhenAll(tasks).Result;
+        (string?, bool)[] results = Task.WhenAll(tasks).Result;
 
         // Assert
         results.Should().AllSatisfy(result =>
@@ -327,16 +327,16 @@ public class NullCacheKeyProviderTests
         var context2 = new ProxyContext { OperationName = "Op2", Method = "POST", Url = "https://example.com/2" };
 
         // Act
-        var result1a = provider.GenerateKey(context1);
-        var result2a = provider.GenerateKey(context2);
-        var result1b = provider.GenerateKey(context1);
-        var result2b = provider.GenerateKey(context2);
+        string? result1A = provider.GenerateKey(context1);
+        string? result2A = provider.GenerateKey(context2);
+        string? result1B = provider.GenerateKey(context1);
+        string? result2B = provider.GenerateKey(context2);
 
         // Assert
-        result1a.Should().BeNull();
-        result2a.Should().BeNull();
-        result1b.Should().BeNull();
-        result2b.Should().BeNull();
+        result1A.Should().BeNull();
+        result2A.Should().BeNull();
+        result1B.Should().BeNull();
+        result2B.Should().BeNull();
         "Provider should maintain consistent stateless behavior".Should().NotBeNull();
     }
 
@@ -344,7 +344,7 @@ public class NullCacheKeyProviderTests
     public void Provider_ShouldBeSealed()
     {
         // Assert
-        var type = typeof(NullCacheKeyProvider);
+        Type type = typeof(NullCacheKeyProvider);
         type.IsSealed.Should().BeTrue("NullCacheKeyProvider should be sealed to prevent inheritance");
     }
 

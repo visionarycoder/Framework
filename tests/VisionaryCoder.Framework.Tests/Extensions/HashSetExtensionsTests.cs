@@ -43,7 +43,7 @@ public class HashSetExtensionsTests
 
         // Assert
         target.Should().HaveCount(5);
-        target.Should().Contain(new[] { 1, 2, 3, 4, 5 });
+        target.Should().Contain([1, 2, 3, 4, 5]);
     }
 
     [TestMethod]
@@ -58,7 +58,7 @@ public class HashSetExtensionsTests
 
         // Assert
         target.Should().HaveCount(4);
-        target.Should().Contain(new[] { 1, 2, 3, 4 });
+        target.Should().Contain([1, 2, 3, 4]);
     }
 
     [TestMethod]
@@ -73,7 +73,7 @@ public class HashSetExtensionsTests
 
         // Assert
         target.Should().HaveCount(2);
-        target.Should().Contain(new[] { 1, 2 });
+        target.Should().Contain([1, 2]);
     }
 
     [TestMethod]
@@ -88,7 +88,7 @@ public class HashSetExtensionsTests
 
         // Assert
         target.Should().HaveCount(3);
-        target.Should().Contain(new[] { 1, 2, 3 });
+        target.Should().Contain([1, 2, 3]);
     }
 
     #endregion
@@ -131,8 +131,8 @@ public class HashSetExtensionsTests
 
         // Assert
         target.Should().HaveCount(3);
-        target.Should().Contain(new[] { 1, 3, 5 });
-        target.Should().NotContain(new[] { 2, 4 });
+        target.Should().Contain([1, 3, 5]);
+        target.Should().NotContain([2, 4]);
     }
 
     [TestMethod]
@@ -147,7 +147,7 @@ public class HashSetExtensionsTests
 
         // Assert
         target.Should().HaveCount(3);
-        target.Should().Contain(new[] { 1, 2, 3 });
+        target.Should().Contain([1, 2, 3]);
     }
 
     [TestMethod]
@@ -162,7 +162,7 @@ public class HashSetExtensionsTests
 
         // Assert
         target.Should().HaveCount(3);
-        target.Should().Contain(new[] { 1, 2, 3 });
+        target.Should().Contain([1, 2, 3]);
     }
 
     [TestMethod]
@@ -423,7 +423,7 @@ public class HashSetExtensionsTests
         bool containsAny = target.ContainsAny(new List<int> { 7, 8, 1 });
 
         // Assert
-        target.Should().Contain(new[] { 1, 3, 4, 5, 6 });
+        target.Should().Contain([1, 3, 4, 5, 6]);
         target.Should().NotContain(2);
         target.Should().HaveCount(5);
         containsAll.Should().BeTrue(); // Contains both 1 and 4
@@ -444,7 +444,7 @@ public class HashSetExtensionsTests
 
         // Assert
         target.Should().HaveCount(4); // No duplicate apple
-        target.Should().Contain(new[] { "apple", "banana", "cherry", "date" });
+        target.Should().Contain(["apple", "banana", "cherry", "date"]);
         hasCommonFruits.Should().BeTrue(); // Contains cherry
         hasAllCitrus.Should().BeFalse(); // Missing lemon and lime
     }

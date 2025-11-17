@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Moq;
 using VisionaryCoder.Framework.Proxy;
 using VisionaryCoder.Framework.Proxy.Interceptors.Auditing;
 
@@ -15,7 +17,7 @@ public class AuditingInterceptorTests
     {
         mockLogger = new Mock<ILogger<AuditingInterceptor>>();
         mockAuditSink = new Mock<IAuditSink>();
-        interceptor = new AuditingInterceptor(mockLogger.Object, new[] { mockAuditSink.Object });
+        interceptor = new AuditingInterceptor(mockLogger.Object, [mockAuditSink.Object]);
     }
 
     [TestMethod]
@@ -23,7 +25,7 @@ public class AuditingInterceptorTests
     {
         // Act & Assert
         Assert.ThrowsExactly<ArgumentNullException>(() =>
-            new AuditingInterceptor(null!, new[] { mockAuditSink.Object }));
+            new AuditingInterceptor(null!, [mockAuditSink.Object]));
     }
 
     [TestMethod]
@@ -150,7 +152,7 @@ public class AuditingInterceptorTests
         var mockSink2 = new Mock<IAuditSink>();
         var multiSinkInterceptor = new AuditingInterceptor(
             mockLogger.Object,
-            new[] { mockSink1.Object, mockSink2.Object });
+            [mockSink1.Object, mockSink2.Object]);
 
         var context = new ProxyContext { Request = new { Id = 1 } };
 

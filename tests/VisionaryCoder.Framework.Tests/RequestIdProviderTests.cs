@@ -168,8 +168,8 @@ public class RequestIdProviderTests
     public void SetRequestId_ShouldAcceptAnyNonEmptyString()
     {
         // Arrange
-        string[] testIds = new[]
-        {
+        string[] testIds =
+        [
             "A",
             "123",
             "lowercase",
@@ -177,7 +177,7 @@ public class RequestIdProviderTests
             "Mixed-Case_123",
             "Special@Characters#!",
             "Very-Long-Request-Id-With-Many-Characters"
-        };
+        ];
 
         foreach (string testId in testIds)
         {

@@ -34,27 +34,27 @@ public static class QueryFilterRehydrator
 
     private static QueryFilter<T> BuildCompositeFilter<T>(CompositeFilter cf)
     {
-        if (cf.Operator == "Not" && cf.Children.Count == 1)
+        if (cf is { Operator: "Not", Children.Count: 1 })
             return cf.Children[0].ToQueryFilter<T>().Not();
 
-        if (cf.Operator == "And")
-            return cf.Children.Select(c => c.ToQueryFilter<T>()).Join(useAnd: true);
-
-        if (cf.Operator == "Or")
-            return cf.Children.Select(c => c.ToQueryFilter<T>()).Join(useAnd: false);
-
-        throw new NotSupportedException($"Unsupported composite operator {cf.Operator}");
+        return cf.Operator switch
+        {
+            "And" => cf.Children.Select(c => c.ToQueryFilter<T>()).Join(useAnd: true),
+            "Or" => cf.Children.Select(c => c.ToQueryFilter<T>()).Join(useAnd: false),
+            _ => throw new NotSupportedException($"Unsupported composite operator {cf.Operator}")
+        };
     }
 
     private static Expression CallStringMethod(Expression prop, string method, ConstantExpression constant, bool ignoreCase)
     {
-        if (ignoreCase)
+        if (!ignoreCase)
         {
-            MethodInfo toLower = typeof(string).GetMethod(nameof(string.ToLowerInvariant), Type.EmptyTypes)!;
-            MethodCallExpression loweredProp = Expression.Call(prop, toLower);
-            ConstantExpression loweredConst = Expression.Constant(((string)constant.Value!).ToLowerInvariant());
-            return Expression.Call(loweredProp, typeof(string).GetMethod(method, new[] { typeof(string) })!, loweredConst);
+            return Expression.Call(prop, typeof(string).GetMethod(method, [typeof(string)])!, constant);
         }
-        return Expression.Call(prop, typeof(string).GetMethod(method, new[] { typeof(string) })!, constant);
+
+        MethodInfo toLower = typeof(string).GetMethod(nameof(string.ToLowerInvariant), Type.EmptyTypes)!;
+        MethodCallExpression loweredProp = Expression.Call(prop, toLower);
+        ConstantExpression loweredConst = Expression.Constant(((string)constant.Value!).ToLowerInvariant());
+        return Expression.Call(loweredProp, typeof(string).GetMethod(method, [typeof(string)])!, loweredConst);
     }
 }

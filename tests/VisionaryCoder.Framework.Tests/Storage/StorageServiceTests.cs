@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Moq;
 using VisionaryCoder.Framework.Storage;
 
 namespace VisionaryCoder.Framework.Tests.Storage;
@@ -57,7 +59,7 @@ public class StorageServiceTests
     public void Constructor_WithNullLogger_ShouldThrowArgumentNullException()
     {
         // Arrange & Act
-        var action = () => new StorageService(null!);
+        Func<StorageService> action = () => new StorageService(null!);
 
         // Assert
         action.Should().Throw<ArgumentNullException>()
@@ -77,7 +79,7 @@ public class StorageServiceTests
         var fileInfo = new FileInfo(filePath);
 
         // Act
-        var result = service!.FileExists(fileInfo);
+        bool result = service!.FileExists(fileInfo);
 
         // Assert
         result.Should().BeTrue();
@@ -91,7 +93,7 @@ public class StorageServiceTests
         var fileInfo = new FileInfo(filePath);
 
         // Act
-        var result = service!.FileExists(fileInfo);
+        bool result = service!.FileExists(fileInfo);
 
         // Assert
         result.Should().BeFalse();
@@ -101,7 +103,7 @@ public class StorageServiceTests
     public void FileExists_FileInfo_WithNullFileInfo_ShouldThrowArgumentNullException()
     {
         // Arrange & Act
-        var action = () => service!.FileExists((FileInfo)null!);
+        Func<bool> action = () => service!.FileExists((FileInfo)null!);
 
         // Assert
         action.Should().Throw<ArgumentNullException>()
@@ -128,7 +130,7 @@ public class StorageServiceTests
         File.WriteAllText(filePath, "test content");
 
         // Act
-        var result = service!.FileExists(filePath);
+        bool result = service!.FileExists(filePath);
 
         // Assert
         result.Should().BeTrue();
@@ -141,7 +143,7 @@ public class StorageServiceTests
         string filePath = Path.Combine(testDirectory!, "nonexistent.txt");
 
         // Act
-        var result = service!.FileExists(filePath);
+        bool result = service!.FileExists(filePath);
 
         // Assert
         result.Should().BeFalse();
@@ -154,7 +156,7 @@ public class StorageServiceTests
     public void FileExists_String_WithInvalidPath_ShouldThrowArgumentException(string? path)
     {
         // Arrange & Act
-        var action = () => service!.FileExists(path!);
+        Func<bool> action = () => service!.FileExists(path!);
 
         // Assert
         action.Should().Throw<ArgumentException>();
@@ -176,7 +178,7 @@ public class StorageServiceTests
         File.WriteAllText(filePath, content);
 
         // Act
-        var result = service!.ReadAllText(filePath);
+        string result = service!.ReadAllText(filePath);
 
         // Assert
         result.Should().Be(content);
@@ -189,7 +191,7 @@ public class StorageServiceTests
         string filePath = Path.Combine(testDirectory!, "nonexistent.txt");
 
         // Act
-        var action = () => service!.ReadAllText(filePath);
+        Func<string> action = () => service!.ReadAllText(filePath);
 
         // Assert
         action.Should().Throw<FileNotFoundException>();
@@ -202,7 +204,7 @@ public class StorageServiceTests
     public void ReadAllText_WithInvalidPath_ShouldThrowArgumentException(string? path)
     {
         // Arrange & Act
-        var action = () => service!.ReadAllText(path!);
+        Func<string> action = () => service!.ReadAllText(path!);
 
         // Assert
         action.Should().Throw<ArgumentException>();
@@ -223,7 +225,7 @@ public class StorageServiceTests
         await File.WriteAllTextAsync(filePath, content);
 
         // Act
-        var result = await service!.ReadAllTextAsync(filePath);
+        string result = await service!.ReadAllTextAsync(filePath);
 
         // Assert
         result.Should().Be(content);
@@ -236,7 +238,7 @@ public class StorageServiceTests
         string filePath = Path.Combine(testDirectory!, "nonexistent.txt");
 
         // Act
-        var action = async () => await service!.ReadAllTextAsync(filePath);
+        Func<Task<string>> action = async () => await service!.ReadAllTextAsync(filePath);
 
         // Assert
         await action.Should().ThrowAsync<FileNotFoundException>();
@@ -252,7 +254,7 @@ public class StorageServiceTests
         cts.Cancel();
 
         // Act
-        var action = async () => await service!.ReadAllTextAsync(filePath, cts.Token);
+        Func<Task<string>> action = async () => await service!.ReadAllTextAsync(filePath, cts.Token);
 
         // Assert
         await action.Should().ThrowAsync<OperationCanceledException>();
@@ -273,7 +275,7 @@ public class StorageServiceTests
         File.WriteAllBytes(filePath, bytes);
 
         // Act
-        var result = service!.ReadAllBytes(filePath);
+        byte[] result = service!.ReadAllBytes(filePath);
 
         // Assert
         result.Should().Equal(bytes);
@@ -286,7 +288,7 @@ public class StorageServiceTests
         string filePath = Path.Combine(testDirectory!, "nonexistent.bin");
 
         // Act
-        var action = () => service!.ReadAllBytes(filePath);
+        Func<byte[]> action = () => service!.ReadAllBytes(filePath);
 
         // Assert
         action.Should().Throw<FileNotFoundException>();
@@ -300,12 +302,12 @@ public class StorageServiceTests
     public async Task ReadAllBytesAsync_WithValidFile_ShouldReturnBytes()
     {
         // Arrange
-        byte[] bytes = new byte[] { 10, 20, 30, 40, 50 };
+        byte[] bytes = [10, 20, 30, 40, 50];
         string filePath = Path.Combine(testDirectory!, "async_bytes.bin");
         await File.WriteAllBytesAsync(filePath, bytes);
 
         // Act
-        var result = await service!.ReadAllBytesAsync(filePath);
+        byte[] result = await service!.ReadAllBytesAsync(filePath);
 
         // Assert
         result.Should().Equal(bytes);
@@ -339,7 +341,7 @@ public class StorageServiceTests
         string filePath = Path.Combine(testDirectory!, "null_content.txt");
 
         // Act
-        var action = () => service!.WriteAllText(filePath, null!);
+        Action action = () => service!.WriteAllText(filePath, null!);
 
         // Assert
         action.Should().Throw<ArgumentNullException>()
@@ -353,7 +355,7 @@ public class StorageServiceTests
     public void WriteAllText_WithInvalidPath_ShouldThrowArgumentException(string? path)
     {
         // Arrange & Act
-        var action = () => service!.WriteAllText(path!, "content");
+        Action action = () => service!.WriteAllText(path!, "content");
 
         // Assert
         action.Should().Throw<ArgumentException>();
@@ -387,7 +389,7 @@ public class StorageServiceTests
     {
         // Arrange
         string filePath = Path.Combine(testDirectory!, "write_bytes.bin");
-        byte[] bytes = new byte[] { 100, 200, 50 };
+        byte[] bytes = [100, 200, 50];
 
         // Act
         service!.WriteAllBytes(filePath, bytes);
@@ -404,7 +406,7 @@ public class StorageServiceTests
         string filePath = Path.Combine(testDirectory!, "null_bytes.bin");
 
         // Act
-        var action = () => service!.WriteAllBytes(filePath, null!);
+        Action action = () => service!.WriteAllBytes(filePath, null!);
 
         // Assert
         action.Should().Throw<ArgumentNullException>()
@@ -420,7 +422,7 @@ public class StorageServiceTests
     {
         // Arrange
         string filePath = Path.Combine(testDirectory!, "async_write_bytes.bin");
-        byte[] bytes = new byte[] { 11, 22, 33, 44 };
+        byte[] bytes = [11, 22, 33, 44];
 
         // Act
         await service!.WriteAllBytesAsync(filePath, bytes);
@@ -455,7 +457,7 @@ public class StorageServiceTests
         string filePath = Path.Combine(testDirectory!, "nonexistent_delete.txt");
 
         // Act
-        var action = () => service!.DeleteFile(filePath);
+        Action action = () => service!.DeleteFile(filePath);
 
         // Assert
         action.Should().NotThrow();
@@ -468,7 +470,7 @@ public class StorageServiceTests
     public void DeleteFile_WithInvalidPath_ShouldThrowArgumentException(string? path)
     {
         // Arrange & Act
-        var action = () => service!.DeleteFile(path!);
+        Action action = () => service!.DeleteFile(path!);
 
         // Assert
         action.Should().Throw<ArgumentException>();
@@ -504,7 +506,7 @@ public class StorageServiceTests
         Directory.CreateDirectory(dirPath);
 
         // Act
-        var result = service!.DirectoryExists(dirPath);
+        bool result = service!.DirectoryExists(dirPath);
 
         // Assert
         result.Should().BeTrue();
@@ -517,7 +519,7 @@ public class StorageServiceTests
         string dirPath = Path.Combine(testDirectory!, "nonexistent_dir");
 
         // Act
-        var result = service!.DirectoryExists(dirPath);
+        bool result = service!.DirectoryExists(dirPath);
 
         // Assert
         result.Should().BeFalse();
@@ -530,7 +532,7 @@ public class StorageServiceTests
     public void DirectoryExists_WithInvalidPath_ShouldThrowArgumentException(string? path)
     {
         // Arrange & Act
-        var action = () => service!.DirectoryExists(path!);
+        Func<bool> action = () => service!.DirectoryExists(path!);
 
         // Assert
         action.Should().Throw<ArgumentException>();
@@ -547,7 +549,7 @@ public class StorageServiceTests
         string dirPath = Path.Combine(testDirectory!, "new_directory");
 
         // Act
-        var result = service!.CreateDirectory(dirPath);
+        DirectoryInfo result = service!.CreateDirectory(dirPath);
 
         // Assert
         Directory.Exists(dirPath).Should().BeTrue();
@@ -562,7 +564,7 @@ public class StorageServiceTests
         string dirPath = Path.Combine(testDirectory!, "level1", "level2", "level3");
 
         // Act
-        var result = service!.CreateDirectory(dirPath);
+        DirectoryInfo result = service!.CreateDirectory(dirPath);
 
         // Assert
         Directory.Exists(dirPath).Should().BeTrue();
@@ -576,7 +578,7 @@ public class StorageServiceTests
         Directory.CreateDirectory(dirPath);
 
         // Act
-        var action = () => service!.CreateDirectory(dirPath);
+        Func<DirectoryInfo> action = () => service!.CreateDirectory(dirPath);
 
         // Assert
         action.Should().NotThrow();
@@ -593,7 +595,7 @@ public class StorageServiceTests
         string dirPath = Path.Combine(testDirectory!, "async_new_directory");
 
         // Act
-        var result = await service!.CreateDirectoryAsync(dirPath);
+        DirectoryInfo result = await service!.CreateDirectoryAsync(dirPath);
 
         // Assert
         Directory.Exists(dirPath).Should().BeTrue();
@@ -644,7 +646,7 @@ public class StorageServiceTests
         File.WriteAllText(Path.Combine(dirPath, "file.txt"), "content");
 
         // Act
-        var action = () => service!.DeleteDirectory(dirPath, recursive: false);
+        Action action = () => service!.DeleteDirectory(dirPath, recursive: false);
 
         // Assert
         action.Should().Throw<IOException>();
@@ -657,7 +659,7 @@ public class StorageServiceTests
         string dirPath = Path.Combine(testDirectory!, "nonexistent_delete_dir");
 
         // Act
-        var action = () => service!.DeleteDirectory(dirPath);
+        Action action = () => service!.DeleteDirectory(dirPath);
 
         // Assert
         action.Should().NotThrow();
@@ -699,7 +701,7 @@ public class StorageServiceTests
         File.WriteAllText(Path.Combine(dirPath, "other.doc"), "");
 
         // Act
-        var result = service!.GetFiles(dirPath, pattern);
+        string[] result = service!.GetFiles(dirPath, pattern);
 
         // Assert
         result.Should().NotBeNull();
@@ -721,7 +723,7 @@ public class StorageServiceTests
         Directory.CreateDirectory(dirPath);
 
         // Act
-        var result = service!.GetFiles(dirPath);
+        string[] result = service!.GetFiles(dirPath);
 
         // Assert
         result.Should().BeEmpty();
@@ -737,7 +739,7 @@ public class StorageServiceTests
     public void GetFiles_WithInvalidParameters_ShouldThrowArgumentException(string? path, string? pattern)
     {
         // Arrange & Act
-        var action = () => service!.GetFiles(path!, pattern!);
+        Func<string[]> action = () => service!.GetFiles(path!, pattern!);
 
         // Assert
         action.Should().Throw<ArgumentException>();
@@ -757,7 +759,7 @@ public class StorageServiceTests
         Directory.CreateDirectory(Path.Combine(dirPath, "sub3"));
 
         // Act
-        var result = service!.GetDirectories(dirPath);
+        string[] result = service!.GetDirectories(dirPath);
 
         // Assert
         result.Should().HaveCount(3);
@@ -773,7 +775,7 @@ public class StorageServiceTests
         Directory.CreateDirectory(Path.Combine(dirPath, "other"));
 
         // Act
-        var result = service!.GetDirectories(dirPath, "test*");
+        string[] result = service!.GetDirectories(dirPath, "test*");
 
         // Assert
         result.Should().HaveCount(2);
@@ -795,7 +797,7 @@ public class StorageServiceTests
 
         // Act
         var files = new List<string>();
-        await foreach (var file in service!.EnumerateFilesAsync(dirPath))
+        await foreach (string file in service!.EnumerateFilesAsync(dirPath))
         {
             files.Add(file);
         }
@@ -820,7 +822,7 @@ public class StorageServiceTests
         var files = new List<string>();
         Func<Task> action = async () =>
         {
-            await foreach (var file in service!.EnumerateFilesAsync(dirPath, "*", cts.Token))
+            await foreach (string file in service!.EnumerateFilesAsync(dirPath, "*", cts.Token))
             {
                 files.Add(file);
                 if (files.Count == 5)
@@ -846,7 +848,7 @@ public class StorageServiceTests
     public void GetFullPath_WithRelativePath_ShouldReturnAbsolutePath(string relativePath)
     {
         // Act
-        var result = service!.GetFullPath(relativePath);
+        string result = service!.GetFullPath(relativePath);
 
         // Assert
         result.Should().NotBeNullOrWhiteSpace();
@@ -860,7 +862,7 @@ public class StorageServiceTests
     public void GetFullPath_WithInvalidPath_ShouldThrowArgumentException(string? path)
     {
         // Arrange & Act
-        var action = () => service!.GetFullPath(path!);
+        Func<string> action = () => service!.GetFullPath(path!);
 
         // Assert
         action.Should().Throw<ArgumentException>();
@@ -876,7 +878,7 @@ public class StorageServiceTests
     public void GetDirectoryName_WithValidPath_ShouldReturnDirectoryName(string path, string expected)
     {
         // Act
-        var result = service!.GetDirectoryName(path);
+        string? result = service!.GetDirectoryName(path);
 
         // Assert
         result.Should().Be(expected);
@@ -887,7 +889,7 @@ public class StorageServiceTests
     public void GetDirectoryName_WithRootPath_ShouldReturnNull(string path)
     {
         // Act
-        var result = service!.GetDirectoryName(path);
+        string? result = service!.GetDirectoryName(path);
 
         // Assert
         result.Should().BeNull();
@@ -904,7 +906,7 @@ public class StorageServiceTests
     public void GetFileName_WithValidPath_ShouldReturnFileName(string path, string expected)
     {
         // Act
-        var result = service!.GetFileName(path);
+        string? result = service!.GetFileName(path);
 
         // Assert
         result.Should().Be(expected);
@@ -917,7 +919,7 @@ public class StorageServiceTests
     public void GetFileName_WithInvalidPath_ShouldThrowArgumentException(string? path)
     {
         // Arrange & Act
-        var action = () => service!.GetFileName(path!);
+        Func<string?> action = () => service!.GetFileName(path!);
 
         // Assert
         action.Should().Throw<ArgumentException>();
@@ -939,7 +941,7 @@ public class StorageServiceTests
         service.FileExists(filePath).Should().BeTrue();
 
         // Act & Assert - Read
-        var readContent = service.ReadAllText(filePath);
+        string readContent = service.ReadAllText(filePath);
         readContent.Should().Be(content);
 
         // Act & Assert - Delete
@@ -959,7 +961,7 @@ public class StorageServiceTests
         service.FileExists(filePath).Should().BeTrue();
 
         // Act & Assert - Read
-        var readContent = await service.ReadAllTextAsync(filePath);
+        string readContent = await service.ReadAllTextAsync(filePath);
         readContent.Should().Be(content);
 
         // Act & Assert - Delete
@@ -982,7 +984,7 @@ public class StorageServiceTests
         File.WriteAllText(Path.Combine(dirPath, "file2.txt"), "content2");
 
         // Act & Assert - Get Files
-        var files = service.GetFiles(dirPath);
+        string[] files = service.GetFiles(dirPath);
         files.Should().HaveCount(2);
 
         // Act & Assert - Delete

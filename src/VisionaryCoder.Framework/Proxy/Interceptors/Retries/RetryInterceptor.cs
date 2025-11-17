@@ -1,6 +1,8 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using VisionaryCoder.Framework.Proxy.Exceptions;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Retries;
@@ -45,13 +47,13 @@ public sealed class RetryInterceptor : IOrderedProxyInterceptor
             {
                 attempt++;
                 TimeSpan delay = CalculateDelay(baseDelay, attempt);
-                LoggerExtensions.LogWarning((ILogger)logger, (Exception?)ex, "Retryable exception on attempt {Attempt}/{MaxAttempts}, retrying in {Delay}ms",
+                LoggerExtensions.LogWarning(logger, ex, "Retryable exception on attempt {Attempt}/{MaxAttempts}, retrying in {Delay}ms",
                     attempt, maxRetries + 1, delay.TotalMilliseconds);
                 await Task.Delay(delay, context.CancellationToken);
             }
             catch (RetryableTransportException ex) when (attempt >= maxRetries)
             {
-                LoggerExtensions.LogError((ILogger)logger, (Exception?)ex, "Operation failed after {MaxAttempts} attempts, giving up", maxRetries + 1);
+                LoggerExtensions.LogError(logger, ex, "Operation failed after {MaxAttempts} attempts, giving up", maxRetries + 1);
                 throw;
             }
             catch (BusinessException ex)

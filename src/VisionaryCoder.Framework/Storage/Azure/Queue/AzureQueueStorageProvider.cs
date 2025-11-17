@@ -1,7 +1,12 @@
+using Azure;
+using Azure.Identity;
+using Azure.Storage.Queues;
+using Azure.Storage.Queues.Models;
+using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
 
-namespace VisionaryCoder.Framework.Storage.Azure;
+namespace VisionaryCoder.Framework.Storage.Azure.Queue;
 
 /// <summary>
 /// Provides Azure Queue Storage-based message queue operations implementation.

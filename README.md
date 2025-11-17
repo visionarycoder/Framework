@@ -12,7 +12,7 @@ A modular, enterprise-grade framework starting with a single foundational librar
 
 ```bash
 # Clone
-git clone https://github.com/visionarycoder/vc.git
+git clone https://github.com/visionarycoder/Framework.git
 cd vc
 
 # Restore
@@ -27,21 +27,21 @@ dotnet test VisionaryCoder.Framework.sln --configuration Release
 
 ## 📦 Current Solution Contents
 
-| Project | Type | Description |
-|---------|------|-------------|
-| `VisionaryCoder.Framework` | Library | Core framework primitives (configuration, results, options, providers, proxy abstractions). |
-| `VisionaryCoder.Framework.Tests` | Test Project | Unit tests validating core behaviors (results, request/correlation IDs, options). |
+| Project                          | Type         | Description                                                                                 |
+|----------------------------------|--------------|---------------------------------------------------------------------------------------------|
+| `VisionaryCoder.Framework`       | Library      | Core framework primitives (configuration, results, options, providers, proxy abstractions). |
+| `VisionaryCoder.Framework.Tests` | Test Project | Unit tests validating core behaviors (results, request/correlation IDs, options).           |
 
 Planned future packages (tracked via ADRs) will be introduced gradually rather than pre-listed. See ADR index for roadmap context.
 
 ## 🗃️ Repository Structure (High-Level)
 
 ```text
-/.copilot                # Modular AI assistant instruction set (base + C# + patterns + standards)
-/docs                    # Documentation (ADRs, best-practices capsules, diagrams, reviews, onboarding)
-/src/VisionaryCoder.Framework  # Core library source
-/tests/VisionaryCoder.Framework.Tests # Unit tests
-/.github                 # Global Copilot instructions & workflows
+/.copilot                              # Modular AI assistant instruction set (base + C# + patterns + standards)
+/docs                                  # Documentation (ADRs, best-practices capsules, diagrams, reviews, onboarding)
+/src/VisionaryCoder.Framework          # Core library source
+/tests/VisionaryCoder.Framework.Tests  # Unit tests
+/.github                               # Global Copilot instructions & workflows
 ```
 
 ---

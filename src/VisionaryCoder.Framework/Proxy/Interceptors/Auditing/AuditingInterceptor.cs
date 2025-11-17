@@ -1,6 +1,8 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
+using Microsoft.Extensions.Logging;
+
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Auditing;
 /// <summary>
 /// Auditing interceptor that emits audit records for proxy operations.
@@ -107,7 +109,7 @@ public sealed class AuditingInterceptor(ILogger<AuditingInterceptor> logger, IEn
     }
     private static bool IsSensitiveKey(string key)
     {
-        string[] sensitiveKeys = new[] { "Authorization", "Password", "Secret", "Token", "Key" };
+        string[] sensitiveKeys = ["Authorization", "Password", "Secret", "Token", "Key"];
         return sensitiveKeys.Any(sensitive =>
             key.Contains(sensitive, StringComparison.OrdinalIgnoreCase));
     }

@@ -1,6 +1,11 @@
+using Azure;
+using Azure.Data.Tables;
+using Azure.Data.Tables.Models;
+using Azure.Identity;
+using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 
-namespace VisionaryCoder.Framework.Storage.Azure;
+namespace VisionaryCoder.Framework.Storage.Azure.Table;
 
 /// <summary>
 /// Provides Azure Table Storage-based NoSQL table operations implementation.
@@ -55,8 +60,8 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
         {
             Logger.LogTrace("Table existence check for '{TableName}'", options.TableName);
 
-            NullableResponse<TableItem> response = tableServiceClient.Query(filter: $"TableName eq '{options.TableName}'").FirstOrDefault();
-            bool exists = response != null;
+            TableItem? item = tableServiceClient.Query(filter: $"TableName eq '{options.TableName}'").FirstOrDefault();
+            bool exists = item is not null;
 
             Logger.LogTrace("Table existence check for '{TableName}': {Exists}", options.TableName, exists);
             return exists;

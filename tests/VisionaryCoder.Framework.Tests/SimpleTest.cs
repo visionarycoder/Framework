@@ -10,10 +10,10 @@ public class SimpleTest
     public void SimpleTest_ShouldPass()
     {
         // Arrange
-        var expected = true;
+        bool expected = true;
 
         // Act
-        var actual = true;
+        bool actual = true;
 
         // Assert
         Assert.AreEqual(expected, actual);

@@ -377,7 +377,7 @@ public class LogDelegatesTests
         // Arrange
         string? captured = null;
         LogCritical logCritical = (message, args) => captured = message;
-        string longMessage = new string('A', 10000);
+        string longMessage = new('A', 10000);
 
         // Act
         logCritical(longMessage);

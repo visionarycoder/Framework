@@ -244,7 +244,7 @@ public class ReflectionExtensionsTests
         // Arrange
         string obj = "Hello World";
         string methodName = "IndexOf";
-        object[] parameters = new object[] { "World" };
+        object[] parameters = ["World"];
 
         // Act & Assert - IndexOf has overloads causing AmbiguousMatchException
         Func<object?> act = () => obj.InvokeMethod(methodName, parameters);
@@ -257,7 +257,7 @@ public class ReflectionExtensionsTests
         // Arrange
         string obj = "Hello World";
         string methodName = "Replace";
-        object[] parameters = new object[] { "World", "Universe" };
+        object[] parameters = ["World", "Universe"];
 
         // Act & Assert - Replace has overloads causing AmbiguousMatchException
         Func<object?> act = () => obj.InvokeMethod(methodName, parameters);
@@ -270,7 +270,7 @@ public class ReflectionExtensionsTests
         // Arrange
         var list = new List<string>();
         string methodName = "Add";
-        object[] parameters = new object[] { "test" };
+        object[] parameters = ["test"];
 
         // Act
         object? result = list.InvokeMethod(methodName, parameters);
@@ -302,7 +302,7 @@ public class ReflectionExtensionsTests
         string methodName = "ThrowException";
 
         // Act & Assert
-        TargetInvocationException? exception = Assert.ThrowsExactly<System.Reflection.TargetInvocationException>(() => obj.InvokeMethod(methodName));
+        TargetInvocationException? exception = Assert.ThrowsExactly<TargetInvocationException>(() => obj.InvokeMethod(methodName));
         exception.InnerException.Should().BeOfType<InvalidOperationException>();
     }
 
@@ -348,7 +348,7 @@ public class ReflectionExtensionsTests
         // Arrange
         string obj = "Hello World";
         string methodName = "IndexOf";
-        object[] parameters = new object[] { 123, "extra param" }; // Wrong parameter types/count
+        object[] parameters = [123, "extra param"]; // Wrong parameter types/count
 
         // Act & Assert
         // Note: The implementation has a flaw - it doesn't handle overloaded methods properly
@@ -422,4 +422,7 @@ public class ReflectionExtensionsTests
     #endregion
 }
 
-// Helper classes for testing
+public class TestClass
+{
+
+}

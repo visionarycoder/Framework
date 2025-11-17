@@ -113,7 +113,7 @@ public class ProxyResponseTests
     public void Failure_WithLongErrorMessage_ShouldPreserve()
     {
         // Arrange
-        string longError = new string('E', 10000);
+        string longError = new('E', 10000);
 
         // Act
         var response = ProxyResponse<string>.Failure(longError);

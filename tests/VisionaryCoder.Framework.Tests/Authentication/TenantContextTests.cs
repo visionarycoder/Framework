@@ -1,7 +1,7 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using VisionaryCoder.Framework.Authentication;
+using VisionaryCoder.Framework.Proxy.Interceptors.Authentication;
 
 namespace VisionaryCoder.Framework.Tests.Authentication;
 
@@ -137,8 +137,8 @@ public class TenantContextTests
     public void CreatedAt_ShouldHaveReasonableDefault()
     {
         // Arrange
-        var beforeCreation = DateTimeOffset.UtcNow.AddSeconds(-1);
-        var afterCreation = DateTimeOffset.UtcNow.AddSeconds(1);
+        DateTimeOffset beforeCreation = DateTimeOffset.UtcNow.AddSeconds(-1);
+        DateTimeOffset afterCreation = DateTimeOffset.UtcNow.AddSeconds(1);
 
         // Act
         var newContext = new TenantContext();
@@ -428,7 +428,7 @@ public class TenantContextTests
     {
         // Arrange
         var complexObject = new { Name = "Config", Limits = new[] { 10, 20, 30 } };
-        var dateTime = DateTimeOffset.UtcNow;
+        DateTimeOffset dateTime = DateTimeOffset.UtcNow;
 
         // Act
         tenantContext.Settings["complex"] = complexObject;
@@ -470,7 +470,7 @@ public class TenantContextTests
         tenantContext.Settings["config"] = complexConfig;
 
         // Act
-        var retrieved = tenantContext.GetSetting<object>("config");
+        object? retrieved = tenantContext.GetSetting<object>("config");
 
         // Assert
         retrieved.Should().Be(complexConfig, "Should retrieve complex objects correctly");

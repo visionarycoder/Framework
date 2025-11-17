@@ -46,10 +46,10 @@ public class StorageFactoryOptionsTests
 
         // Use reflection to call internal method for testing
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Act
-        method?.Invoke(options, new object?[] { "test", implementationType, null });
+        method?.Invoke(options, ["test", implementationType, null]);
 
         // Assert
         options.Implementations.Should().ContainKey("test");
@@ -67,10 +67,10 @@ public class StorageFactoryOptionsTests
         var options = new StorageFactoryOptions();
         Type implementationType = typeof(TestStorageProvider);
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Act
-        method?.Invoke(options, new object?[] { "local", implementationType, null });
+        method?.Invoke(options, ["local", implementationType, null]);
 
         // Assert
         options.Implementations.Should().HaveCount(1);
@@ -87,10 +87,10 @@ public class StorageFactoryOptionsTests
         Type implementationType = typeof(TestStorageProvider);
         var testOptions = new TestOptions { Setting = "value" };
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Act
-        method?.Invoke(options, new object?[] { "ftp", implementationType, testOptions });
+        method?.Invoke(options, ["ftp", implementationType, testOptions]);
 
         // Assert
         options.Implementations["ftp"].Options.Should().BeSameAs(testOptions);
@@ -104,11 +104,11 @@ public class StorageFactoryOptionsTests
         Type type1 = typeof(TestStorageProvider);
         Type type2 = typeof(AnotherTestProvider);
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Act
-        method?.Invoke(options, new object?[] { "local", type1, null });
-        method?.Invoke(options, new object?[] { "ftp", type2, null });
+        method?.Invoke(options, ["local", type1, null]);
+        method?.Invoke(options, ["ftp", type2, null]);
 
         // Assert
         options.Implementations.Should().HaveCount(2);
@@ -124,11 +124,11 @@ public class StorageFactoryOptionsTests
         Type type1 = typeof(TestStorageProvider);
         Type type2 = typeof(AnotherTestProvider);
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Act
-        method?.Invoke(options, new object?[] { "provider", type1, null });
-        method?.Invoke(options, new object?[] { "provider", type2, null });
+        method?.Invoke(options, ["provider", type1, null]);
+        method?.Invoke(options, ["provider", type2, null]);
 
         // Assert
         options.Implementations.Should().HaveCount(1);
@@ -145,12 +145,12 @@ public class StorageFactoryOptionsTests
         int intOptions = 42;
         var objectOptions = new { Key = "Value" };
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Act
-        method?.Invoke(options, new object?[] { "string", implementationType, stringOptions });
-        method?.Invoke(options, new object?[] { "int", implementationType, intOptions });
-        method?.Invoke(options, new object?[] { "object", implementationType, objectOptions });
+        method?.Invoke(options, ["string", implementationType, stringOptions]);
+        method?.Invoke(options, ["int", implementationType, intOptions]);
+        method?.Invoke(options, ["object", implementationType, objectOptions]);
 
         // Assert
         options.Implementations["string"].Options.Should().Be(stringOptions);
@@ -168,9 +168,9 @@ public class StorageFactoryOptionsTests
         // Arrange
         var options = new StorageFactoryOptions();
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        method?.Invoke(options, new object?[] { "local", typeof(TestStorageProvider), null });
-        method?.Invoke(options, new object?[] { "ftp", typeof(AnotherTestProvider), null });
+            BindingFlags.NonPublic | BindingFlags.Instance);
+        method?.Invoke(options, ["local", typeof(TestStorageProvider), null]);
+        method?.Invoke(options, ["ftp", typeof(AnotherTestProvider), null]);
 
         // Act
         var keys = options.Implementations.Keys.ToList();
@@ -188,8 +188,8 @@ public class StorageFactoryOptionsTests
         var options = new StorageFactoryOptions();
         Type type1 = typeof(TestStorageProvider);
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        method?.Invoke(options, new object?[] { "local", type1, null });
+            BindingFlags.NonPublic | BindingFlags.Instance);
+        method?.Invoke(options, ["local", type1, null]);
 
         // Act
         var values = options.Implementations.Values.ToList();
@@ -206,8 +206,8 @@ public class StorageFactoryOptionsTests
         var options = new StorageFactoryOptions();
         Type implementationType = typeof(TestStorageProvider);
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        method?.Invoke(options, new object?[] { "test", implementationType, null });
+            BindingFlags.NonPublic | BindingFlags.Instance);
+        method?.Invoke(options, ["test", implementationType, null]);
 
         // Act
         bool exists = options.Implementations.TryGetValue("test", out StorageImplementation? implementation);
@@ -227,8 +227,8 @@ public class StorageFactoryOptionsTests
         // Arrange
         var options = new StorageFactoryOptions();
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        method?.Invoke(options, new object?[] { "exists", typeof(TestStorageProvider), null });
+            BindingFlags.NonPublic | BindingFlags.Instance);
+        method?.Invoke(options, ["exists", typeof(TestStorageProvider), null]);
 
         // Act & Assert
         options.Implementations.ContainsKey("exists").Should().BeTrue();
@@ -245,10 +245,10 @@ public class StorageFactoryOptionsTests
         // Arrange
         var options = new StorageFactoryOptions();
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Act
-        method?.Invoke(options, new object?[] { "", typeof(TestStorageProvider), null });
+        method?.Invoke(options, ["", typeof(TestStorageProvider), null]);
 
         // Assert
         options.Implementations.Should().ContainKey("");
@@ -260,10 +260,10 @@ public class StorageFactoryOptionsTests
         // Arrange
         var options = new StorageFactoryOptions();
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Act
-        method?.Invoke(options, new object?[] { "  ", typeof(TestStorageProvider), null });
+        method?.Invoke(options, ["  ", typeof(TestStorageProvider), null]);
 
         // Assert
         options.Implementations.Should().ContainKey("  ");
@@ -275,11 +275,11 @@ public class StorageFactoryOptionsTests
         // Arrange
         var options = new StorageFactoryOptions();
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Act
-        method?.Invoke(options, new object?[] { "Provider", typeof(TestStorageProvider), null });
-        method?.Invoke(options, new object?[] { "provider", typeof(AnotherTestProvider), null });
+        method?.Invoke(options, ["Provider", typeof(TestStorageProvider), null]);
+        method?.Invoke(options, ["provider", typeof(AnotherTestProvider), null]);
 
         // Assert
         options.Implementations.Should().HaveCount(2);
@@ -293,10 +293,10 @@ public class StorageFactoryOptionsTests
         // Arrange
         var options = new StorageFactoryOptions();
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Act
-        method?.Invoke(options, new object?[] { "test", typeof(TestStorageProvider), null });
+        method?.Invoke(options, ["test", typeof(TestStorageProvider), null]);
 
         // Assert
         options.Implementations["test"].Options.Should().BeNull();
@@ -309,11 +309,11 @@ public class StorageFactoryOptionsTests
         var options1 = new StorageFactoryOptions();
         var options2 = new StorageFactoryOptions();
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Act
-        method?.Invoke(options1, new object?[] { "test", typeof(TestStorageProvider), null });
-        method?.Invoke(options2, new object?[] { "other", typeof(AnotherTestProvider), null });
+        method?.Invoke(options1, ["test", typeof(TestStorageProvider), null]);
+        method?.Invoke(options2, ["other", typeof(AnotherTestProvider), null]);
 
         // Assert
         options1.Implementations.Should().HaveCount(1);
@@ -341,7 +341,7 @@ public class StorageFactoryOptionsTests
     {
         // Arrange & Act
         MethodInfo? method = typeof(StorageFactoryOptions).GetMethod("RegisterImplementation",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Assert
         method.Should().NotBeNull();

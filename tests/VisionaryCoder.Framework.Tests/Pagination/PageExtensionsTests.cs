@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using VisionaryCoder.Framework.Pagination;
 
 namespace VisionaryCoder.Framework.Tests.Pagination;
@@ -287,7 +288,7 @@ public class PageExtensionsTests
             async (query, token, pageSize, ct) =>
             {
                 List<TestEntity> items = await query.Take(pageSize).ToListAsync(ct);
-                return (items, (string?)null);
+                return (items, null);
             });
 
         // Assert

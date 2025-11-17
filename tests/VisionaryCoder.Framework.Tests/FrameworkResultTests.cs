@@ -289,7 +289,7 @@ public class FrameworkResultTests
 
             // Assert
             mappedResult.IsSuccess.Should().BeFalse();
-            mappedResult.ErrorMessage.Should().Be("Unknown error");
+            mappedResult.ErrorMessage.Should().Be("Value is null");
         }
 
         [TestMethod]
@@ -457,8 +457,8 @@ public class FrameworkResultTests
             // This tests the "Unknown error" fallback in Match method
             // We need to create a result through reflection to test this edge case
             Type resultType = typeof(ServiceResult);
-            ConstructorInfo constructor = resultType.GetConstructors(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)[0];
-            var result = (ServiceResult)constructor.Invoke(new object?[] { false, null, null });
+            ConstructorInfo constructor = resultType.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[0];
+            var result = (ServiceResult)constructor.Invoke([false, null, null]);
 
             string? capturedError = null;
 

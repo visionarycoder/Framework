@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 18
-VisualStudioVersion = 18.0.11205.157
+# Visual Studio Version 17
+VisualStudioVersion = 17
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CF68B68C-8A91-4020-AA05-C6862858DAB7}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,11 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
 		Directory.Packages.props = Directory.Packages.props
-		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
-		version.json = version.json
-		VisionaryCoder.Framework.README.md = VisionaryCoder.Framework.README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{94FEF38A-DA45-4CF1-A0DD-EA337586A1AF}"
@@ -120,7 +117,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "best-practices", "best-prac
 		docs\best-practices\radar.md = docs\best-practices\radar.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "architecture-decision-records", "architecture-decision-records", "{D179AF1B-D641-4436-BF3F-5E394D3955D0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "adr", "adr", "{D179AF1B-D641-4436-BF3F-5E394D3955D0}"
 	ProjectSection(SolutionItems) = preProject
 		docs\adr\adr-0001.md = docs\adr\adr-0001.md
 		docs\adr\adr-0002.md = docs\adr\adr-0002.md

@@ -418,8 +418,8 @@ applyTo: '**/*'
 - **Communication Rules:** 
   - All communication must go through Contract interfaces and proxy implementations
   - Use fastest appropriate protocol: in-process DI → gRPC → HTTP/2 → message queues
-  - Prevent direct sibling communication; use message bus or mediator patterns
-  - Implement circuit breakers and retry policies in all external communications
+  - Prevent direct sibling communication; Use parent component; If manager use message bus;
+  - Implement circuit breakers and retry policies in all communications
 - **Composition over Inheritance:** Compose behaviors to keep components focused and testable
 
 ### Cross-Cutting Concerns
@@ -462,7 +462,8 @@ applyTo: '**/*'
   - **Production:** Live production environment
 - **Configuration Management:** Use environment-specific `AppSettings.json` files:
   - `AppSettings.json` (base configuration)
-  - `AppSettings.Development.json` (development overrides)
+  - `AppSettings.Local.json` (local environment)
+  - `AppSettings.Development.json` (development environment)
   - `AppSettings.Testing.json` (testing environment)
   - `AppSettings.Staging.json` (staging environment)
   - `AppSettings.Production.json` (production environment)

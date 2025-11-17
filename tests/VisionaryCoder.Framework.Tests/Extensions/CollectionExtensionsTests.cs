@@ -153,7 +153,7 @@ public class CollectionExtensionsTests
     {
         // Arrange
         var collection = new List<string> { "existing" };
-        string[] itemsToAdd = new[] { "item1", "item2", "item3" };
+        string[] itemsToAdd = ["item1", "item2", "item3"];
 
         // Act
         collection.AddRange(itemsToAdd);
@@ -171,7 +171,7 @@ public class CollectionExtensionsTests
     {
         // Arrange
         var collection = new List<string> { "existing" };
-        string[] itemsToAdd = Array.Empty<string>();
+        string[] itemsToAdd = [];
 
         // Act
         collection.AddRange(itemsToAdd);
@@ -186,7 +186,7 @@ public class CollectionExtensionsTests
     {
         // Arrange
         ICollection<string>? collection = null;
-        string[] itemsToAdd = new[] { "item1" };
+        string[] itemsToAdd = ["item1"];
 
         // Act & Assert
         Action action = () => collection!.AddRange(itemsToAdd);
@@ -198,7 +198,7 @@ public class CollectionExtensionsTests
     {
         // Arrange
         var collection = new List<string>();
-        string[] itemsToAdd = new[] { "item", "item", "item" };
+        string[] itemsToAdd = ["item", "item", "item"];
 
         // Act
         collection.AddRange(itemsToAdd);
@@ -469,7 +469,7 @@ public class CollectionExtensionsTests
         var collection = new List<int> { 1, 2, 3, 4, 5 };
 
         // Act
-        collection.AddRange(new[] { 6, 7, 8 });
+        collection.AddRange([6, 7, 8]);
         int evenRemoved = collection.RemoveWhere(x => x % 2 == 0);
         bool added = collection.AddIf(9, x => x % 2 != 0);
 
@@ -486,7 +486,7 @@ public class CollectionExtensionsTests
     {
         // Test with HashSet
         var hashSet = new HashSet<string> { "a", "b" };
-        hashSet.AddRange(new[] { "c", "d" });
+        hashSet.AddRange(["c", "d"]);
         hashSet.Should().HaveCount(4);
 
         // Test with List

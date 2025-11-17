@@ -1,9 +1,10 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using VisionaryCoder.Framework.Authentication;
-using VisionaryCoder.Framework.Authentication.Providers;
-using VisionaryCoder.Framework.Authentication.Jwt;
+using Microsoft.Extensions.DependencyInjection;
+using VisionaryCoder.Framework.Proxy.Interceptors.Authentication;
+using VisionaryCoder.Framework.Proxy.Interceptors.Authentication.Jwt;
+using VisionaryCoder.Framework.Proxy.Interceptors.Authentication.Providers;
 
 namespace VisionaryCoder.Framework.Tests.Authentication;
 
@@ -38,17 +39,17 @@ public class AuthenticationServiceCollectionExtensionsTests
         services.UseDefaultAuthenticationProviders();
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-        var userProvider = serviceProvider.GetService<IUserContextProvider>();
+        IUserContextProvider? userProvider = serviceProvider.GetService<IUserContextProvider>();
         userProvider.Should().NotBeNull();
         userProvider.Should().BeOfType<DefaultUserContextProvider>();
 
-        var tenantProvider = serviceProvider.GetService<ITenantContextProvider>();
+        ITenantContextProvider? tenantProvider = serviceProvider.GetService<ITenantContextProvider>();
         tenantProvider.Should().NotBeNull();
         tenantProvider.Should().BeOfType<DefaultTenantContextProvider>();
 
-        var tokenProvider = serviceProvider.GetService<ITokenProvider>();
+        ITokenProvider? tokenProvider = serviceProvider.GetService<ITokenProvider>();
         tokenProvider.Should().NotBeNull();
         tokenProvider.Should().BeOfType<DefaultTokenProvider>();
     }
@@ -71,8 +72,8 @@ public class AuthenticationServiceCollectionExtensionsTests
         services.ReplaceUserContextProvider<DefaultUserContextProvider>();
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
-        var provider = serviceProvider.GetService<IUserContextProvider>();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+        IUserContextProvider? provider = serviceProvider.GetService<IUserContextProvider>();
         provider.Should().NotBeNull();
         provider.Should().BeOfType<DefaultUserContextProvider>();
     }
@@ -92,8 +93,8 @@ public class AuthenticationServiceCollectionExtensionsTests
         services.ReplaceUserContextProvider<NullUserContextProvider>();
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
-        var provider = serviceProvider.GetService<IUserContextProvider>();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+        IUserContextProvider? provider = serviceProvider.GetService<IUserContextProvider>();
         provider.Should().BeOfType<NullUserContextProvider>();
     }
 
@@ -115,8 +116,8 @@ public class AuthenticationServiceCollectionExtensionsTests
         services.ReplaceTenantContextProvider<DefaultTenantContextProvider>();
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
-        var provider = serviceProvider.GetService<ITenantContextProvider>();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+        ITenantContextProvider? provider = serviceProvider.GetService<ITenantContextProvider>();
         provider.Should().NotBeNull();
         provider.Should().BeOfType<DefaultTenantContextProvider>();
     }
@@ -136,8 +137,8 @@ public class AuthenticationServiceCollectionExtensionsTests
         services.ReplaceTenantContextProvider<NullTenantContextProvider>();
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
-        var provider = serviceProvider.GetService<ITenantContextProvider>();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+        ITenantContextProvider? provider = serviceProvider.GetService<ITenantContextProvider>();
         provider.Should().BeOfType<NullTenantContextProvider>();
     }
 
@@ -159,8 +160,8 @@ public class AuthenticationServiceCollectionExtensionsTests
         services.ReplaceTokenProvider<DefaultTokenProvider>();
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
-        var provider = serviceProvider.GetService<ITokenProvider>();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+        ITokenProvider? provider = serviceProvider.GetService<ITokenProvider>();
         provider.Should().NotBeNull();
         provider.Should().BeOfType<DefaultTokenProvider>();
     }
@@ -180,15 +181,15 @@ public class AuthenticationServiceCollectionExtensionsTests
         });
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-        var userProvider = serviceProvider.GetService<IUserContextProvider>();
+        IUserContextProvider? userProvider = serviceProvider.GetService<IUserContextProvider>();
         userProvider.Should().BeOfType<NullUserContextProvider>();
 
-        var tenantProvider = serviceProvider.GetService<ITenantContextProvider>();
+        ITenantContextProvider? tenantProvider = serviceProvider.GetService<ITenantContextProvider>();
         tenantProvider.Should().BeOfType<NullTenantContextProvider>();
 
-        var tokenProvider = serviceProvider.GetService<ITokenProvider>();
+        ITokenProvider? tokenProvider = serviceProvider.GetService<ITokenProvider>();
         tokenProvider.Should().BeOfType<NullTokenProvider>();
     }
 

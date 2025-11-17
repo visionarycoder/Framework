@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Moq;
 using VisionaryCoder.Framework.Logging;
 
 namespace VisionaryCoder.Framework.Tests.Logging;

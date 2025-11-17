@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace VisionaryCoder.Framework.Storage.Local;
 
 public class LocalStorageProvider(ILogger<LocalStorageProvider> logger) : IStorageProvider

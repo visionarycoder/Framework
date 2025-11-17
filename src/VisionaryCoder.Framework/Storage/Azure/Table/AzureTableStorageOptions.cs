@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Storage.Azure;
+namespace VisionaryCoder.Framework.Storage.Azure.Table;
 
 /// <summary>
 /// Configuration options for Azure Table Storage operations.
@@ -66,11 +66,11 @@ public sealed class AzureTableStorageOptions
     /// </summary>
     public void Validate()
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(TableName, nameof(TableName));
+        ArgumentException.ThrowIfNullOrWhiteSpace(TableName);
 
         if (UseManagedIdentity)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(StorageAccountUri, nameof(StorageAccountUri));
+            ArgumentException.ThrowIfNullOrWhiteSpace(StorageAccountUri);
             if (!Uri.TryCreate(StorageAccountUri, UriKind.Absolute, out _))
             {
                 throw new ArgumentException("StorageAccountUri must be a valid absolute URI.", nameof(StorageAccountUri));
@@ -78,7 +78,7 @@ public sealed class AzureTableStorageOptions
         }
         else
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(ConnectionString, nameof(ConnectionString));
+            ArgumentException.ThrowIfNullOrWhiteSpace(ConnectionString);
         }
 
         if (TimeoutMilliseconds <= 0)

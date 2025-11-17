@@ -1,5 +1,4 @@
 using System.Reflection;
-
 using VisionaryCoder.Framework.Providers;
 
 namespace VisionaryCoder.Framework.Tests;

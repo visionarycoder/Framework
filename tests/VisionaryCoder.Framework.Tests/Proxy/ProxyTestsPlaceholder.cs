@@ -13,6 +13,8 @@ public sealed class ProxyTestsPlaceholder
     {
         // This is a placeholder test to verify the test project structure
         // Once Proxy project compilation errors are fixed, comprehensive tests can be added
+#pragma warning disable MSTEST0032 // Assertion condition is always true
         Assert.IsTrue(true, "Placeholder test should always pass");
+#pragma warning restore MSTEST0032 // Assertion condition is always true
     }
 }
