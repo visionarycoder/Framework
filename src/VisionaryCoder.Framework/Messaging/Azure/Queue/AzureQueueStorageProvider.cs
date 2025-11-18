@@ -6,14 +6,14 @@ using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
 
-namespace VisionaryCoder.Framework.Storage.Azure.Queue;
+namespace VisionaryCoder.Framework.Messaging.Azure.Queue;
 
 /// <summary>
 /// Provides Azure Queue Storage-based message queue operations implementation.
 /// This service wraps Azure Queue Storage operations with logging, error handling, and async support.
 /// Supports both connection string and managed identity authentication.
 /// </summary>
-public sealed class AzureQueueStorageProvider : ServiceBase<AzureQueueStorageProvider>
+public sealed class AzureQueueStorageProvider : ServiceBase<AzureQueueStorageProvider>, IQueueStorageProvider
 {
     private static readonly Encoding defaultEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
@@ -191,7 +191,7 @@ public sealed class AzureQueueStorageProvider : ServiceBase<AzureQueueStoragePro
         try
         {
             int messageCount = maxMessages ?? options.MaxMessagesToRetrieve;
-            TimeSpan visibilityTimeout = TimeSpan.FromSeconds(options.VisibilityTimeoutSeconds);
+            var visibilityTimeout = TimeSpan.FromSeconds(options.VisibilityTimeoutSeconds);
 
             Logger.LogDebug("Receiving up to {MaxMessages} messages from queue '{QueueName}'", messageCount, options.QueueName);
 
@@ -215,7 +215,7 @@ public sealed class AzureQueueStorageProvider : ServiceBase<AzureQueueStoragePro
         try
         {
             int messageCount = maxMessages ?? options.MaxMessagesToRetrieve;
-            TimeSpan visibilityTimeout = TimeSpan.FromSeconds(options.VisibilityTimeoutSeconds);
+            var visibilityTimeout = TimeSpan.FromSeconds(options.VisibilityTimeoutSeconds);
 
             Logger.LogDebug("Receiving up to {MaxMessages} messages async from queue '{QueueName}'", messageCount, options.QueueName);
 
@@ -343,8 +343,7 @@ public sealed class AzureQueueStorageProvider : ServiceBase<AzureQueueStoragePro
     /// <summary>
     /// Updates the visibility timeout of a message asynchronously.
     /// </summary>
-    public async Task UpdateMessageAsync(string messageId, string popReceipt, string? messageText = null,
-        TimeSpan? visibilityTimeout = null, CancellationToken cancellationToken = default)
+    public async Task UpdateMessageAsync(string messageId, string popReceipt, string? messageText = null, TimeSpan? visibilityTimeout = null, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(messageId);
         ArgumentException.ThrowIfNullOrWhiteSpace(popReceipt);
@@ -441,4 +440,5 @@ public sealed class AzureQueueStorageProvider : ServiceBase<AzureQueueStoragePro
             throw;
         }
     }
+
 }

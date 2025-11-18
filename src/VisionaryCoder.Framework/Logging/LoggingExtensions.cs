@@ -50,10 +50,7 @@ public static class LoggingExtensions
     /// <param name="slowThresholdMs">Threshold in milliseconds for slow operation warnings.</param>
     /// <param name="criticalThresholdMs">Threshold in milliseconds for critical operation errors.</param>
     /// <returns>The service collection for chaining.</returns>
-    public static IServiceCollection AddTimingInterceptor(
-        this IServiceCollection services,
-        long slowThresholdMs = 1000,
-        long criticalThresholdMs = 5000)
+    public static IServiceCollection AddTimingInterceptor(this IServiceCollection services, long slowThresholdMs = 1000, long criticalThresholdMs = 5000)
     {
         services.TryAddSingleton<IOrderedProxyInterceptor>(provider =>
         {
@@ -99,9 +96,7 @@ public static class LoggingExtensions
     /// <param name="services">The service collection.</param>
     /// <param name="configureOptions">Action to configure logging behavior.</param>
     /// <returns>The service collection for chaining.</returns>
-    public static IServiceCollection AddLogging(
-        this IServiceCollection services,
-        Action<LoggingOptions> configureOptions)
+    public static IServiceCollection AddLogging(this IServiceCollection services, Action<LoggingOptions> configureOptions)
     {
         var options = new LoggingOptions();
         configureOptions(options);

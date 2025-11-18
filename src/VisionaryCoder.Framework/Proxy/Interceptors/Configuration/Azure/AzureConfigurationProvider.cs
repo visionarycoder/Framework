@@ -14,7 +14,7 @@ public sealed class AzureConfigurationProvider
     : ConfigurationProvider, IConfigurationProvider
 {
 
-    private readonly AzureConfigurationProviderOptions options;
+    private new readonly AzureConfigurationProviderOptions options;
 
     public AzureConfigurationProvider(AzureConfigurationProviderOptions options, ILogger<AzureConfigurationProvider> logger)
         : base(options, logger)

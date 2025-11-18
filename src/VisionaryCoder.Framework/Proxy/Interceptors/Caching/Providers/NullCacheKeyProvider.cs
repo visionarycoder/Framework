@@ -8,7 +8,7 @@ namespace VisionaryCoder.Framework.Proxy.Interceptors.Caching.Providers;
 /// Returns consistent but non-functional cache keys when no explicit provider is registered.
 /// Follows SOLID principles by ensuring safe operation without implicit defaults.
 /// </summary>
-public sealed class NullCacheKeyProvider : ICacheKeyProvider
+public sealed class NullCacheKeyProvider : ICacheKeyProvider, Caching.ICacheKeyProvider
 {
     /// <summary>
     /// Returns a null cache key to indicate caching should be bypassed.

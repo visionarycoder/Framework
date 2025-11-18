@@ -5,14 +5,14 @@ using Azure.Identity;
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 
-namespace VisionaryCoder.Framework.Storage.Azure.Table;
+namespace VisionaryCoder.Framework.Data.Azure.Table;
 
 /// <summary>
 /// Provides Azure Table Storage-based NoSQL table operations implementation.
 /// This service wraps Azure Table Storage operations with logging, error handling, and async support.
 /// Supports both connection string and managed identity authentication.
 /// </summary>
-public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStorageProvider>
+public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStorageProvider>, ITableStorageProvider
 {
     private readonly AzureTableStorageOptions options;
     private readonly TableServiceClient tableServiceClient;
@@ -168,8 +168,7 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
     /// <summary>
     /// Updates an existing entity in the table asynchronously.
     /// </summary>
-    public async Task UpdateEntityAsync<T>(T entity, ETag etag = default, TableUpdateMode mode = TableUpdateMode.Replace,
-        CancellationToken cancellationToken = default) where T : class, ITableEntity
+    public async Task UpdateEntityAsync<T>(T entity, ETag etag = default, TableUpdateMode mode = TableUpdateMode.Replace, CancellationToken cancellationToken = default) where T : class, ITableEntity
     {
         ArgumentNullException.ThrowIfNull(entity);
 
@@ -213,8 +212,7 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
     /// <summary>
     /// Upserts an entity (insert or replace) in the table asynchronously.
     /// </summary>
-    public async Task UpsertEntityAsync<T>(T entity, TableUpdateMode mode = TableUpdateMode.Replace,
-        CancellationToken cancellationToken = default) where T : class, ITableEntity
+    public async Task UpsertEntityAsync<T>(T entity, TableUpdateMode mode = TableUpdateMode.Replace, CancellationToken cancellationToken = default) where T : class, ITableEntity
     {
         ArgumentNullException.ThrowIfNull(entity);
 
@@ -259,8 +257,7 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
     /// <summary>
     /// Deletes an entity from the table asynchronously.
     /// </summary>
-    public async Task DeleteEntityAsync(string partitionKey, string rowKey, ETag etag = default,
-        CancellationToken cancellationToken = default)
+    public async Task DeleteEntityAsync(string partitionKey, string rowKey, ETag etag = default, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(partitionKey);
         ArgumentException.ThrowIfNullOrWhiteSpace(rowKey);
@@ -283,7 +280,8 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
     /// <summary>
     /// Gets an entity by partition key and row key.
     /// </summary>
-    public T? GetEntity<T>(string partitionKey, string rowKey) where T : class, ITableEntity
+    public T? GetEntity<T>(string partitionKey, string rowKey)
+        where T : class, ITableEntity
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(partitionKey);
         ArgumentException.ThrowIfNullOrWhiteSpace(rowKey);
@@ -344,7 +342,8 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
     /// <summary>
     /// Queries entities from the table with an optional filter.
     /// </summary>
-    public List<T> QueryEntities<T>(string? filter = null, int? maxPerPage = null) where T : class, ITableEntity
+    public List<T> QueryEntities<T>(string? filter = null, int? maxPerPage = null)
+        where T : class, ITableEntity
     {
         try
         {
@@ -353,7 +352,7 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
             int pageSize = maxPerPage ?? options.MaxEntitiesPerQuery;
             Pageable<T>? query = tableClient.Query<T>(filter, pageSize);
 
-            List<T> results = query.ToList();
+            var results = query.ToList();
             Logger.LogTrace("Successfully queried {Count} entities from table '{TableName}'", results.Count, options.TableName);
             return results;
         }
@@ -367,8 +366,8 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
     /// <summary>
     /// Queries entities from the table with an optional filter asynchronously.
     /// </summary>
-    public async Task<List<T>> QueryEntitiesAsync<T>(string? filter = null, int? maxPerPage = null,
-        CancellationToken cancellationToken = default) where T : class, ITableEntity
+    public async Task<List<T>> QueryEntitiesAsync<T>(string? filter = null, int? maxPerPage = null, CancellationToken cancellationToken = default)
+        where T : class, ITableEntity
     {
         try
         {
@@ -396,8 +395,8 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
     /// <summary>
     /// Enumerates entities from the table with an optional filter asynchronously.
     /// </summary>
-    public async IAsyncEnumerable<T> EnumerateEntitiesAsync<T>(string? filter = null, int? maxPerPage = null,
-        [EnumeratorCancellation] CancellationToken cancellationToken = default) where T : class, ITableEntity
+    public async IAsyncEnumerable<T> EnumerateEntitiesAsync<T>(string? filter = null, int? maxPerPage = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        where T : class, ITableEntity
     {
         Logger.LogDebug("Enumerating entities async from table '{TableName}' with filter '{Filter}'", options.TableName, filter ?? "none");
 
@@ -419,7 +418,7 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
 
         try
         {
-            List<TableTransactionAction>? actionList = actions.ToList();
+            var actionList = actions.ToList();
             Logger.LogDebug("Submitting batch transaction to table '{TableName}' with {Count} actions",
                 options.TableName, actionList.Count);
 
@@ -447,7 +446,7 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
 
         try
         {
-            List<TableTransactionAction>? actionList = actions.ToList();
+            var actionList = actions.ToList();
             Logger.LogDebug("Submitting batch transaction async to table '{TableName}' with {Count} actions",
                 options.TableName, actionList.Count);
 
@@ -469,7 +468,8 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
     /// <summary>
     /// Gets entities by partition key.
     /// </summary>
-    public List<T> GetEntitiesByPartitionKey<T>(string partitionKey) where T : class, ITableEntity
+    public List<T> GetEntitiesByPartitionKey<T>(string partitionKey)
+        where T : class, ITableEntity
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(partitionKey);
 
@@ -488,4 +488,5 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
         string filter = $"PartitionKey eq '{partitionKey}'";
         return await QueryEntitiesAsync<T>(filter, cancellationToken: cancellationToken);
     }
+
 }

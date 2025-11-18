@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using VisionaryCoder.Framework.Proxy.Interceptors.Configuration;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Configuration.Local;
 
@@ -13,7 +12,7 @@ public sealed class LocalConfigurationProvider
     : ConfigurationProvider, IConfigurationProvider
 {
 
-    private readonly LocalConfigurationProviderOptions options;
+    private new readonly LocalConfigurationProviderOptions options;
     private readonly FileSystemWatcher? fileWatcher;
 
     public LocalConfigurationProvider(LocalConfigurationProviderOptions options, ILogger<LocalConfigurationProvider> logger)

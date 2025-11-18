@@ -1,6 +1,8 @@
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json;
+using VisionaryCoder.Framework.Filtering.Abstractions;
 
 namespace VisionaryCoder.Framework.Filtering.Poco;
 
@@ -42,6 +44,50 @@ internal static class PocoFilterExpressionBuilder
         MemberExpression? member = BuildMemberAccess(parameter, condition.Path);
         if (member is null) return null;
 
+        // Special handling for IN
+        if (condition.Operator == FilterOperation.In)
+        {
+            // condition.Value holds JSON array of string values
+            if (string.IsNullOrEmpty(condition.Value)) return null;
+            try
+            {
+                var items = JsonSerializer.Deserialize<List<string?>>(condition.Value) ?? new();
+                if (items.Count == 0) return null;
+
+                // Build OR equals: (member == v1) || (member == v2) ...
+                Expression? combined = null;
+                foreach (string? s in items)
+                {
+                    object? parsed = ConvertFromString(s, Nullable.GetUnderlyingType(member.Type) ?? member.Type);
+                    if (parsed is null && (Nullable.GetUnderlyingType(member.Type) ?? member.Type).IsValueType && (Nullable.GetUnderlyingType(member.Type) ?? member.Type) != typeof(string))
+                        continue;
+
+                    ConstantExpression c = Expression.Constant(parsed, parsed?.GetType() ?? typeof(string));
+                    Expression leftExpr = member;
+                    if (member.Type != c.Type)
+                    {
+                        if (Nullable.GetUnderlyingType(member.Type) == c.Type)
+                        {
+                            // ok
+                        }
+                        else
+                        {
+                            leftExpr = Expression.Convert(member, c.Type);
+                        }
+                    }
+
+                    Expression eq = Expression.Equal(leftExpr, PromoteNull(c, leftExpr.Type));
+                    combined = combined is null ? eq : Expression.OrElse(combined, eq);
+                }
+
+                return combined;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         Type targetType = Nullable.GetUnderlyingType(member.Type) ?? member.Type;
         object? constantValue = ConvertFromString(condition.Value, targetType);
         if (constantValue is null && targetType.IsValueType && targetType != typeof(string))
@@ -63,15 +109,15 @@ internal static class PocoFilterExpressionBuilder
 
         return condition.Operator switch
         {
-            FilterOperator.Equals => Expression.Equal(left, PromoteNull(constant, left.Type)),
-            FilterOperator.NotEquals => Expression.NotEqual(left, PromoteNull(constant, left.Type)),
-            FilterOperator.GreaterThan => Expression.GreaterThan(left, constant),
-            FilterOperator.GreaterOrEqual => Expression.GreaterThanOrEqual(left, constant),
-            FilterOperator.LessThan => Expression.LessThan(left, constant),
-            FilterOperator.LessOrEqual => Expression.LessThanOrEqual(left, constant),
-            FilterOperator.Contains => StringMethod(member, nameof(string.Contains), condition.Value),
-            FilterOperator.StartsWith => StringMethod(member, nameof(string.StartsWith), condition.Value),
-            FilterOperator.EndsWith => StringMethod(member, nameof(string.EndsWith), condition.Value),
+            FilterOperation.Equals => Expression.Equal(left, PromoteNull(constant, left.Type)),
+            FilterOperation.NotEquals => Expression.NotEqual(left, PromoteNull(constant, left.Type)),
+            FilterOperation.GreaterThan => Expression.GreaterThan(left, constant),
+            FilterOperation.GreaterOrEqual => Expression.GreaterThanOrEqual(left, constant),
+            FilterOperation.LessThan => Expression.LessThan(left, constant),
+            FilterOperation.LessOrEqual => Expression.LessThanOrEqual(left, constant),
+            FilterOperation.Contains => StringMethod(member, nameof(string.Contains), condition.Value),
+            FilterOperation.StartsWith => StringMethod(member, nameof(string.StartsWith), condition.Value),
+            FilterOperation.EndsWith => StringMethod(member, nameof(string.EndsWith), condition.Value),
             _ => null
         };
     }
@@ -85,17 +131,17 @@ internal static class PocoFilterExpressionBuilder
 
         string? anyAllMethodName = condition.Operator switch
         {
-            FilterOperator.HasElements => nameof(Enumerable.Any),
-            FilterOperator.Any => nameof(Enumerable.Any),
-            FilterOperator.All => nameof(Enumerable.All),
+            FilterOperation.HasElements => nameof(Enumerable.Any),
+            FilterOperation.Any => nameof(Enumerable.Any),
+            FilterOperation.All => nameof(Enumerable.All),
             _ => null
         };
         if (anyAllMethodName is null) return null;
 
-        if (condition.Operator == FilterOperator.HasElements)
+        if (condition.Operator == FilterOperation.HasElements)
         {
             return Expression.Call(
-                typeof(Enumerable), anyAllMethodName, [elementType], collection);
+                typeof(Enumerable), anyAllMethodName, new[] { elementType }, collection);
         }
 
         if (condition.Predicate is null) return null;
@@ -104,13 +150,13 @@ internal static class PocoFilterExpressionBuilder
         if (inner is null) return null;
         LambdaExpression lambda = Expression.Lambda(inner, elemParam);
         return Expression.Call(
-            typeof(Enumerable), anyAllMethodName, [elementType], collection, lambda);
+            typeof(Enumerable), anyAllMethodName, new[] { elementType }, collection, lambda);
     }
 
     private static Expression? StringMethod(Expression member, string method, string? arg)
     {
         if (member.Type != typeof(string)) return null;
-        MethodInfo mi = typeof(string).GetMethod(method, [typeof(string)])!;
+        MethodInfo mi = typeof(string).GetMethod(method, new[] { typeof(string) })!;
         return Expression.Call(member, mi, Expression.Constant(arg ?? string.Empty));
     }
 

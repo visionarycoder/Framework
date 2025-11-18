@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Storage.Azure.Table;
+namespace VisionaryCoder.Framework.Data.Azure.Table;
 
 /// <summary>
 /// Configuration options for Azure Table Storage operations.

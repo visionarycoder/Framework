@@ -20,9 +20,7 @@ public static class CachingExtensions
     /// <param name="services">The service collection to add caching services to.</param>
     /// <param name="configure">Optional configuration action for caching options.</param>
     /// <returns>The service collection for chaining.</returns>
-    public static IServiceCollection AddCaching(
-        this IServiceCollection services,
-        Action<CachingOptions>? configure = null)
+    public static IServiceCollection AddCaching(this IServiceCollection services, Action<CachingOptions>? configure = null)
     {
         // Add memory cache for infrastructure
         services.AddMemoryCache();
@@ -46,16 +44,13 @@ public static class CachingExtensions
     }
 
     /// <summary>
-    /// Adds caching services with a specific cache implementation.
+    /// Adds caching services by registering a single implementation type which can be either
+    /// an IProxyCache, ICachePolicyProvider, or ICacheKeyProvider. This single generic overload
+    /// allows concise registration in tests and consumers (e.g. AddCaching<MemoryProxyCache>()
+    /// or AddCaching<DefaultCachePolicyProvider>()).
     /// </summary>
-    /// <typeparam name="TCache">The type of cache implementation.</typeparam>
-    /// <param name="services">The service collection.</param>
-    /// <param name="configure">Optional configuration for caching options.</param>
-    /// <returns>The service collection for chaining.</returns>
-    public static IServiceCollection AddCaching<TCache>(
-        this IServiceCollection services,
-        Action<CachingOptions>? configure = null)
-        where TCache : class, IProxyCache
+    public static IServiceCollection AddCaching<T>(this IServiceCollection services, Action<CachingOptions>? configure = null)
+        where T : class
     {
         services.AddMemoryCache();
 
@@ -64,38 +59,31 @@ public static class CachingExtensions
             services.Configure(configure);
         }
 
-        services.TryAddSingleton<ICacheKeyProvider, Providers.DefaultCacheKeyProvider>();
-        services.TryAddSingleton<ICachePolicyProvider, Providers.DefaultCachePolicyProvider>();
-        services.TryAddSingleton<IProxyCache, TCache>();
-        services.TryAddSingleton<IOrderedProxyInterceptor, Interceptors.CachingInterceptor>();
+        Type t = typeof(T);
 
-        return services;
-    }
-
-    /// <summary>
-    /// Adds caching with custom providers for fine-grained control.
-    /// </summary>
-    /// <typeparam name="TKeyProvider">The cache key provider implementation.</typeparam>
-    /// <typeparam name="TPolicyProvider">The cache policy provider implementation.</typeparam>
-    /// <param name="services">The service collection.</param>
-    /// <param name="configure">Optional configuration for caching options.</param>
-    /// <returns>The service collection for chaining.</returns>
-    public static IServiceCollection AddCaching<TKeyProvider, TPolicyProvider>(
-        this IServiceCollection services,
-        Action<CachingOptions>? configure = null)
-        where TKeyProvider : class, ICacheKeyProvider
-        where TPolicyProvider : class, ICachePolicyProvider
-    {
-        services.AddMemoryCache();
-
-        if (configure != null)
+        if (typeof(IProxyCache).IsAssignableFrom(t))
         {
-            services.Configure(configure);
+            services.TryAddSingleton<ICacheKeyProvider, DefaultCacheKeyProvider>();
+            services.TryAddSingleton<ICachePolicyProvider, DefaultCachePolicyProvider>();
+            services.TryAddSingleton(typeof(IProxyCache), t);
+        }
+        else if (typeof(ICachePolicyProvider).IsAssignableFrom(t))
+        {
+            services.TryAddSingleton<ICacheKeyProvider, DefaultCacheKeyProvider>();
+            services.TryAddSingleton(typeof(ICachePolicyProvider), t);
+            services.TryAddSingleton<IProxyCache, MemoryProxyCache>();
+        }
+        else if (typeof(ICacheKeyProvider).IsAssignableFrom(t))
+        {
+            services.TryAddSingleton(typeof(ICacheKeyProvider), t);
+            services.TryAddSingleton<ICachePolicyProvider, DefaultCachePolicyProvider>();
+            services.TryAddSingleton<IProxyCache, MemoryProxyCache>();
+        }
+        else
+        {
+            throw new ArgumentException($"Type parameter {t.FullName} must implement IProxyCache, ICachePolicyProvider or ICacheKeyProvider.", nameof(T));
         }
 
-        services.TryAddSingleton<ICacheKeyProvider, TKeyProvider>();
-        services.TryAddSingleton<ICachePolicyProvider, TPolicyProvider>();
-        services.TryAddSingleton<IProxyCache, MemoryProxyCache>();
         services.TryAddSingleton<IOrderedProxyInterceptor, Interceptors.CachingInterceptor>();
 
         return services;
@@ -109,11 +97,7 @@ public static class CachingExtensions
     /// <param name="maxCacheSize">Optional maximum cache size in entries.</param>
     /// <param name="enableEvictionLogging">Whether to enable eviction logging.</param>
     /// <returns>The service collection for chaining.</returns>
-    public static IServiceCollection AddCaching(
-        this IServiceCollection services,
-        TimeSpan defaultDuration,
-        int? maxCacheSize = null,
-        bool enableEvictionLogging = false)
+    public static IServiceCollection AddCaching(this IServiceCollection services, TimeSpan defaultDuration, int? maxCacheSize = null, bool enableEvictionLogging = false)
     {
         return services.AddCaching(options =>
         {
@@ -129,9 +113,7 @@ public static class CachingExtensions
     /// <param name="services">The service collection.</param>
     /// <param name="configure">Configuration for caching options.</param>
     /// <returns>The service collection for chaining.</returns>
-    public static IServiceCollection AddDistributedCaching(
-        this IServiceCollection services,
-        Action<CachingOptions> configure)
+    public static IServiceCollection AddDistributedCaching(this IServiceCollection services, Action<CachingOptions> configure)
     {
         // This would be extended to support distributed caching providers like Redis
         // For now, falls back to memory cache with a warning in configuration
@@ -217,8 +199,8 @@ public static class CachingExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        services.ReplaceCacheKeyProvider<Providers.DefaultCacheKeyProvider>();
-        services.ReplaceCachePolicyProvider<Providers.DefaultCachePolicyProvider>();
+        services.ReplaceCacheKeyProvider<DefaultCacheKeyProvider>();
+        services.ReplaceCachePolicyProvider<DefaultCachePolicyProvider>();
         services.ReplaceProxyCache<MemoryProxyCache>();
 
         return services;

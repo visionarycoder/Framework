@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json;
+using VisionaryCoder.Framework.Filtering.Abstractions;
 
 namespace VisionaryCoder.Framework.Filtering.EFCore;
 
@@ -44,6 +46,51 @@ internal static class EfFilterExpressionBuilder
         MemberExpression? member = BuildMemberAccess(parameter, condition.Path);
         if (member is null) return null;
 
+        // Handle IN - optimized for EF Core: create a typed constant array and call Enumerable.Contains(array, member)
+        if (condition.Operator == FilterOperation.In)
+        {
+            if (string.IsNullOrEmpty(condition.Value)) return null;
+            try
+            {
+                var items = JsonSerializer.Deserialize<List<string?>>(condition.Value) ?? new();
+                if (items.Count == 0) return null;
+
+                Type elementClrType = Nullable.GetUnderlyingType(member.Type) ?? member.Type;
+                Array arr = Array.CreateInstance(elementClrType, items.Count);
+
+                int idx = 0;
+                foreach (string? s in items)
+                {
+                    object? parsed = ConvertFromString(s, elementClrType);
+                    if (parsed is null && elementClrType.IsValueType && elementClrType != typeof(string))
+                    {
+                        // skip invalid
+                        idx++;
+                        continue;
+                    }
+                    arr.SetValue(parsed, idx);
+                    idx++;
+                }
+
+                // If arr contains default entries and parsed were skipped, we might trim, but EF can handle empties. If no valid elements, null.
+                // Build constant expression for the array
+                Expression arrayConst = Expression.Constant(arr, elementClrType.MakeArrayType());
+
+                // Ensure member is of the same type as array element
+                Expression memberExpr = member.Type == elementClrType ? (Expression)member : Expression.Convert(member, elementClrType);
+
+                MethodInfo containsMi = typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public)
+                    .First(m => m.Name == "Contains" && m.GetParameters().Length == 2)
+                    .MakeGenericMethod(elementClrType);
+
+                return Expression.Call(containsMi, arrayConst, memberExpr);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         Type targetType = Nullable.GetUnderlyingType(member.Type) ?? member.Type;
         object? constantValue = ConvertFromString(condition.Value, targetType);
         if (constantValue is null && targetType.IsValueType && targetType != typeof(string))
@@ -66,15 +113,15 @@ internal static class EfFilterExpressionBuilder
 
         return condition.Operator switch
         {
-            FilterOperator.Equals => Expression.Equal(left, PromoteNull(constant, left.Type)),
-            FilterOperator.NotEquals => Expression.NotEqual(left, PromoteNull(constant, left.Type)),
-            FilterOperator.GreaterThan => Expression.GreaterThan(left, constant),
-            FilterOperator.GreaterOrEqual => Expression.GreaterThanOrEqual(left, constant),
-            FilterOperator.LessThan => Expression.LessThan(left, constant),
-            FilterOperator.LessOrEqual => Expression.LessThanOrEqual(left, constant),
-            FilterOperator.Contains => StringMethod(member, nameof(string.Contains), condition.Value),
-            FilterOperator.StartsWith => StringMethod(member, nameof(string.StartsWith), condition.Value),
-            FilterOperator.EndsWith => StringMethod(member, nameof(string.EndsWith), condition.Value),
+            FilterOperation.Equals => Expression.Equal(left, PromoteNull(constant, left.Type)),
+            FilterOperation.NotEquals => Expression.NotEqual(left, PromoteNull(constant, left.Type)),
+            FilterOperation.GreaterThan => Expression.GreaterThan(left, constant),
+            FilterOperation.GreaterOrEqual => Expression.GreaterThanOrEqual(left, constant),
+            FilterOperation.LessThan => Expression.LessThan(left, constant),
+            FilterOperation.LessOrEqual => Expression.LessThanOrEqual(left, constant),
+            FilterOperation.Contains => StringMethod(member, nameof(string.Contains), condition.Value),
+            FilterOperation.StartsWith => StringMethod(member, nameof(string.StartsWith), condition.Value),
+            FilterOperation.EndsWith => StringMethod(member, nameof(string.EndsWith), condition.Value),
             _ => null
         };
     }
@@ -89,17 +136,17 @@ internal static class EfFilterExpressionBuilder
 
         string? anyAllMethodName = condition.Operator switch
         {
-            FilterOperator.HasElements => nameof(Enumerable.Any),
-            FilterOperator.Any => nameof(Enumerable.Any),
-            FilterOperator.All => nameof(Enumerable.All),
+            FilterOperation.HasElements => nameof(Enumerable.Any),
+            FilterOperation.Any => nameof(Enumerable.Any),
+            FilterOperation.All => nameof(Enumerable.All),
             _ => null
         };
         if (anyAllMethodName is null) return null;
 
-        if (condition.Operator == FilterOperator.HasElements)
+        if (condition.Operator == FilterOperation.HasElements)
         {
             return Expression.Call(
-                typeof(Enumerable), anyAllMethodName, [elementType], collection);
+                typeof(Enumerable), anyAllMethodName, new[] { elementType }, collection);
         }
 
         if (condition.Predicate is null) return null;
@@ -108,13 +155,13 @@ internal static class EfFilterExpressionBuilder
         if (inner is null) return null;
         LambdaExpression lambda = Expression.Lambda(inner, elemParam);
         return Expression.Call(
-            typeof(Enumerable), anyAllMethodName, [elementType], collection, lambda);
+            typeof(Enumerable), anyAllMethodName, new[] { elementType }, collection, lambda);
     }
 
     private static Expression? StringMethod(Expression member, string method, string? arg)
     {
         if (member.Type != typeof(string)) return null;
-        MethodInfo mi = typeof(string).GetMethod(method, [typeof(string)])!;
+        MethodInfo mi = typeof(string).GetMethod(method, new[] { typeof(string) })!;
         return Expression.Call(member, mi, Expression.Constant(arg ?? string.Empty));
     }
 

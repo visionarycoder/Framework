@@ -12,6 +12,7 @@ namespace VisionaryCoder.Framework.Proxy.Interceptors.Caching.Interceptors;
 public sealed class CachingInterceptor(ILogger<CachingInterceptor> logger, IProxyCache proxyCache, ICacheKeyProvider keyProvider, ICachePolicyProvider policyProvider)
     : IOrderedProxyInterceptor
 {
+
     /// <inheritdoc />
     public int Order => 50; // Caching typically runs in the middle of the pipeline
 
@@ -52,20 +53,12 @@ public sealed class CachingInterceptor(ILogger<CachingInterceptor> logger, IProx
         }
 
         // Generate and try to retrieve from cache
-        string? cacheKey = keyProvider.GenerateKey(context);
-        if (cacheKey == null)
-        {
-            logger.LogDebug("No cache key generated for operation '{OperationName}', bypassing cache. Correlation ID: '{CorrelationId}'",
-                operationName, correlationId);
-            return await next(context, cancellationToken);
-        }
-
+        string cacheKey = keyProvider.GenerateKey(context);
         ProxyResponse<T>? cachedResponse = await proxyCache.GetAsync<T>(cacheKey, cancellationToken);
 
         if (cachedResponse != null)
         {
-            logger.LogDebug("Cache hit for operation '{OperationName}' with key '{CacheKey}'. Correlation ID: '{CorrelationId}'",
-                operationName, cacheKey, correlationId);
+            logger.LogDebug("Cache hit for operation '{OperationName}' with key '{CacheKey}'. Correlation ID: '{CorrelationId}'", operationName, cacheKey, correlationId);
 
             context.Metadata["CacheHit"] = true;
             context.Metadata["CacheKey"] = cacheKey;
@@ -74,8 +67,7 @@ public sealed class CachingInterceptor(ILogger<CachingInterceptor> logger, IProx
         }
 
         // Cache miss - execute the operation
-        logger.LogDebug("Cache miss for operation '{OperationName}' with key '{CacheKey}'. Correlation ID: '{CorrelationId}'",
-            operationName, cacheKey, correlationId);
+        logger.LogDebug("Cache miss for operation '{OperationName}' with key '{CacheKey}'. Correlation ID: '{CorrelationId}'", operationName, cacheKey, correlationId);
 
         ProxyResponse<T> response = await next(context, cancellationToken);
 
@@ -86,8 +78,7 @@ public sealed class CachingInterceptor(ILogger<CachingInterceptor> logger, IProx
 
             await proxyCache.SetAsync(cacheKey, response, expiration, cancellationToken);
 
-            logger.LogDebug("Cached successful response for operation '{OperationName}' with key '{CacheKey}' for {Duration}. Correlation ID: '{CorrelationId}'",
-                operationName, cacheKey, expiration, correlationId);
+            logger.LogDebug("Cached successful response for operation '{OperationName}' with key '{CacheKey}' for {Duration}. Correlation ID: '{CorrelationId}'", operationName, cacheKey, expiration, correlationId);
         }
 
         context.Metadata["CacheHit"] = false;
@@ -103,25 +94,26 @@ public sealed class CachingInterceptor(ILogger<CachingInterceptor> logger, IProx
     /// <returns>True if caching should be disabled for this request.</returns>
     private static bool IsCachingDisabled(ProxyContext context)
     {
+
         // Check for explicit cache disable flag
-        if (context.Metadata.TryGetValue("DisableCache", out object? disableCache) &&
-            disableCache is bool disabled && disabled)
+        if (context.Metadata.TryGetValue("DisableCache", out object? disableCache) && disableCache is bool and true)
         {
             return true;
         }
 
         // Check for cache-control headers that indicate no-cache
-        if (context.Headers.TryGetValue("Cache-Control", out string? cacheControl))
+        if (!context.Headers.TryGetValue("Cache-Control", out string? cacheControl))
         {
-            string? cacheControlValue = cacheControl?.ToString()?.ToLowerInvariant();
-            if (cacheControlValue?.Contains("no-cache") == true ||
-                cacheControlValue?.Contains("no-store") == true)
-            {
-                return true;
-            }
+            return false;
         }
 
+        string? cacheControlValue = cacheControl.ToLowerInvariant();
+        if (cacheControlValue?.Contains("no-cache") == true || cacheControlValue?.Contains("no-store") == true)
+        {
+            return true;
+        }
         return false;
+
     }
 
     /// <summary>
@@ -140,11 +132,6 @@ public sealed class CachingInterceptor(ILogger<CachingInterceptor> logger, IProx
         }
 
         // Apply policy-specific caching decision
-        if (policy.ShouldCache != null && response.Data != null)
-        {
-            return policy.ShouldCache(response.Data);
-        }
-
-        return true;
+        return response.Data == null || policy.ShouldCache(response.Data);
     }
 }

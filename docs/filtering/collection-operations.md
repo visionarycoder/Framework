@@ -17,7 +17,7 @@ Expression<Func<Customer, bool>> expr = c => c.Orders.Any();
 // Translates to
 FilterCollectionCondition(
     Path: "Orders",
-    Operator: FilterOperator.HasElements,
+    Operator: FilterOperation.HasElements,
     Predicate: null
 )
 ```
@@ -33,10 +33,10 @@ Expression<Func<Customer, bool>> expr = c => c.Orders.Any(o => o.Total > 1000);
 // Translates to
 FilterCollectionCondition(
     Path: "Orders",
-    Operator: FilterOperator.Any,
+    Operator: FilterOperation.Any,
     Predicate: FilterCondition(
         Path: "Total",
-        Operator: FilterOperator.GreaterThan,
+        Operator: FilterOperation.GreaterThan,
         Value: "1000"
     )
 )
@@ -53,10 +53,10 @@ Expression<Func<Customer, bool>> expr = c => c.Orders.All(o => o.IsPaid);
 // Translates to
 FilterCollectionCondition(
     Path: "Orders",
-    Operator: FilterOperator.All,
+    Operator: FilterOperation.All,
     Predicate: FilterCondition(
         Path: "IsPaid",
-        Operator: FilterOperator.Equals,
+        Operator: FilterOperation.Equals,
         Value: "True"
     )
 )
@@ -73,7 +73,7 @@ Expression<Func<Product, bool>> expr = p => p.Tags.Contains("electronics");
 // Translates to
 FilterCondition(
     Path: "Tags",
-    Operator: FilterOperator.Contains,
+    Operator: FilterOperation.Contains,
     Value: "electronics"
 )
 ```
@@ -90,7 +90,7 @@ Expression<Func<Customer, bool>> expr = c =>
 // Translates to
 FilterCollectionCondition(
     Path: "Orders",
-    Operator: FilterOperator.Any,
+    Operator: FilterOperation.Any,
     Predicate: FilterGroup(
         Combination: FilterCombination.And,
         Children: [
@@ -131,18 +131,18 @@ A new `FilterNode` type that represents operations on collection properties.
 ```csharp
 public sealed record FilterCollectionCondition(
     string Path,              // Collection property path
-    FilterOperator Operator,  // Any, All, or HasElements
+    FilterOperation Operator,  // Any, All, or HasElements
     FilterNode? Predicate     // Nested filter for collection elements
 ) : FilterNode;
 ```
 
-### New FilterOperator Values
+### New FilterOperation Values
 
 Three new operators have been added to support collection operations:
 
-- `FilterOperator.Any` - At least one element matches the predicate
-- `FilterOperator.All` - All elements match the predicate
-- `FilterOperator.HasElements` - Collection is not empty
+- `FilterOperation.Any` - At least one element matches the predicate
+- `FilterOperation.All` - All elements match the predicate
+- `FilterOperation.HasElements` - Collection is not empty
 
 ## Extensibility for Custom Methods
 
@@ -160,7 +160,7 @@ static FilterNode? TranslateMethodCall(MethodCallExpression call)
         var targetMember = GetMember(call.Object);
         var path = GetMemberPath(targetMember);
         // Create appropriate FilterNode based on method semantics
-        return new FilterCondition(path, FilterOperator.Equals, "special");
+        return new FilterCondition(path, FilterOperation.Equals, "special");
     }
     
     return null;

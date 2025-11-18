@@ -1,4 +1,4 @@
-namespace VisionaryCoder.Framework.Storage.Azure.Queue;
+namespace VisionaryCoder.Framework.Messaging.Azure.Queue;
 
 /// <summary>
 /// Configuration options for Azure Queue Storage operations.

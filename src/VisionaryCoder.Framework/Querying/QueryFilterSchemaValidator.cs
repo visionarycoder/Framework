@@ -18,7 +18,7 @@ public static class QueryFilterSchemaValidator
     {
         try
         {
-            using JsonDocument doc = JsonDocument.Parse(json);
+            using var doc = JsonDocument.Parse(json);
             return ValidateElement(doc.RootElement);
         }
         catch (JsonException je)

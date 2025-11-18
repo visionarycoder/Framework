@@ -3,8 +3,6 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using VisionaryCoder.Framework.Authorization.Policies;
-using VisionaryCoder.Framework.Proxy.Authorization.Policies;
 using VisionaryCoder.Framework.Proxy.Interceptors.Authorization.Policies;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Authorization;

@@ -1,3 +1,5 @@
+using Grpc.Net.Client;
+
 namespace VisionaryCoder.Framework.Pipeline.Dispatch;
 
 public sealed class GenericGrpcClient

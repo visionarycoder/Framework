@@ -107,7 +107,7 @@ public class CachingServiceCollectionExtensionsTests
     public void AddCaching_WithGenericProviders_ShouldRegisterSpecifiedProviders()
     {
         // Act
-        services.AddCaching<DefaultCacheKeyProvider, DefaultCachePolicyProvider>();
+        services.AddCaching<DefaultCachePolicyProvider>();
 
         // Assert
         ServiceProvider serviceProvider = services.BuildServiceProvider();

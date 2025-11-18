@@ -14,4 +14,7 @@ public interface ICachePolicyProvider
     /// Determines whether the operation should be cached.
     /// <returns>True if the operation should be cached; otherwise, false.</returns>
     bool ShouldCache(ProxyContext context);
+
+    CachePolicy GetPolicy(ProxyContext context);
+
 }

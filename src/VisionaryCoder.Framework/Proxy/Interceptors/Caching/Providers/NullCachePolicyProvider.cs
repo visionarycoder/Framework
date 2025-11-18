@@ -8,7 +8,7 @@ namespace VisionaryCoder.Framework.Proxy.Interceptors.Caching.Providers;
 /// Returns no-cache policies when no explicit provider is registered.
 /// Follows SOLID principles by ensuring safe operation without implicit defaults.
 /// </summary>
-public sealed class NullCachePolicyProvider : ICachePolicyProvider
+public sealed class NullCachePolicyProvider : ICachePolicyProvider, Caching.ICachePolicyProvider
 {
     /// <summary>
     /// Returns a cache policy that disables caching entirely.

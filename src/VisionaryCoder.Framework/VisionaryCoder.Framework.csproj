@@ -27,12 +27,17 @@
     <RepositoryBranch>main</RepositoryBranch>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Data\Azure\NewFolder\**" />
+    <EmbeddedResource Remove="Data\Azure\NewFolder\**" />
+    <None Remove="Data\Azure\NewFolder\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\.json\schemas\queryfilter.schema.json">
-      <Link>Schemas\queryfilter.schema.json</Link>
-      <LogicalName>VisionaryCoder.Framework.Schemas.queryfilter.schema.json</LogicalName>
+      <Link>Querying\Schemas\queryfilter.schema.json</Link>
+      <LogicalName>VisionaryCoder.Framework.Querying.Schemas.queryfilter.schema.json</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <!-- Azure Dependencies -->
@@ -48,6 +53,7 @@
   <ItemGroup Label="Microsoft Extensions">
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
     <PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
@@ -81,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pipeline\Samples\" />
+    <Folder Include="Proxy\Abstractions\" />
   </ItemGroup>
   <ItemGroup>
     <Protobuf Include="Pipeline\Dispatch\Abstractions\GenericInvoker.proto" GrpcServices="Both" />
