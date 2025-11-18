@@ -521,7 +521,7 @@ public class EnumerableExtensionsTests
     public void TryLast_WithArray_ShouldReturnTrueAndLastElement()
     {
         // Arrange
-        int[] source = new int[] { 1, 2, 3 };
+        int[] source = [1, 2, 3];
 
         // Act
         bool result = source.TryLast(out int value);
@@ -687,7 +687,7 @@ public class EnumerableExtensionsTests
         };
 
         // Act
-        var result = EnumerableExtensions.ToDictionary(((IEnumerable<KeyValuePair<string, int>>)source));
+        var result = EnumerableExtensions.ToDictionary(source);
 
         // Assert
         result.Should().BeOfType<Dictionary<string, int>>();

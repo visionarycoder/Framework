@@ -333,12 +333,12 @@ public class EntityIdJsonConverterFactoryTests
     public void Serialize_ArrayOfEntityIds_ShouldSerializeCorrectly()
     {
         // Arrange
-        EntityId<TestUser, int>[] ids = new[]
-        {
+        EntityId<TestUser, int>[] ids =
+        [
             new EntityId<TestUser, int>(1),
             new EntityId<TestUser, int>(2),
             new EntityId<TestUser, int>(3)
-        };
+        ];
 
         // Act
         string json = JsonSerializer.Serialize(ids, options);

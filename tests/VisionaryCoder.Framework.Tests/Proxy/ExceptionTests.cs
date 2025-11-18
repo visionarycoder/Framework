@@ -1,5 +1,4 @@
 using System.Net.Sockets;
-
 using VisionaryCoder.Framework.Proxy.Exceptions;
 using VisionaryCoder.Framework.Proxy.Interceptors.Retries;
 

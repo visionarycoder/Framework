@@ -184,7 +184,7 @@ public class FrameworkInfoProviderTests
     {
         // Arrange
         var provider = new FrameworkInfoProvider();
-        int[] reasonableYears = new[] { 2024, 2025, 2026, 2027 };
+        int[] reasonableYears = [2024, 2025, 2026, 2027];
 
         // Act
         DateTimeOffset compiledAt = provider.CompiledAt;

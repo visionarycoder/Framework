@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using VisionaryCoder.Framework.Secrets;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Security.Web;

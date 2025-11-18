@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using VisionaryCoder.Framework.Filtering;
+using VisionaryCoder.Framework.Filtering.Abstractions;
 
 namespace VisionaryCoder.Framework.Tests.Filtering;
 
@@ -41,7 +42,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCondition>();
         var condition = (FilterCondition)result;
         condition.Path.Should().Be("Name");
-        condition.Operator.Should().Be(FilterOperator.Equals);
+        condition.Operator.Should().Be(FilterOperation.Equals);
         condition.Value.Should().Be("test");
     }
 
@@ -58,7 +59,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCondition>();
         var condition = (FilterCondition)result;
         condition.Path.Should().Be("Age");
-        condition.Operator.Should().Be(FilterOperator.NotEquals);
+        condition.Operator.Should().Be(FilterOperation.NotEquals);
         condition.Value.Should().Be("25");
     }
 
@@ -75,7 +76,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCondition>();
         var condition = (FilterCondition)result;
         condition.Path.Should().Be("Age");
-        condition.Operator.Should().Be(FilterOperator.GreaterThan);
+        condition.Operator.Should().Be(FilterOperation.GreaterThan);
         condition.Value.Should().Be("18");
     }
 
@@ -92,7 +93,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCondition>();
         var condition = (FilterCondition)result;
         condition.Path.Should().Be("Age");
-        condition.Operator.Should().Be(FilterOperator.LessOrEqual);
+        condition.Operator.Should().Be(FilterOperation.LessOrEqual);
         condition.Value.Should().Be("65");
     }
 
@@ -113,7 +114,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCondition>();
         var condition = (FilterCondition)result;
         condition.Path.Should().Be("Name");
-        condition.Operator.Should().Be(FilterOperator.Contains);
+        condition.Operator.Should().Be(FilterOperation.Contains);
         condition.Value.Should().Be("test");
     }
 
@@ -130,7 +131,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCondition>();
         var condition = (FilterCondition)result;
         condition.Path.Should().Be("Email");
-        condition.Operator.Should().Be(FilterOperator.StartsWith);
+        condition.Operator.Should().Be(FilterOperation.StartsWith);
         condition.Value.Should().Be("admin");
     }
 
@@ -147,7 +148,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCondition>();
         var condition = (FilterCondition)result;
         condition.Path.Should().Be("Email");
-        condition.Operator.Should().Be(FilterOperator.EndsWith);
+        condition.Operator.Should().Be(FilterOperation.EndsWith);
         condition.Value.Should().Be(".com");
     }
 
@@ -200,7 +201,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCondition>();
         var condition = (FilterCondition)result;
         condition.Path.Should().Be("Age");
-        condition.Operator.Should().Be(FilterOperator.LessOrEqual); // Negation of >
+        condition.Operator.Should().Be(FilterOperation.LessOrEqual); // Negation of >
         condition.Value.Should().Be("18");
     }
 
@@ -221,7 +222,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCollectionCondition>();
         var condition = (FilterCollectionCondition)result;
         condition.Path.Should().Be("Tags");
-        condition.Operator.Should().Be(FilterOperator.HasElements);
+        condition.Operator.Should().Be(FilterOperation.HasElements);
         condition.Predicate.Should().BeNull();
     }
 
@@ -238,13 +239,13 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCollectionCondition>();
         var condition = (FilterCollectionCondition)result;
         condition.Path.Should().Be("Children");
-        condition.Operator.Should().Be(FilterOperator.Any);
+        condition.Operator.Should().Be(FilterOperation.Any);
         condition.Predicate.Should().NotBeNull();
         condition.Predicate.Should().BeOfType<FilterCondition>();
 
         var predicateCondition = (FilterCondition)condition.Predicate!;
         predicateCondition.Path.Should().Be("Value");
-        predicateCondition.Operator.Should().Be(FilterOperator.GreaterThan);
+        predicateCondition.Operator.Should().Be(FilterOperation.GreaterThan);
         predicateCondition.Value.Should().Be("10");
     }
 
@@ -261,13 +262,13 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCollectionCondition>();
         var condition = (FilterCollectionCondition)result;
         condition.Path.Should().Be("Children");
-        condition.Operator.Should().Be(FilterOperator.Any);
+        condition.Operator.Should().Be(FilterOperation.Any);
         condition.Predicate.Should().NotBeNull();
         condition.Predicate.Should().BeOfType<FilterCondition>();
 
         var predicateCondition = (FilterCondition)condition.Predicate!;
         predicateCondition.Path.Should().Be("Name");
-        predicateCondition.Operator.Should().Be(FilterOperator.Contains);
+        predicateCondition.Operator.Should().Be(FilterOperation.Contains);
         predicateCondition.Value.Should().Be("test");
     }
 
@@ -284,7 +285,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCollectionCondition>();
         var condition = (FilterCollectionCondition)result;
         condition.Path.Should().Be("Children");
-        condition.Operator.Should().Be(FilterOperator.Any);
+        condition.Operator.Should().Be(FilterOperation.Any);
         condition.Predicate.Should().NotBeNull();
         condition.Predicate.Should().BeOfType<FilterGroup>();
 
@@ -310,13 +311,13 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCollectionCondition>();
         var condition = (FilterCollectionCondition)result;
         condition.Path.Should().Be("Children");
-        condition.Operator.Should().Be(FilterOperator.All);
+        condition.Operator.Should().Be(FilterOperation.All);
         condition.Predicate.Should().NotBeNull();
         condition.Predicate.Should().BeOfType<FilterCondition>();
 
         var predicateCondition = (FilterCondition)condition.Predicate!;
         predicateCondition.Path.Should().Be("Value");
-        predicateCondition.Operator.Should().Be(FilterOperator.GreaterThan);
+        predicateCondition.Operator.Should().Be(FilterOperation.GreaterThan);
         predicateCondition.Value.Should().Be("0");
     }
 
@@ -333,7 +334,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCollectionCondition>();
         var condition = (FilterCollectionCondition)result;
         condition.Path.Should().Be("Children");
-        condition.Operator.Should().Be(FilterOperator.All);
+        condition.Operator.Should().Be(FilterOperation.All);
         condition.Predicate.Should().NotBeNull();
         condition.Predicate.Should().BeOfType<FilterGroup>();
     }
@@ -355,7 +356,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCondition>();
         var condition = (FilterCondition)result;
         condition.Path.Should().Be("Tags");
-        condition.Operator.Should().Be(FilterOperator.Contains);
+        condition.Operator.Should().Be(FilterOperation.Contains);
         condition.Value.Should().Be("important");
     }
 
@@ -468,7 +469,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCondition>();
         var condition = (FilterCondition)result;
         condition.Path.Should().Be("Age");
-        condition.Operator.Should().Be(FilterOperator.GreaterThan);
+        condition.Operator.Should().Be(FilterOperation.GreaterThan);
         condition.Value.Should().Be("18");
     }
 
@@ -485,7 +486,7 @@ public sealed class ExpressionToFilterNodeTests
         result.Should().BeOfType<FilterCondition>();
         var condition = (FilterCondition)result;
         condition.Path.Should().Be("Name");
-        condition.Operator.Should().Be(FilterOperator.Equals);
+        condition.Operator.Should().Be(FilterOperation.Equals);
         condition.Value.Should().Be("test");
     }
 

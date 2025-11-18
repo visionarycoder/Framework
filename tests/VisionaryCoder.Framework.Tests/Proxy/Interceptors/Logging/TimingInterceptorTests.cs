@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Moq;
 using VisionaryCoder.Framework.Proxy;
 using VisionaryCoder.Framework.Proxy.Interceptors.Logging;
 

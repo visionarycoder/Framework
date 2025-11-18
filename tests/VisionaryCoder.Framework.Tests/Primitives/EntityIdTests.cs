@@ -614,7 +614,7 @@ public class EntityIdTests
     public void Parse_WithVeryLongString_ShouldSucceed()
     {
         // Arrange
-        string longString = new string('a', 10000);
+        string longString = new('a', 10000);
 
         // Act
         var id = EntityId<TestUser, string>.Parse(longString);

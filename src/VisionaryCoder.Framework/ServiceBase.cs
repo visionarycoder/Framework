@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace VisionaryCoder.Framework;
 
 /// <summary>
@@ -38,6 +40,7 @@ public abstract class ServiceBase<T>(ILogger<T> logger) : IDisposable where T : 
     /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
+
         if (!disposed)
         {
             if (disposing)
@@ -45,9 +48,9 @@ public abstract class ServiceBase<T>(ILogger<T> logger) : IDisposable where T : 
                 // Dispose managed resources here
                 // Derived classes can override this method to dispose their resources
             }
-
             disposed = true;
         }
+
     }
 
     /// <summary>

@@ -1,5 +1,5 @@
 using VisionaryCoder.Framework.Proxy;
-using VisionaryCoder.Framework.Proxy.Caching;
+using VisionaryCoder.Framework.Proxy.Interceptors.Caching;
 
 namespace VisionaryCoder.Framework.Tests.Proxy.Interceptors.Caching;
 
@@ -178,7 +178,7 @@ public class NullCachingInterceptorTests
         {
             Id = 123,
             Name = "Test",
-            Items = new List<string> { "A", "B", "C" }
+            Items = ["A", "B", "C"]
         };
         var expectedResponse = ProxyResponse<ComplexType>.Success(expectedData);
 
@@ -258,6 +258,6 @@ public class NullCachingInterceptorTests
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public List<string> Items { get; set; } = new();
+        public List<string> Items { get; set; } = [];
     }
 }

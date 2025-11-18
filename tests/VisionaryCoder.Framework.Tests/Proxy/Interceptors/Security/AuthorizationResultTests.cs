@@ -182,7 +182,7 @@ public class AuthorizationResultTests
     public void Failure_WithVeryLongReason_ShouldStoreCompletely()
     {
         // Arrange
-        string longReason = new string('A', 10000);
+        string longReason = new('A', 10000);
 
         // Act
         var result = AuthorizationResult.Failure(longReason);

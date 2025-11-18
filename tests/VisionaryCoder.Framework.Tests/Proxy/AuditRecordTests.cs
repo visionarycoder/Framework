@@ -235,7 +235,7 @@ public class AuditRecordTests
     {
         // Arrange
         var record = new AuditRecord();
-        string longUserAgent = new string('A', 10000);
+        string longUserAgent = new('A', 10000);
 
         // Act
         record.UserAgent = longUserAgent;

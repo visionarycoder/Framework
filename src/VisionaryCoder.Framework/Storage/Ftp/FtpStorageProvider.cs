@@ -1,3 +1,5 @@
+using FluentFTP;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;

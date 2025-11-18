@@ -88,7 +88,7 @@ public class Month
 
     public Month(string name)
     {
-        ArgumentNullException.ThrowIfNull(name, nameof(name));
+        ArgumentNullException.ThrowIfNull(name);
         if (longMonthNames.Contains(name))
         {
             Ordinal = longMonthNames.IndexOf(name);
@@ -106,7 +106,7 @@ public class Month
 
     public Month(Month other)
     {
-        ArgumentNullException.ThrowIfNull(other, nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
         Name = other.Name;
         Ordinal = other.Ordinal;
     }

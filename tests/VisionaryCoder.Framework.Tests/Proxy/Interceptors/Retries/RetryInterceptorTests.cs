@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Moq;
 using VisionaryCoder.Framework.Proxy;
 
 using VisionaryCoder.Framework.Proxy.Exceptions;

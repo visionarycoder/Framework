@@ -36,7 +36,7 @@ public class WebJwtOptions
     /// <summary>
     /// Gets or sets the scopes for the JWT token.
     /// </summary>
-    public string[] Scopes { get; set; } = Array.Empty<string>();
+    public string[] Scopes { get; set; } = [];
 
     /// <summary>
     /// Gets or sets whether to refresh the token if it's expired.

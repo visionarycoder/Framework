@@ -7,14 +7,18 @@ namespace VisionaryCoder.Framework.Providers;
 /// </summary>
 public interface IFrameworkInfoProvider
 {
+
     /// <summary>
     /// Gets the current framework version.
     /// </summary>
     string Version { get; }
+
     /// Gets the framework name.
     string Name { get; }
+
     /// Gets the framework description.
     string Description { get; }
+
     /// Gets when the framework was compiled.
     DateTimeOffset CompiledAt { get; }
 }

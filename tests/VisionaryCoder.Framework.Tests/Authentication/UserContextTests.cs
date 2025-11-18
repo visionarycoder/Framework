@@ -1,7 +1,7 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using VisionaryCoder.Framework.Authentication;
+using VisionaryCoder.Framework.Proxy.Interceptors.Authentication;
 
 namespace VisionaryCoder.Framework.Tests.Authentication;
 
@@ -156,8 +156,8 @@ public class UserContextTests
     public void AuthenticatedAt_ShouldHaveReasonableDefault()
     {
         // Arrange
-        var beforeCreation = DateTimeOffset.UtcNow.AddSeconds(-1);
-        var afterCreation = DateTimeOffset.UtcNow.AddSeconds(1);
+        DateTimeOffset beforeCreation = DateTimeOffset.UtcNow.AddSeconds(-1);
+        DateTimeOffset afterCreation = DateTimeOffset.UtcNow.AddSeconds(1);
 
         // Act
         var newContext = new UserContext();
@@ -398,7 +398,7 @@ public class UserContextTests
     {
         // Arrange
         var complexObject = new { Name = "Test", Values = new[] { 1, 2, 3 } };
-        var dateTime = DateTimeOffset.UtcNow;
+        DateTimeOffset dateTime = DateTimeOffset.UtcNow;
 
         // Act
         userContext.Claims["complex"] = complexObject;

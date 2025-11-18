@@ -602,6 +602,6 @@ public class DefaultCacheKeyProviderTests
     private class SearchResult
     {
         public int TotalCount { get; set; }
-        public List<string> Items { get; set; } = new();
+        public List<string> Items { get; set; } = [];
     }
 }

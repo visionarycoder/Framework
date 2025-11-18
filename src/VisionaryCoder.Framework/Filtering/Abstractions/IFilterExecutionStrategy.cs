@@ -1,3 +1,5 @@
+namespace VisionaryCoder.Framework.Filtering.Abstractions;
+
 public interface IFilterExecutionStrategy
 {
     IQueryable<T> Apply<T>(IQueryable<T> source, FilterNode? filter);

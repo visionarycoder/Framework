@@ -1,8 +1,13 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using VisionaryCoder.Framework.Caching;
-using VisionaryCoder.Framework.Caching.Providers;
+using Microsoft.Extensions.DependencyInjection;
+using VisionaryCoder.Framework.Proxy.Interceptors.Caching;
+using VisionaryCoder.Framework.Proxy.Interceptors.Caching.Providers;
+using DefaultCacheKeyProvider = VisionaryCoder.Framework.Proxy.Interceptors.Caching.Providers.DefaultCacheKeyProvider;
+using DefaultCachePolicyProvider = VisionaryCoder.Framework.Proxy.Interceptors.Caching.Providers.DefaultCachePolicyProvider;
+using ICacheKeyProvider = VisionaryCoder.Framework.Proxy.Interceptors.Caching.Providers.ICacheKeyProvider;
+using ICachePolicyProvider = VisionaryCoder.Framework.Proxy.Interceptors.Caching.Providers.ICachePolicyProvider;
 
 namespace VisionaryCoder.Framework.Tests.Caching;
 
@@ -30,17 +35,17 @@ public class CachingServiceCollectionExtensionsTests
         services.AddCaching();
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-        var keyProvider = serviceProvider.GetService<ICacheKeyProvider>();
+        ICacheKeyProvider? keyProvider = serviceProvider.GetService<ICacheKeyProvider>();
         keyProvider.Should().NotBeNull();
         keyProvider.Should().BeOfType<NullCacheKeyProvider>();
 
-        var policyProvider = serviceProvider.GetService<ICachePolicyProvider>();
+        ICachePolicyProvider? policyProvider = serviceProvider.GetService<ICachePolicyProvider>();
         policyProvider.Should().NotBeNull();
         policyProvider.Should().BeOfType<NullCachePolicyProvider>();
 
-        var cache = serviceProvider.GetService<IProxyCache>();
+        IProxyCache? cache = serviceProvider.GetService<IProxyCache>();
         cache.Should().NotBeNull();
         cache.Should().BeOfType<NullProxyCache>();
     }
@@ -56,8 +61,8 @@ public class CachingServiceCollectionExtensionsTests
         });
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
-        var cache = serviceProvider.GetService<IProxyCache>();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+        IProxyCache? cache = serviceProvider.GetService<IProxyCache>();
         cache.Should().NotBeNull();
     }
 
@@ -68,8 +73,8 @@ public class CachingServiceCollectionExtensionsTests
         services.AddCaching(TimeSpan.FromMinutes(15));
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
-        var cache = serviceProvider.GetService<IProxyCache>();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+        IProxyCache? cache = serviceProvider.GetService<IProxyCache>();
         cache.Should().NotBeNull();
         cache.Should().BeOfType<NullProxyCache>();
     }
@@ -85,16 +90,16 @@ public class CachingServiceCollectionExtensionsTests
         services.AddCaching<MemoryProxyCache>();
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-        var cache = serviceProvider.GetService<IProxyCache>();
+        IProxyCache? cache = serviceProvider.GetService<IProxyCache>();
         cache.Should().NotBeNull();
         cache.Should().BeOfType<MemoryProxyCache>();
 
-        var keyProvider = serviceProvider.GetService<ICacheKeyProvider>();
+        ICacheKeyProvider? keyProvider = serviceProvider.GetService<ICacheKeyProvider>();
         keyProvider.Should().BeOfType<DefaultCacheKeyProvider>();
 
-        var policyProvider = serviceProvider.GetService<ICachePolicyProvider>();
+        ICachePolicyProvider? policyProvider = serviceProvider.GetService<ICachePolicyProvider>();
         policyProvider.Should().BeOfType<DefaultCachePolicyProvider>();
     }
 
@@ -102,18 +107,18 @@ public class CachingServiceCollectionExtensionsTests
     public void AddCaching_WithGenericProviders_ShouldRegisterSpecifiedProviders()
     {
         // Act
-        services.AddCaching<DefaultCacheKeyProvider, DefaultCachePolicyProvider>();
+        services.AddCaching<DefaultCachePolicyProvider>();
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-        var keyProvider = serviceProvider.GetService<ICacheKeyProvider>();
+        ICacheKeyProvider? keyProvider = serviceProvider.GetService<ICacheKeyProvider>();
         keyProvider.Should().BeOfType<DefaultCacheKeyProvider>();
 
-        var policyProvider = serviceProvider.GetService<ICachePolicyProvider>();
+        ICachePolicyProvider? policyProvider = serviceProvider.GetService<ICachePolicyProvider>();
         policyProvider.Should().BeOfType<DefaultCachePolicyProvider>();
 
-        var cache = serviceProvider.GetService<IProxyCache>();
+        IProxyCache? cache = serviceProvider.GetService<IProxyCache>();
         cache.Should().BeOfType<MemoryProxyCache>();
     }
 
@@ -132,8 +137,8 @@ public class CachingServiceCollectionExtensionsTests
         });
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
-        var cache = serviceProvider.GetService<IProxyCache>();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+        IProxyCache? cache = serviceProvider.GetService<IProxyCache>();
         cache.Should().NotBeNull();
     }
 
@@ -148,15 +153,15 @@ public class CachingServiceCollectionExtensionsTests
         services.AddCaching();
 
         // Assert
-        var keyProviderDescriptor = services.FirstOrDefault(s => s.ServiceType == typeof(ICacheKeyProvider));
+        ServiceDescriptor? keyProviderDescriptor = services.FirstOrDefault(s => s.ServiceType == typeof(ICacheKeyProvider));
         keyProviderDescriptor.Should().NotBeNull();
         keyProviderDescriptor!.Lifetime.Should().Be(ServiceLifetime.Singleton);
 
-        var policyProviderDescriptor = services.FirstOrDefault(s => s.ServiceType == typeof(ICachePolicyProvider));
+        ServiceDescriptor? policyProviderDescriptor = services.FirstOrDefault(s => s.ServiceType == typeof(ICachePolicyProvider));
         policyProviderDescriptor.Should().NotBeNull();
         policyProviderDescriptor!.Lifetime.Should().Be(ServiceLifetime.Singleton);
 
-        var cacheDescriptor = services.FirstOrDefault(s => s.ServiceType == typeof(IProxyCache));
+        ServiceDescriptor? cacheDescriptor = services.FirstOrDefault(s => s.ServiceType == typeof(IProxyCache));
         cacheDescriptor.Should().NotBeNull();
         cacheDescriptor!.Lifetime.Should().Be(ServiceLifetime.Singleton);
     }

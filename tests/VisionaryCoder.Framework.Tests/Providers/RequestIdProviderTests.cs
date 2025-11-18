@@ -117,7 +117,7 @@ public sealed class RequestIdProviderTests
     {
         // Arrange
         var provider = new RequestIdProvider();
-        string[] ids = new[] { "id-1", "id-2", "id-3" };
+        string[] ids = ["id-1", "id-2", "id-3"];
 
         // Act & Assert
         foreach (string id in ids)

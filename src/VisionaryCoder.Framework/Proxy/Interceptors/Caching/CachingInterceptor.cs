@@ -1,7 +1,8 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using VisionaryCoder.Framework.Proxy.Caching;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Caching;
 /// <summary>
@@ -122,15 +123,15 @@ public sealed class CachingInterceptor : IOrderedProxyInterceptor
     private static bool IsRelevantForCaching(string metadataKey)
     {
         // Exclude non-relevant keys from cache key generation
-        string[] excludeKeys = new[]
-        {
+        string[] excludeKeys =
+        [
             "CorrelationId",
             "ExecutionTimeMs",
             "RetryAttempts",
             "CircuitBreakerState",
             "CacheHit",
             "Authorization" // Sensitive data
-        };
+        ];
 
         return !excludeKeys.Contains(metadataKey, StringComparer.OrdinalIgnoreCase);
     }

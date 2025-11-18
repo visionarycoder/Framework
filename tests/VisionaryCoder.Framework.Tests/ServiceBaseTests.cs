@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Logging;
+using Moq;
+
 namespace VisionaryCoder.Framework.Tests;
 
 /// <summary>
@@ -12,12 +15,8 @@ public class ServiceBaseTests
     /// <summary>
     /// Concrete implementation of ServiceBase for testing purposes.
     /// </summary>
-    public class TestService : ServiceBase<TestService>
+    public class TestService(ILogger<TestService> logger) : ServiceBase<TestService>(logger)
     {
-        public TestService(ILogger<TestService> logger) : base(logger)
-        {
-        }
-
         /// <summary>
         /// Exposes the protected Logger property for testing.
         /// </summary>
@@ -215,12 +214,8 @@ public class ServiceBaseTests
     /// <summary>
     /// Second concrete implementation to test generic type parameter.
     /// </summary>
-    public class AnotherTestService : ServiceBase<AnotherTestService>
+    public class AnotherTestService(ILogger<AnotherTestService> logger) : ServiceBase<AnotherTestService>(logger)
     {
-        public AnotherTestService(ILogger<AnotherTestService> logger) : base(logger)
-        {
-        }
-
         public ILogger<AnotherTestService> ExposedLogger => Logger;
     }
 

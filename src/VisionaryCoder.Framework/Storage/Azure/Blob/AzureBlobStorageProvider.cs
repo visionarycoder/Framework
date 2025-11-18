@@ -1,7 +1,12 @@
+using Azure;
+using Azure.Identity;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace VisionaryCoder.Framework.Storage.Azure;
+namespace VisionaryCoder.Framework.Storage.Azure.Blob;
 
 /// <summary>
 /// Provides Azure Blob Storage-based storage operations implementation following Microsoft I/O patterns.
@@ -296,7 +301,7 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
             string blobName = NormalizeBlobName(directoryMarkerPath);
             BlobClient? blobClient = containerClient.GetBlobClient(blobName);
 
-            using var emptyStream = new MemoryStream(Array.Empty<byte>());
+            using var emptyStream = new MemoryStream([]);
             blobClient.Upload(emptyStream, overwrite: true);
 
             Logger.LogTrace("Successfully created directory '{Path}'", path);
@@ -322,7 +327,7 @@ public sealed class AzureBlobStorageProvider : ServiceBase<AzureBlobStorageProvi
             string blobName = NormalizeBlobName(directoryMarkerPath);
             BlobClient? blobClient = containerClient.GetBlobClient(blobName);
 
-            using var emptyStream = new MemoryStream(Array.Empty<byte>());
+            using var emptyStream = new MemoryStream([]);
             await blobClient.UploadAsync(emptyStream, overwrite: true, cancellationToken: cancellationToken);
 
             Logger.LogTrace("Successfully created directory async '{Path}'", path);

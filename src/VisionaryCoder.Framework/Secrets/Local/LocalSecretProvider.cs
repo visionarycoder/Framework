@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using VisionaryCoder.Framework.Secrets.Azure.KeyVault;
 
 namespace VisionaryCoder.Framework.Secrets.Local;

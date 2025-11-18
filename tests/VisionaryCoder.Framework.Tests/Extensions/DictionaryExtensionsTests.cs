@@ -822,7 +822,7 @@ public class DictionaryExtensionsTests
     public void AddToList_WithExistingKey_ShouldAddToExistingList()
     {
         // Arrange
-        var dictionary = new Dictionary<string, List<int>> { ["items"] = new List<int> { 1, 2 } };
+        var dictionary = new Dictionary<string, List<int>> { ["items"] = [1, 2] };
 
         // Act
         dictionary.AddToList("items", 3);

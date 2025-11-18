@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Configuration;
+using Moq;
+using Moq.Language;
 using VisionaryCoder.Framework.Secrets;
 using VisionaryCoder.Framework.Secrets.Azure.KeyVault;
 using VisionaryCoder.Framework.Secrets.Local;

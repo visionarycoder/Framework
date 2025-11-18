@@ -193,7 +193,7 @@ public class TypeExtensionTests
     public void AsBoolean_WithUnsupportedType_ShouldReturnFalse()
     {
         // Arrange
-        object value = new object();
+        object value = new();
 
         // Act
         bool result = value.AsBoolean();
@@ -340,7 +340,7 @@ public class TypeExtensionTests
     public void AsInteger_WithUnsupportedType_ShouldReturnDefaultValue()
     {
         // Arrange
-        object value = new object();
+        object value = new();
 
         // Act
         int result = value.AsInteger(77);

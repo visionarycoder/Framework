@@ -1,5 +1,3 @@
-using VisionaryCoder.Framework.Proxy.Caching;
-
 namespace VisionaryCoder.Framework.Proxy.Interceptors.Caching;
 
 /// <summary>

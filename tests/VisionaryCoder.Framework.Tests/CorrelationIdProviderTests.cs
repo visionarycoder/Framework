@@ -168,8 +168,8 @@ public class CorrelationIdProviderTests
     public void SetCorrelationId_ShouldAcceptAnyNonEmptyString()
     {
         // Arrange
-        string[] testIds = new[]
-        {
+        string[] testIds =
+        [
             "A",
             "123",
             "lowercase",
@@ -177,7 +177,7 @@ public class CorrelationIdProviderTests
             "Mixed-Case_123",
             "Special@Characters#!",
             "Very-Long-Correlation-Id-With-Many-Characters"
-        };
+        ];
 
         foreach (string testId in testIds)
         {

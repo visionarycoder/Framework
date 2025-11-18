@@ -94,7 +94,7 @@ public class TenantContextTests
     public void TenantName_WithVeryLongName_ShouldStoreCompletely()
     {
         // Arrange
-        string longName = new string('A', 10000);
+        string longName = new('A', 10000);
         var context = new TenantContext();
 
         // Act

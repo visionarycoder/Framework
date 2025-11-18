@@ -1,7 +1,7 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using VisionaryCoder.Framework.Authorization.Results;
+using VisionaryCoder.Framework.Proxy.Interceptors.Authorization.Results;
 
 namespace VisionaryCoder.Framework.Tests.Authorization.Results;
 
@@ -233,7 +233,7 @@ public class AuthorizationResultTests
     public void Failure_WithLongReason_ShouldHandleGracefully()
     {
         // Arrange
-        var longReason = new string('A', 1000) + " - Access denied due to insufficient permissions for the requested resource";
+        string longReason = new string('A', 1000) + " - Access denied due to insufficient permissions for the requested resource";
 
         // Act
         var result = AuthorizationResult.Failure(longReason);
@@ -247,7 +247,7 @@ public class AuthorizationResultTests
     public void Failure_WithSpecialCharacters_ShouldHandleGracefully()
     {
         // Arrange
-        var specialReason = "Access denied: 用户权限不足 ñoñó @#$%^&*()";
+        string specialReason = "Access denied: 用户权限不足 ñoñó @#$%^&*()";
 
         // Act
         var result = AuthorizationResult.Failure(specialReason);
@@ -398,7 +398,7 @@ public class AuthorizationResultTests
             }
         }
 
-        var results = Task.WhenAll(tasks).Result;
+        AuthorizationResult[] results = Task.WhenAll(tasks).Result;
 
         // Assert
         var successResults = results.Where(r => r.IsAuthorized).ToList();

@@ -1,5 +1,5 @@
-using VisionaryCoder.Framework.Querying;
 using System.Linq.Expressions;
+using VisionaryCoder.Framework.Querying;
 
 namespace VisionaryCoder.Framework.Tests.Querying;
 
@@ -473,12 +473,12 @@ public sealed class QueryFilterExtensionsTests
     public void Join_WithMultipleFiltersAndTrue_ShouldCombineWithAnd()
     {
         // Arrange
-        QueryFilter<TestEntity>[] filters = new[]
-        {
+        QueryFilter<TestEntity>[] filters =
+        [
             new QueryFilter<TestEntity>(e => e.Id > 0),
             new QueryFilter<TestEntity>(e => e.Id < 100),
             new QueryFilter<TestEntity>(e => e.Name != null)
-        };
+        ];
 
         // Act
         QueryFilter<TestEntity> combined = filters.Join(useAnd: true);
@@ -493,11 +493,11 @@ public sealed class QueryFilterExtensionsTests
     public void Join_WithMultipleFiltersAndFalse_ShouldCombineWithOr()
     {
         // Arrange
-        QueryFilter<TestEntity>[] filters = new[]
-        {
+        QueryFilter<TestEntity>[] filters =
+        [
             new QueryFilter<TestEntity>(e => e.Id < 10),
             new QueryFilter<TestEntity>(e => e.Id > 90)
-        };
+        ];
 
         // Act
         QueryFilter<TestEntity> combined = filters.Join(useAnd: false);
@@ -513,7 +513,7 @@ public sealed class QueryFilterExtensionsTests
     public void Join_WithEmptySequence_ShouldReturnAlwaysTrueFilter()
     {
         // Arrange
-        QueryFilter<TestEntity>[] filters = Array.Empty<QueryFilter<TestEntity>>();
+        QueryFilter<TestEntity>[] filters = [];
 
         // Act
         QueryFilter<TestEntity> combined = filters.Join();
@@ -633,11 +633,11 @@ public sealed class QueryFilterExtensionsTests
             new TestEntity(4, "David", "david@test.com")
         }.AsQueryable();
 
-        QueryFilter<TestEntity>[] filters = new[]
-        {
+        QueryFilter<TestEntity>[] filters =
+        [
             new QueryFilter<TestEntity>(e => e.Id > 1),
             new QueryFilter<TestEntity>(e => e.Id < 4)
-        };
+        ];
 
         // Act
         var result = data.ApplyAll(filters).ToList();
@@ -658,12 +658,12 @@ public sealed class QueryFilterExtensionsTests
             new TestEntity(2, "Bob", "bob@test.com")
         }.AsQueryable();
 
-        QueryFilter<TestEntity>?[] filters = new[]
-        {
+        QueryFilter<TestEntity>?[] filters =
+        [
             new QueryFilter<TestEntity>(e => e.Id > 0),
             null,
             new QueryFilter<TestEntity>(e => e.Id < 10)
-        };
+        ];
 
         // Act
         var result = data.ApplyAll(filters!).ToList();
@@ -677,7 +677,7 @@ public sealed class QueryFilterExtensionsTests
     {
         // Arrange
         IQueryable<TestEntity> source = null!;
-        QueryFilter<TestEntity>[] filters = new[] { new QueryFilter<TestEntity>(e => e.Id > 0) };
+        QueryFilter<TestEntity>[] filters = [new QueryFilter<TestEntity>(e => e.Id > 0)];
 
         // Act
         Action act = () => source.ApplyAll(filters);

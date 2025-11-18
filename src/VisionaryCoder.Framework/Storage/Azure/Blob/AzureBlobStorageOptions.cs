@@ -1,4 +1,6 @@
-namespace VisionaryCoder.Framework.Storage.Azure;
+using Azure.Storage.Blobs.Models;
+
+namespace VisionaryCoder.Framework.Storage.Azure.Blob;
 
 /// <summary>
 /// Configuration options for Azure Blob Storage operations.
@@ -56,11 +58,11 @@ public sealed class AzureBlobStorageOptions
     /// </summary>
     public void Validate()
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(ContainerName, nameof(ContainerName));
+        ArgumentException.ThrowIfNullOrWhiteSpace(ContainerName);
 
         if (UseManagedIdentity)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(StorageAccountUri, nameof(StorageAccountUri));
+            ArgumentException.ThrowIfNullOrWhiteSpace(StorageAccountUri);
             if (!Uri.TryCreate(StorageAccountUri, UriKind.Absolute, out _))
             {
                 throw new ArgumentException("StorageAccountUri must be a valid absolute URI.", nameof(StorageAccountUri));
@@ -68,7 +70,7 @@ public sealed class AzureBlobStorageOptions
         }
         else
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(ConnectionString, nameof(ConnectionString));
+            ArgumentException.ThrowIfNullOrWhiteSpace(ConnectionString);
         }
 
         if (TimeoutMilliseconds <= 0)

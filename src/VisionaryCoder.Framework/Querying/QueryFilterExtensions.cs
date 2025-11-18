@@ -221,7 +221,7 @@ public static class QueryFilterExtensions
     /// <summary>
     /// Joins multiple filters using AND semantics by default. If <paramref name="useAnd"/> is false, uses OR semantics.
     /// </summary>
-    public static QueryFilter<T> Join<T>(bool useAnd, params QueryFilter<T>[] filters) => (filters ?? Array.Empty<QueryFilter<T>>()).Join(useAnd);
+    public static QueryFilter<T> Join<T>(bool useAnd, params QueryFilter<T>[] filters) => (filters ?? []).Join(useAnd);
 
     private static QueryFilter<T> True<T>()
     {
@@ -257,7 +257,7 @@ public static class QueryFilterExtensions
         ParameterExpression param = selector.Parameters[0];
         // x => x.Prop != null && x.Prop.ToLowerInvariant().Contains(value.ToLowerInvariant())
         MethodInfo toLowerInvariant = typeof(string).GetMethod(nameof(string.ToLowerInvariant), Type.EmptyTypes)!;
-        MethodInfo contains = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!;
+        MethodInfo contains = typeof(string).GetMethod(nameof(string.Contains), [typeof(string)])!;
 
         BinaryExpression notNull = Expression.NotEqual(selector.Body, Expression.Constant(null, typeof(string)));
         MethodCallExpression left = Expression.Call(selector.Body, toLowerInvariant);
@@ -285,7 +285,7 @@ public static class QueryFilterExtensions
 
         ParameterExpression param = selector.Parameters[0];
         MethodInfo toLowerInvariant = typeof(string).GetMethod(nameof(string.ToLowerInvariant), Type.EmptyTypes)!;
-        MethodInfo startsWith = typeof(string).GetMethod(nameof(string.StartsWith), new[] { typeof(string) })!;
+        MethodInfo startsWith = typeof(string).GetMethod(nameof(string.StartsWith), [typeof(string)])!;
 
         BinaryExpression notNull = Expression.NotEqual(selector.Body, Expression.Constant(null, typeof(string)));
         MethodCallExpression left = Expression.Call(selector.Body, toLowerInvariant);
@@ -311,7 +311,7 @@ public static class QueryFilterExtensions
 
         ParameterExpression param = selector.Parameters[0];
         MethodInfo toLowerInvariant = typeof(string).GetMethod(nameof(string.ToLowerInvariant), Type.EmptyTypes)!;
-        MethodInfo endsWith = typeof(string).GetMethod(nameof(string.EndsWith), new[] { typeof(string) })!;
+        MethodInfo endsWith = typeof(string).GetMethod(nameof(string.EndsWith), [typeof(string)])!;
 
         BinaryExpression notNull = Expression.NotEqual(selector.Body, Expression.Constant(null, typeof(string)));
         MethodCallExpression left = Expression.Call(selector.Body, toLowerInvariant);
