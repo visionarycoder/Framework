@@ -4,85 +4,99 @@ A comprehensive core framework library providing foundational features for the V
 
 ## Overview
 
-The `VisionaryCoder.Framework` project serves as the foundational library for the entire VisionaryCoder Framework ecosystem. It provides core services, utilities, and patterns that are used throughout all other framework components.
+`VisionaryCoder.Framework` is the foundational library for the VisionaryCoder Framework ecosystem. It provides core services, utilities and small, focused sub-systems that other framework components and applications can reuse.
 
-## Features
+This project contains several concerns, including the filtering model and execution strategies that make it easy to build, serialize and apply query filters across in-memory POCO collections and EF Core queryables.
 
-### Core Services
+## Highlights (what's included today)
 
-- **Framework Information Provider**: Provides metadata about the framework version, compilation time, and description
-- **Correlation ID Provider**: Manages correlation IDs for distributed request tracking
-- **Request ID Provider**: Manages request IDs for individual request tracking
-- **Response Wrapper**: Consistent success/failure handling with `Response<T>` and `Response`
+- Core framework helpers and DI registration utilities
+- A flexible filtering model (portable abstractions)
+  - `VisionaryCoder.Framework.Filtering.Abstractions` contains the filter node model: `FilterNode`, `FilterCondition`, `FilterGroup`, `FilterOperation`, and related enums
+  - Expression translation from LINQ predicates via `ExpressionToFilterNode` (produces the portable `FilterNode` tree)
+- Pluggable filter execution strategies
+  - POCO strategy (default) for in-memory `IEnumerable<T>` filtering
+  - EF Core strategy (sub-library) which translates `FilterNode` into EF expressions and is optimized to produce SQL (including `IN` support)
+- Sample code showing usage and new `IN` operator support (constant collection `.Contains(member)` and array literal `.Contains(member)` are translated)
 
-### Configuration
+## Filtering and Querying
 
-- **Service Collection Extensions**: Easy registration of framework services via dependency injection
-- **Framework Options**: Configurable settings for framework behavior
-- **Framework Constants**: Centralized constants for timeouts, headers, and logging
+The filtering subsystem is intentionally split into a stable `Abstractions` surface and provider-specific execution code:
 
-### Key Components
+- `VisionaryCoder.Framework.Filtering.Abstractions`
+  - Portable POCO types used to represent filters (`FilterNode`, `FilterCondition`, `FilterGroup`, etc.)
+  - `IFilterExecutionStrategy` interface to apply a `FilterNode` to `IQueryable<T>` or `IEnumerable<T>`
 
-#### FrameworkConstants
+- `VisionaryCoder.Framework.Filtering` (helpers)
+  - `Filter.For<T>()` builder and `ExpressionToFilterNode` translator used to create `FilterNode` trees from LINQ expressions
 
-Provides framework-wide constants including:
+- `VisionaryCoder.Framework.Filtering.Poco` (default)
+  - In-memory application of `FilterNode` trees; intended as the default execution strategy for POCO collections
 
-- Version information
-- Default timeout values
-- Common HTTP headers
-- Logging configuration
+- `VisionaryCoder.Framework.Filtering.EFCore` (optional provider)
+  - EF Core optimized execution strategy that translates `FilterNode` into expression trees EF can turn into SQL
+  - Includes optimized handling of `IN` by generating a typed constant array and using `Enumerable.Contains(array, member)`, which EF Core providers translate to `IN (...)` in SQL
 
-#### ServiceCollectionExtensions
+## New: IN operator support
 
-Extension methods for easy framework integration:
-
-```csharp
-services.AddVisionaryCoderFramework();
-services.AddVisionaryCoderFramework(options => 
-{
-    options.EnableCorrelationId = true;
-    options.DefaultHttpTimeoutSeconds = 60;
-});
-```
-
-#### Response<T>
-
-Consistent result wrapper for operations:
+You can now write filters using constant collections or array literals and have them translated to an `IN` operation for EF Core:
 
 ```csharp
-var response = Response<string>.Success("Hello World");
-response.Match(
-    onSuccess: value => Console.WriteLine(value),
-    onFailure: (error, ex) => Console.WriteLine($"Error: {error}")
-);
+// variable-backed collection -> translated to IN for EF
+var allowedNames = new[] { "John Smith", "Bob Brown" };
+var filter = Filter.For<User>()
+    .Where(u => allowedNames.Contains(u.Name))
+    .Build();
+
+// literal array -> also translated to IN
+var filter2 = Filter.For<User>()
+    .Where(u => new[] { "Ann Smith", "Bob Brown" }.Contains(u.Name))
+    .Build();
 ```
 
-## Project Structure
+For POCO execution the framework evaluates the same semantics in-memory; for EF Core the expression is optimized to a SQL `IN` clause where possible.
 
-``` text
-VisionaryCoder.Framework/
-├── Abstractions.cs              # Core interfaces
-├── FrameworkConstants.cs        # Framework constants
-├── FrameworkResult.cs          # Result wrapper types
-├── Implementations.cs          # Default implementations
-├── ServiceCollectionExtensions.cs # DI extensions
+## Samples
+
+A small sample application is included under `src/VisionaryCoder.Framework/Filtering/Sample` demonstrating:
+
+- Building a filter with `Filter.For<T>()` and `ExpressionToFilterNode`
+- Applying the filter to an in-memory collection via the POCO execution strategy
+- Applying the same filter to an EF Core `IQueryable<T>` via the EF Core execution strategy
+- Examples for `IN` usage (variable collection and array literal)
+
+## Project structure (high level)
+
+```text
+src/VisionaryCoder.Framework/
+├── Filtering/
+│   ├── Abstractions/             # Filter model (FilterNode, FilterCondition, FilterOperation...)
+│   ├── EFCore/                   # EF Core execution strategy and expression builder
+│   ├── Poco/                     # Default POCO execution strategy
+│   └── Sample/                   # Samples demonstrating usage
+├── Querying/                     # Thin query helpers and serialization
 └── VisionaryCoder.Framework.csproj
 ```
 
-## Dependencies
+## Dependencies and targets
 
-- **.NET 8.0**: Target framework
-- **Microsoft.Extensions.DependencyInjection.Abstractions**: For dependency injection
-- **Microsoft.Extensions.Logging.Abstractions**: For logging abstractions
-- **Microsoft.Extensions.Options**: For configuration options
-- **VisionaryCoder.Framework.Abstractions**: Core framework abstractions
+- Target: .NET 8
+- C# language level: modern (C# 13+ where applicable)
+- Notable NuGet: `Microsoft.EntityFrameworkCore` (for EF strategy / samples)
 
-## Integration
+## Testing
 
-This project is automatically included when referencing the VisionaryCoder Framework ecosystem. It provides the foundational services that other framework components depend on.
+Unit tests for filtering and expression translation exist in the `tests/VisionaryCoder.Framework.Tests` project. They cover:
 
-## Version
+- Expression -> FilterNode translation
+- Collection operator translation (Any, All, HasElements)
+- `IN` translation cases
 
-Current Version: **1.0.0**
+## Contribution notes
 
-Built with C# 12 and .NET 8.0, following Microsoft naming conventions and modern C# practices including primary constructors where applicable.
+- The filtering model is intentionally small and provider-agnostic; new execution strategies can be added by implementing `IFilterExecutionStrategy` and wiring it through DI or via helper classes.
+- Prefer immutable records for filter model types; keep translation logic focused and testable.
+
+---
+
+This README reflects the current state of the `VisionaryCoder.Framework` repository and the filtering features available in the codebase.

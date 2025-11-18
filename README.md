@@ -4,7 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/v/VisionaryCoder.Framework.Core.svg)](https://www.nuget.org/packages/VisionaryCoder.Framework.Core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A modular, enterprise-grade framework starting with a single foundational library (`VisionaryCoder.Framework`) and accompanying test project. The repository emphasizes **clean, reproducible, and automated development** with .NET 8 (ready for forward compatibility to .NET 10). Future packages will evolve incrementally via ADRs.
+A modular, enterprise-grade framework starting from a single foundational library. This repository contains the source, documentation, samples and tests for the VisionaryCoder Framework ecosystem.
 
 ---
 
@@ -13,7 +13,7 @@ A modular, enterprise-grade framework starting with a single foundational librar
 ```bash
 # Clone
 git clone https://github.com/visionarycoder/Framework.git
-cd vc
+cd Framework
 
 # Restore
 dotnet restore VisionaryCoder.Framework.sln
@@ -25,64 +25,59 @@ dotnet test VisionaryCoder.Framework.sln --configuration Release
 
 ---
 
-## 📦 Current Solution Contents
+## 📦 Solution Overview
 
-| Project                          | Type         | Description                                                                                 |
-|----------------------------------|--------------|---------------------------------------------------------------------------------------------|
-| `VisionaryCoder.Framework`       | Library      | Core framework primitives (configuration, results, options, providers, proxy abstractions). |
-| `VisionaryCoder.Framework.Tests` | Test Project | Unit tests validating core behaviors (results, request/correlation IDs, options).           |
+This repository currently contains a single main library that aggregates foundational capabilities. The intent is to progressively decompose this monolith into smaller packages (see ADRs and roadmap in `docs/`), and this README serves as the top-level index linking to module-level READMEs and developer guidance to make that process easier.
 
-Planned future packages (tracked via ADRs) will be introduced gradually rather than pre-listed. See ADR index for roadmap context.
+### Projects
+
+- `src/VisionaryCoder.Framework` — Core library and shared utilities (see `src/VisionaryCoder.Framework/README.md`)
+- `tests/VisionaryCoder.Framework.Tests` — Unit tests validating framework behaviors
+
+### Module READMEs (entry points)
+
+- Core project README: `src/VisionaryCoder.Framework/README.md`
+- Filtering subsystem: `src/VisionaryCoder.Framework/Filtering/README.md`
+- Querying serialization & helpers: `src/VisionaryCoder.Framework/Querying/README.md`
+- Documentation and architecture decisions: `docs/` (ADRs, best-practices, diagrams)
+
+Use these module READMEs as the canonical documentation when splitting the project into multiple packages.
 
 ## 🗃️ Repository Structure (High-Level)
 
 ```text
-/.copilot                              # Modular AI assistant instruction set (base + C# + patterns + standards)
-/docs                                  # Documentation (ADRs, best-practices capsules, diagrams, reviews, onboarding)
-/src/VisionaryCoder.Framework          # Core library source
-/tests/VisionaryCoder.Framework.Tests  # Unit tests
-/.github                               # Global Copilot instructions & workflows
+/.copilot
+/docs
+/src/VisionaryCoder.Framework
+  ├─ Filtering/
+  ├─ Querying/
+  └─ VisionaryCoder.Framework.csproj
+/tests/VisionaryCoder.Framework.Tests
+/.github
 ```
 
----
+## 📚 Documentation & Roadmap
 
-## 🏗️ Architecture Overview
+- Architectural Decision Records (ADRs): `docs/adr/index.md`
+- Design diagrams and best-practice capsules: `docs/*`
+- Roadmap notes: `docs/reviews/*`
 
-The framework follows **Volatility-Based Decomposition (VBD)** principles. While the current library aggregates foundational concerns, future decomposition will create distinct Manager, Engine, and Accessor component packages as volatility boundaries emerge.
+## 🧭 How to subdivide this repo (next steps)
 
-Core library already enforces:
+If you plan to split this repository into multiple packages, follow these high-level steps:
 
-- Contract-first abstractions for providers & proxies
-- Structured result + request/correlation context handling
-- Dependency injection integration & options binding
-- Early extensibility points for caching, security, querying
-
----
-
-## 📚 Documentation & Guidance
-
-- **ADRs**: `docs/adr/index.md` (recent: ADR-0004 modular Copilot instructions)
-- **Best Practices Capsules**: `docs/best-practices/*/readme.md` (architecture, security, observability, etc.)
-- **Copilot Instructions**: `.github/copilot-instructions.md` (enterprise baseline) and `.copilot/copilot-instructions.md` (modular hub)
-- **Design Patterns Guidance**: `.copilot/design-patterns.instructions.md`
-- **C# Generation Heuristics**: `.copilot/csharp.instructions.md`
-- **Repository Standards**: `.copilot/repo-standards.md`
+1. Identify volatility boundaries using VBD (Volatility-Based Decomposition). Good candidates: Filtering, Querying/Serialization, Execution Strategies, POCO helpers, EFCore adapters.
+2. Create new projects under `src/` for each package and move code with one-class-per-file, preserving namespaces (e.g., `VisionaryCoder.Framework.Filtering.Abstractions`).
+3. Keep `IFilterExecutionStrategy` and other small provider-agnostic interfaces in their own `*.Abstractions` package to avoid circular references.
+4. Introduce `VisionaryCoder.Framework.*.csproj` projects with clear dependencies and update solution file.
+5. Add module README files (use those in this repo as templates) and ADRs to justify the split.
 
 ## 🤝 Contributing
 
-Contributions are welcome—please open an issue or ADR proposal before large architectural changes. Align new code with:
-
-1. Naming & layering rules (see global Copilot instructions)
-2. Volatility boundaries (introduce new packages only when volatility justifies extraction)
-3. Modular instruction consistency (update domain index + ADR when extending guidance)
+Contributions are welcome. Please open an issue or ADR proposal for large architectural changes. Keep PRs focused and update module READMEs when moving code.
 
 ---
 
-## 📄 License
+This document is the canonical solution-level index. See module READMEs for implementation details and examples.
 
-MIT License – see [LICENSE](LICENSE).
-
-Copyright (c) 2025 VisionaryCoder
-
----
 Last synchronized with solution structure: 2025-11-14
