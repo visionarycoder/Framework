@@ -4,7 +4,7 @@
 using VisionaryCoder.Framework.Proxy;
 using VisionaryCoder.Framework.Secrets;
 
-namespace VisionaryCoder.Framework.Authentication.Interceptors;
+namespace VisionaryCoder.Framework.Security.Authentication.Interceptors;
 
 /// <summary>
 /// JWT interceptor specialized for Azure Key Vault authentication scenarios.

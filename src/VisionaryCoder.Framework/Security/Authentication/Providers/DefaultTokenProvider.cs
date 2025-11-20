@@ -3,9 +3,10 @@
 
 using System.Security.Claims;
 using System.Text.Json;
-using VisionaryCoder.Framework.Authentication.Jwt;
 
-namespace VisionaryCoder.Framework.Authentication.Providers;
+using VisionaryCoder.Framework.Security.Authentication.Jwt;
+
+namespace VisionaryCoder.Framework.Security.Authentication.Providers;
 
 /// <summary>
 /// Default implementation of <see cref="ITokenProvider"/> that handles JWT token acquisition and validation.

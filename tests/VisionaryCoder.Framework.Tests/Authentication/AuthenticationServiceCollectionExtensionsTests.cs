@@ -1,9 +1,9 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using VisionaryCoder.Framework.Authentication;
-using VisionaryCoder.Framework.Authentication.Providers;
-using VisionaryCoder.Framework.Authentication.Jwt;
+using VisionaryCoder.Framework.Security.Authentication;
+using VisionaryCoder.Framework.Security.Authentication.Jwt;
+using VisionaryCoder.Framework.Security.Authentication.Providers;
 
 namespace VisionaryCoder.Framework.Tests.Authentication;
 

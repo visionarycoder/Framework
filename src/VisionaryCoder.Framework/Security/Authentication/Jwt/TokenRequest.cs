@@ -3,7 +3,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace VisionaryCoder.Framework.Authentication.Jwt;
+namespace VisionaryCoder.Framework.Security.Authentication.Jwt;
 
 /// <summary>
 /// Represents a JWT token request containing authentication parameters and configuration options.

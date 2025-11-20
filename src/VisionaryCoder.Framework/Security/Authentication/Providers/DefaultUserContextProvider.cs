@@ -3,7 +3,9 @@
 
 using System.Security.Claims;
 
-namespace VisionaryCoder.Framework.Authentication.Providers;
+using VisionaryCoder.Framework.Security.Authentication;
+
+namespace VisionaryCoder.Framework.Security.Authentication.Providers;
 
 /// <summary>
 /// Default implementation of <see cref="IUserContextProvider"/> that extracts user information from HTTP context.

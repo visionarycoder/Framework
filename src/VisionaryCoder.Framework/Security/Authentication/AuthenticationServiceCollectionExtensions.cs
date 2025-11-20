@@ -4,11 +4,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-using VisionaryCoder.Framework.Authentication.Interceptors;
-using VisionaryCoder.Framework.Authentication.Jwt;
-using VisionaryCoder.Framework.Authentication.Providers;
+using VisionaryCoder.Framework.Security.Authentication.Interceptors;
+using VisionaryCoder.Framework.Security.Authentication.Jwt;
+using VisionaryCoder.Framework.Security.Authentication.Providers;
 
-namespace VisionaryCoder.Framework.Authentication;
+namespace VisionaryCoder.Framework.Security.Authentication;
 
 /// <summary>
 /// Extension methods for configuring authentication services in the dependency injection container.

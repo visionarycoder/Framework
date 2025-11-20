@@ -1,7 +1,7 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-namespace VisionaryCoder.Framework.Authentication.Jwt;
+namespace VisionaryCoder.Framework.Security.Authentication.Jwt;
 
 /// <summary>
 /// Defines a contract for JWT token providers that handle token acquisition and validation.

@@ -3,7 +3,7 @@
 
 using System.Text.Json;
 
-namespace VisionaryCoder.Framework.Authentication.Jwt;
+namespace VisionaryCoder.Framework.Security.Authentication.Jwt;
 
 /// <summary>
 /// Represents the result of a JWT token request, containing the token details and metadata.

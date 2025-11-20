@@ -1,7 +1,13 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-namespace VisionaryCoder.Framework.Authentication.Providers;
+
+// Copyright (c) 2025 VisionaryCoder. All rights reserved.
+// Licensed under the MIT License. See LICENSE file in the project root for license information.
+
+using VisionaryCoder.Framework.Security.Authentication;
+
+namespace VisionaryCoder.Framework.Security.Authentication.Providers;
 
 /// <summary>
 /// Defines a contract for providing authenticated user context information.

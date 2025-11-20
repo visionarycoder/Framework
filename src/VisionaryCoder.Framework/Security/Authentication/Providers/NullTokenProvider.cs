@@ -1,9 +1,13 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using VisionaryCoder.Framework.Authentication.Jwt;
 
-namespace VisionaryCoder.Framework.Authentication.Providers;
+// Copyright (c) 2025 VisionaryCoder. All rights reserved.
+// Licensed under the MIT License. See LICENSE file in the project root for license information.
+
+using VisionaryCoder.Framework.Security.Authentication.Jwt;
+
+namespace VisionaryCoder.Framework.Security.Authentication.Providers;
 
 /// <summary>
 /// Null Object pattern implementation of <see cref="ITokenProvider"/> that provides no token functionality.

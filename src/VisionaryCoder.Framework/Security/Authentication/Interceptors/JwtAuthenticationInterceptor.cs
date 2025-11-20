@@ -1,10 +1,10 @@
 // Copyright (c) 2025 VisionaryCoder. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
 
-using VisionaryCoder.Framework.Authentication.Jwt;
 using VisionaryCoder.Framework.Proxy;
+using VisionaryCoder.Framework.Security.Authentication.Jwt;
 
-namespace VisionaryCoder.Framework.Authentication.Interceptors;
+namespace VisionaryCoder.Framework.Security.Authentication.Interceptors;
 
 /// <summary>
 /// JWT interceptor for web-based authentication scenarios.
