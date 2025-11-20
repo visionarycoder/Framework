@@ -23,7 +23,7 @@ public sealed class QueryFilterInterceptor : IProxyInterceptor
             }
             
             // Deserialize and rehydrate
-            FilterNode? node = QueryFilterSerializer.Deserialize(json);
+            VisionaryCoder.Framework.Querying.Serialization.FilterNode? node = QueryFilterSerializer.Deserialize(json);
             if (node != null && typeof(T).IsGenericType &&
                 typeof(T).GetGenericTypeDefinition() == typeof(QueryFilter<>))
             {

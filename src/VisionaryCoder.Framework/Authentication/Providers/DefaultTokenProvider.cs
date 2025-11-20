@@ -12,32 +12,9 @@ namespace VisionaryCoder.Framework.Authentication.Providers;
 /// Supports multiple OAuth 2.0 flows including client credentials, authorization code, and refresh token flows.
 /// Provides comprehensive token management with caching, refresh, and validation capabilities.
 /// </summary>
-public class DefaultTokenProvider : ITokenProvider
+public class DefaultTokenProvider(HttpClient httpClient, JwtOptions options, ILogger<DefaultTokenProvider> logger) : ITokenProvider
 {
-    private readonly HttpClient httpClient;
-    private readonly JwtOptions options;
-    private readonly ILogger<DefaultTokenProvider> logger;
-    private readonly JwtSecurityTokenHandler tokenHandler;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DefaultTokenProvider"/> class.
-    /// </summary>
-    /// <param name="httpClient">The HTTP client for making token requests.</param>
-    /// <param name="options">The JWT configuration options.</param>
-    /// <param name="logger">The logger for diagnostic information.</param>
-    /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
-    public DefaultTokenProvider(
-        HttpClient httpClient,
-        JwtOptions options,
-        ILogger<DefaultTokenProvider> logger)
-    {
-        this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-        this.options = options ?? throw new ArgumentNullException(nameof(options));
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.tokenHandler = new JwtSecurityTokenHandler();
-
-        ConfigureHttpClient();
-    }
+    private readonly JwtSecurityTokenHandler tokenHandler = new();
 
     /// <summary>
     /// Gets a JWT token asynchronously using default configuration.
@@ -47,11 +24,7 @@ public class DefaultTokenProvider : ITokenProvider
     /// <returns>A task representing the async operation with the JWT token string.</returns>
     public async Task<string> GetTokenAsync(CancellationToken cancellationToken = default)
     {
-        var defaultRequest = TokenRequest.CreateClientCredentials(
-            options.ClientId,
-            options.ClientSecret,
-            options.Scopes,
-            options.Audience);
+        var defaultRequest = TokenRequest.CreateClientCredentials(options.ClientId, options.ClientSecret, options.Scopes, options.Audience);
 
         var result = await GetTokenAsync(defaultRequest, cancellationToken);
 
@@ -81,8 +54,7 @@ public class DefaultTokenProvider : ITokenProvider
 
         try
         {
-            logger.LogDebug("Requesting JWT token for audience: {Audience}, grant type: {GrantType}",
-                request.Audience, request.GrantType);
+            logger.LogDebug("Requesting JWT token for audience: {Audience}, grant type: {GrantType}", request.Audience, request.GrantType);
 
             using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeoutCts.CancelAfter(options.RequestTimeout);
@@ -109,8 +81,7 @@ public class DefaultTokenProvider : ITokenProvider
                 }
             }
 
-            logger.LogWarning("Token request failed with status {StatusCode}: {ResponseContent}",
-                response.StatusCode, responseContent);
+            logger.LogWarning("Token request failed with status {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
 
             return ParseErrorResponse(responseContent);
         }
@@ -143,8 +114,7 @@ public class DefaultTokenProvider : ITokenProvider
             var validationParameters = await GetValidationParametersAsync(cancellationToken);
             var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
 
-            logger.LogDebug("JWT token validation successful for subject: {Subject}",
-                principal.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "unknown");
+            logger.LogDebug("JWT token validation successful for subject: {Subject}", principal.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "unknown");
 
             return true;
         }
@@ -182,8 +152,7 @@ public class DefaultTokenProvider : ITokenProvider
             {
                 if (!jsonToken.Audiences.Contains(options.Audience))
                 {
-                    logger.LogDebug("JWT token audience mismatch. Expected: {ExpectedAudience}, Actual: {ActualAudiences}",
-                        options.Audience, string.Join(", ", jsonToken.Audiences));
+                    logger.LogDebug("JWT token audience mismatch. Expected: {ExpectedAudience}, Actual: {ActualAudiences}", options.Audience, string.Join(", ", jsonToken.Audiences));
                     return false;
                 }
             }
@@ -193,8 +162,7 @@ public class DefaultTokenProvider : ITokenProvider
             {
                 if (!string.Equals(jsonToken.Issuer, options.Issuer, StringComparison.OrdinalIgnoreCase))
                 {
-                    logger.LogDebug("JWT token issuer mismatch. Expected: {ExpectedIssuer}, Actual: {ActualIssuer}",
-                        options.Issuer, jsonToken.Issuer);
+                    logger.LogDebug("JWT token issuer mismatch. Expected: {ExpectedIssuer}, Actual: {ActualIssuer}", options.Issuer, jsonToken.Issuer);
                     return false;
                 }
             }
@@ -296,20 +264,6 @@ public class DefaultTokenProvider : ITokenProvider
     }
 
     /// <summary>
-    /// Configures the HTTP client for token requests.
-    /// </summary>
-    private void ConfigureHttpClient()
-    {
-        httpClient.Timeout = options.RequestTimeout;
-        httpClient.DefaultRequestHeaders.Add("User-Agent", "VisionaryCoder.Framework.Authentication/1.0");
-
-        if (!httpClient.DefaultRequestHeaders.Contains("Accept"))
-        {
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-        }
-    }
-
-    /// <summary>
     /// Gets the token endpoint URL for OAuth 2.0 requests.
     /// </summary>
     /// <returns>The token endpoint URL.</returns>
@@ -388,11 +342,7 @@ public class DefaultTokenProvider : ITokenProvider
     /// <returns>A TokenResult object.</returns>
     private static TokenResult MapToTokenResult(TokenResponse response)
     {
-        var result = TokenResult.Success(
-            response.AccessToken ?? string.Empty,
-            response.ExpiresIn,
-            response.RefreshToken,
-            response.Scope);
+        var result = TokenResult.Success(response.AccessToken ?? string.Empty, response.ExpiresIn, response.RefreshToken, response.Scope);
 
         result.TokenType = response.TokenType ?? "Bearer";
         result.CorrelationId = Guid.NewGuid().ToString();
@@ -412,10 +362,7 @@ public class DefaultTokenProvider : ITokenProvider
             var errorResponse = JsonSerializer.Deserialize<TokenErrorResponse>(responseContent);
             if (errorResponse != null)
             {
-                return TokenResult.Failure(
-                    errorResponse.Error ?? "unknown_error",
-                    errorResponse.ErrorDescription,
-                    errorResponse.ErrorUri);
+                return TokenResult.Failure(errorResponse.Error ?? "unknown_error", errorResponse.ErrorDescription, errorResponse.ErrorUri);
             }
         }
         catch

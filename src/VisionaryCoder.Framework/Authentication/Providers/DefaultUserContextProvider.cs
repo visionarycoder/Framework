@@ -10,25 +10,8 @@ namespace VisionaryCoder.Framework.Authentication.Providers;
 /// Provides comprehensive user context extraction from JWT tokens, claims, and HTTP headers.
 /// Supports multi-tenant scenarios and comprehensive user attribute management.
 /// </summary>
-public class DefaultUserContextProvider : IUserContextProvider
+public class DefaultUserContextProvider(IHttpContextAccessor httpContextAccessor, ILogger<DefaultUserContextProvider> logger) : IUserContextProvider
 {
-    private readonly IHttpContextAccessor httpContextAccessor;
-    private readonly ILogger<DefaultUserContextProvider> logger;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DefaultUserContextProvider"/> class.
-    /// </summary>
-    /// <param name="httpContextAccessor">The HTTP context accessor for accessing request context.</param>
-    /// <param name="logger">The logger for diagnostic information.</param>
-    /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
-    public DefaultUserContextProvider(
-        IHttpContextAccessor httpContextAccessor,
-        ILogger<DefaultUserContextProvider> logger)
-    {
-        this.httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
-
     /// <summary>
     /// Gets the current user context by user identifier.
     /// </summary>
@@ -103,8 +86,7 @@ public class DefaultUserContextProvider : IUserContextProvider
             // Add additional context from HTTP headers if available
             EnrichFromHttpHeaders(userContext, httpContext);
 
-            logger.LogDebug("User context extracted for user: {UserId} ({UserName})",
-                userContext.UserId, userContext.UserName);
+            logger.LogDebug("User context extracted for user: {UserId} ({UserName})", userContext.UserId, userContext.UserName);
 
             return userContext;
         }
@@ -164,8 +146,7 @@ public class DefaultUserContextProvider : IUserContextProvider
             var principal = httpContext.User;
 
             // Check for permission claim
-            if (principal.HasClaim("permission", permission) ||
-                principal.HasClaim("permissions", permission))
+            if (principal.HasClaim("permission", permission) || principal.HasClaim("permissions", permission))
             {
                 return true;
             }
@@ -213,30 +194,15 @@ public class DefaultUserContextProvider : IUserContextProvider
     /// <returns>A UserContext extracted from the principal's claims.</returns>
     protected virtual UserContext ExtractUserContextFromPrincipal(ClaimsPrincipal principal)
     {
-        var userId = GetClaimValue(principal, ClaimTypes.NameIdentifier) ??
-                    GetClaimValue(principal, "sub") ??
-                    GetClaimValue(principal, "user_id") ??
-                    string.Empty;
+        var userId = GetClaimValue(principal, ClaimTypes.NameIdentifier) ?? GetClaimValue(principal, "sub") ?? GetClaimValue(principal, "user_id") ?? string.Empty;
 
-        var userName = GetClaimValue(principal, ClaimTypes.Name) ??
-                      GetClaimValue(principal, "name") ??
-                      GetClaimValue(principal, "preferred_username") ??
-                      string.Empty;
+        var userName = GetClaimValue(principal, ClaimTypes.Name) ?? GetClaimValue(principal, "name") ?? GetClaimValue(principal, "preferred_username") ?? string.Empty;
 
-        var email = GetClaimValue(principal, ClaimTypes.Email) ??
-                   GetClaimValue(principal, "email") ??
-                   string.Empty;
+        var email = GetClaimValue(principal, ClaimTypes.Email) ?? GetClaimValue(principal, "email") ?? string.Empty;
 
-        var roles = GetClaimValues(principal, ClaimTypes.Role)
-            .Concat(GetClaimValues(principal, "role"))
-            .Concat(GetClaimValues(principal, "roles"))
-            .Distinct()
-            .ToArray();
+        var roles = GetClaimValues(principal, ClaimTypes.Role).Concat(GetClaimValues(principal, "role")).Concat(GetClaimValues(principal, "roles")).Distinct().ToArray();
 
-        var permissions = GetClaimValues(principal, "permission")
-            .Concat(GetClaimValues(principal, "permissions"))
-            .Distinct()
-            .ToArray();
+        var permissions = GetClaimValues(principal, "permission").Concat(GetClaimValues(principal, "permissions")).Distinct().ToArray();
 
         // Extract additional attributes
         var attributes = new Dictionary<string, object>();
@@ -285,8 +251,7 @@ public class DefaultUserContextProvider : IUserContextProvider
         var headers = httpContext.Request.Headers;
 
         // Add correlation ID from header if not already present
-        if (!userContext.Claims.ContainsKey("CorrelationId") &&
-            headers.TryGetValue("X-Correlation-ID", out var correlationId))
+        if (!userContext.Claims.ContainsKey("CorrelationId") && headers.TryGetValue("X-Correlation-ID", out var correlationId))
         {
             userContext.Claims["CorrelationId"] = correlationId.ToString();
         }
@@ -350,14 +315,9 @@ public class DefaultUserContextProvider : IUserContextProvider
             ["Viewer"] = new[] { "read" }
         };
 
-        var userRoles = GetClaimValues(principal, ClaimTypes.Role)
-            .Concat(GetClaimValues(principal, "role"))
-            .ToHashSet();
+        var userRoles = GetClaimValues(principal, ClaimTypes.Role).Concat(GetClaimValues(principal, "role")).ToHashSet();
 
-        return rolePermissionMap
-            .Where(kvp => userRoles.Contains(kvp.Key))
-            .SelectMany(kvp => kvp.Value)
-            .Contains(permission, StringComparer.OrdinalIgnoreCase);
+        return rolePermissionMap.Where(kvp => userRoles.Contains(kvp.Key)).SelectMany(kvp => kvp.Value).Contains(permission, StringComparer.OrdinalIgnoreCase);
     }
 
     /// <summary>

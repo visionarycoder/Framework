@@ -55,7 +55,7 @@ public sealed class AzureTableStorageProvider : ServiceBase<AzureTableStoragePro
         {
             Logger.LogTrace("Table existence check for '{TableName}'", options.TableName);
 
-            NullableResponse<TableItem> response = tableServiceClient.Query(filter: $"TableName eq '{options.TableName}'").FirstOrDefault();
+            TableItem? response = tableServiceClient.Query(filter: $"TableName eq '{options.TableName}'").FirstOrDefault();
             bool exists = response != null;
 
             Logger.LogTrace("Table existence check for '{TableName}': {Exists}", options.TableName, exists);

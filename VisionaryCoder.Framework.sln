@@ -11,11 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
 		Directory.Packages.props = Directory.Packages.props
-		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
-		version.json = version.json
-		VisionaryCoder.Framework.README.md = VisionaryCoder.Framework.README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{94FEF38A-DA45-4CF1-A0DD-EA337586A1AF}"
@@ -59,10 +56,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".copilot", ".copilot", "{97CED195-F648-4791-915D-D3771753A2B7}"
 	ProjectSection(SolutionItems) = preProject
+		.copilot\code-generation.instructions.md = .copilot\code-generation.instructions.md
+		.copilot\code-quality.instructions.md = .copilot\code-quality.instructions.md
 		.copilot\copilot-instructions.md = .copilot\copilot-instructions.md
 		.copilot\csharp.instructions.md = .copilot\csharp.instructions.md
 		.copilot\design-patterns.instructions.md = .copilot\design-patterns.instructions.md
 		.copilot\repo-standards.md = .copilot\repo-standards.md
+		.copilot\unit-test.instructions.md = .copilot\unit-test.instructions.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{15F01A9A-90BF-4E18-B3DF-5F5E6DE97C39}"
@@ -120,16 +120,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "best-practices", "best-prac
 		docs\best-practices\radar.md = docs\best-practices\radar.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "architecture-decision-records", "architecture-decision-records", "{D179AF1B-D641-4436-BF3F-5E394D3955D0}"
-	ProjectSection(SolutionItems) = preProject
-		docs\adr\adr-0001.md = docs\adr\adr-0001.md
-		docs\adr\adr-0002.md = docs\adr\adr-0002.md
-		docs\adr\adr-0003.md = docs\adr\adr-0003.md
-		docs\adr\adr-0004.md = docs\adr\adr-0004.md
-		docs\adr\adr-template.md = docs\adr\adr-template.md
-		docs\adr\index.md = docs\adr\index.md
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cloud-architecture", "cloud-architecture", "{F36418D1-20E2-4159-B67F-AA0FDA54E3D4}"
 	ProjectSection(SolutionItems) = preProject
 		docs\best-practices\cloud-architecture\ReadMe.md = docs\best-practices\cloud-architecture\ReadMe.md
@@ -180,6 +170,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ITEM-TEMPLATE", "ITEM-TEMPL
 		.github\ISSUE-TEMPLATE\radar-change-proposal.md = .github\ISSUE-TEMPLATE\radar-change-proposal.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "adr", "adr", "{7A169559-F1CF-4F29-8FED-306BD902EB45}"
+	ProjectSection(SolutionItems) = preProject
+		docs\adr\adr-0001.md = docs\adr\adr-0001.md
+		docs\adr\adr-0002.md = docs\adr\adr-0002.md
+		docs\adr\adr-0003.md = docs\adr\adr-0003.md
+		docs\adr\adr-0004.md = docs\adr\adr-0004.md
+		docs\adr\adr-template.md = docs\adr\adr-template.md
+		docs\adr\index.md = docs\adr\index.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -228,7 +228,6 @@ Global
 		{26DDBFD6-7F51-487F-898F-CFF86708EC19} = {24A894FD-4457-4F4E-820D-AD31950FEBE0}
 		{7CF1A278-3E54-4B12-ABA8-2A92F7791581} = {CB6260C4-9E72-4283-96F2-7D671B9CCB2C}
 		{673C1190-F0F9-4EC0-AE1C-979783F03134} = {CB6260C4-9E72-4283-96F2-7D671B9CCB2C}
-		{D179AF1B-D641-4436-BF3F-5E394D3955D0} = {CB6260C4-9E72-4283-96F2-7D671B9CCB2C}
 		{F36418D1-20E2-4159-B67F-AA0FDA54E3D4} = {673C1190-F0F9-4EC0-AE1C-979783F03134}
 		{8DC296DD-9E42-4EA1-8890-543CBBAF8FBD} = {CB6260C4-9E72-4283-96F2-7D671B9CCB2C}
 		{23F3DDEA-520D-4C06-A3F0-821240DF1992} = {673C1190-F0F9-4EC0-AE1C-979783F03134}
@@ -239,6 +238,7 @@ Global
 		{C38C03F8-709E-44D2-AB3F-FB43C563C359} = {673C1190-F0F9-4EC0-AE1C-979783F03134}
 		{B177C31A-130F-436F-816D-8B0F029C3BBB} = {673C1190-F0F9-4EC0-AE1C-979783F03134}
 		{B39EF5BF-8A82-D54F-B795-59BB21F8833A} = {A87D5213-6DF1-4E17-83D1-FCBB76750022}
+		{7A169559-F1CF-4F29-8FED-306BD902EB45} = {CB6260C4-9E72-4283-96F2-7D671B9CCB2C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E278ADA2-B7D4-46F5-91C8-988E8CB3B734}

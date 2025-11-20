@@ -1,3 +1,5 @@
+namespace VisionaryCoder.Framework.Filtering.Poco;
+
 public sealed class PocoFilterExecutionStrategy : IFilterExecutionStrategy
 {
     public IQueryable<T> Apply<T>(IQueryable<T> source, FilterNode? filter)

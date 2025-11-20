@@ -323,9 +323,9 @@ public static class ExpressionToFilterNode
 
             case nameof(Enumerable.All):
                 // All(predicate) - check if all elements match the predicate
-                if (call.Arguments.Count == 2 && call.Arguments[1] is UnaryExpression { Operand: LambdaExpression lambdaPredicate })
+                if (call.Arguments.Count == 2 && call.Arguments[1] is UnaryExpression { Operand: LambdaExpression allPredicate })
                 {
-                    var predicateFilter = TranslateNode(lambdaPredicate.Body);
+                    var predicateFilter = TranslateNode(allPredicate.Body);
                     if (predicateFilter is null)
                     {
                         return null;

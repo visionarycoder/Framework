@@ -1,3 +1,5 @@
+namespace VisionaryCoder.Framework.Filtering.EFCore;
+
 public sealed class EfFilterExecutionStrategy(DbContext dbContext) : IFilterExecutionStrategy
 {
     public IQueryable<T> Apply<T>(IQueryable<T> source, FilterNode? filter)

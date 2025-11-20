@@ -10,25 +10,8 @@ namespace VisionaryCoder.Framework.Authentication.Providers;
 /// Provides comprehensive tenant context extraction from JWT tokens, claims, HTTP headers, and routing information.
 /// Supports multi-tenant SaaS applications with flexible tenant identification strategies.
 /// </summary>
-public class DefaultTenantContextProvider : ITenantContextProvider
+public class DefaultTenantContextProvider(IHttpContextAccessor httpContextAccessor, ILogger<DefaultTenantContextProvider> logger) : ITenantContextProvider
 {
-    private readonly IHttpContextAccessor httpContextAccessor;
-    private readonly ILogger<DefaultTenantContextProvider> logger;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DefaultTenantContextProvider"/> class.
-    /// </summary>
-    /// <param name="httpContextAccessor">The HTTP context accessor for accessing request context.</param>
-    /// <param name="logger">The logger for diagnostic information.</param>
-    /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
-    public DefaultTenantContextProvider(
-        IHttpContextAccessor httpContextAccessor,
-        ILogger<DefaultTenantContextProvider> logger)
-    {
-        this.httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
-
     /// <summary>
     /// Gets the current tenant identifier synchronously.
     /// </summary>
@@ -122,9 +105,7 @@ public class DefaultTenantContextProvider : ITenantContextProvider
             await Task.CompletedTask; // Placeholder for async validation operations
 
             // Basic validation - check if tenant ID is valid and tenant is active
-            return !string.IsNullOrWhiteSpace(tenantContext.TenantId) &&
-                   tenantContext.IsActive &&
-                   IsTenantValid(tenantContext.TenantId);
+            return !string.IsNullOrWhiteSpace(tenantContext.TenantId) && tenantContext.IsActive && IsTenantValid(tenantContext.TenantId);
         }
         catch (Exception ex)
         {
@@ -149,17 +130,12 @@ public class DefaultTenantContextProvider : ITenantContextProvider
                 return CreateDefaultTenantContext();
             }
 
-            var tenantContext = ExtractTenantFromClaims(httpContext) ??
-                               ExtractTenantFromHeaders(httpContext) ??
-                               ExtractTenantFromSubdomain(httpContext) ??
-                               ExtractTenantFromPath(httpContext) ??
-                               CreateDefaultTenantContext();
+            var tenantContext = ExtractTenantFromClaims(httpContext) ?? ExtractTenantFromHeaders(httpContext) ?? ExtractTenantFromSubdomain(httpContext) ?? ExtractTenantFromPath(httpContext) ?? CreateDefaultTenantContext();
 
             // Enrich with additional context
             EnrichTenantContext(tenantContext, httpContext);
 
-            logger.LogDebug("Tenant context extracted: {TenantId} ({TenantName})",
-                tenantContext.TenantId, tenantContext.TenantName);
+            logger.LogDebug("Tenant context extracted: {TenantId} ({TenantName})", tenantContext.TenantId, tenantContext.TenantName);
 
             return tenantContext;
         }
@@ -281,16 +257,12 @@ public class DefaultTenantContextProvider : ITenantContextProvider
 
         var principal = httpContext.User;
 
-        var tenantId = GetClaimValue(principal, "tenant_id") ??
-                      GetClaimValue(principal, "tid") ??
-                      GetClaimValue(principal, "tenantid");
+        var tenantId = GetClaimValue(principal, "tenant_id") ?? GetClaimValue(principal, "tid") ?? GetClaimValue(principal, "tenantid");
 
         if (string.IsNullOrEmpty(tenantId))
             return null;
 
-        var tenantName = GetClaimValue(principal, "tenant_name") ??
-                        GetClaimValue(principal, "tenant") ??
-                        tenantId;
+        var tenantName = GetClaimValue(principal, "tenant_name") ?? GetClaimValue(principal, "tenant") ?? tenantId;
 
         return CreateTenantContext(tenantId, tenantName, "Claims");
     }
@@ -310,9 +282,7 @@ public class DefaultTenantContextProvider : ITenantContextProvider
             var tenantId = tenantIdHeader.ToString();
             if (!string.IsNullOrEmpty(tenantId))
             {
-                var tenantName = headers.TryGetValue("X-Tenant-Name", out var nameHeader)
-                    ? nameHeader.ToString()
-                    : tenantId;
+                var tenantName = headers.TryGetValue("X-Tenant-Name", out var nameHeader) ? nameHeader.ToString() : tenantId;
 
                 return CreateTenantContext(tenantId, tenantName, "Header");
             }
@@ -378,8 +348,7 @@ public class DefaultTenantContextProvider : ITenantContextProvider
         for (int i = 0; i < pathSegments.Length - 1; i++)
         {
             var segment = pathSegments[i];
-            if (segment.Equals("tenant", StringComparison.OrdinalIgnoreCase) ||
-                segment.Equals("t", StringComparison.OrdinalIgnoreCase))
+            if (segment.Equals("tenant", StringComparison.OrdinalIgnoreCase) || segment.Equals("t", StringComparison.OrdinalIgnoreCase))
             {
                 var tenantId = pathSegments[i + 1];
                 return CreateTenantContext(tenantId, tenantId, "Path");
@@ -430,8 +399,7 @@ public class DefaultTenantContextProvider : ITenantContextProvider
         tenantContext.Settings["RequestMethod"] = httpContext.Request.Method;
 
         // Add any tenant context override from HTTP items
-        if (httpContext.Items.TryGetValue("CurrentTenantId", out var overrideTenantId) &&
-            overrideTenantId is string overrideId)
+        if (httpContext.Items.TryGetValue("CurrentTenantId", out var overrideTenantId) && overrideTenantId is string overrideId)
         {
             tenantContext.TenantId = overrideId;
             tenantContext.Settings["OverriddenBy"] = "HttpContext.Items";
@@ -493,9 +461,7 @@ public class DefaultTenantContextProvider : ITenantContextProvider
             return true;
 
         // Check for reasonable tenant ID patterns
-        return value.Length >= 2 &&
-               value.Length <= 50 &&
-               value.All(c => char.IsLetterOrDigit(c) || c == '-' || c == '_');
+        return value.Length >= 2 && value.Length <= 50 && value.All(c => char.IsLetterOrDigit(c) || c == '-' || c == '_');
     }
 
     /// <summary>

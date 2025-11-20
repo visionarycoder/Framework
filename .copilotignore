@@ -39,9 +39,6 @@ out/
 *.tar
 *.gz
 
-# Ignore Copilot instruction files
-.github/copilot-instructions.md
-
 # Ignore miscellaneous
 *.tmp
 *.bak
